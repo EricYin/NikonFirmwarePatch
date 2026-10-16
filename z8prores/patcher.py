@@ -10,7 +10,7 @@ CODE_VERSION_AT = 0xEB29FC
 
 
 def public_words(version):
-    require(re.fullmatch(r'[0-9]{2}\.[0-9]{2}', version), 'Version must be two digits, a dot and two digits, e.g. 03.22')
+    require(re.fullmatch(r'[0-9]{2}\.[0-9]{2}', version), 'Version must be two digits, a dot and two digits, e.g. 04.01')
     raw = version.encode()
     return struct.pack('<3I', 0x52800008 | (int.from_bytes(raw[:2], 'little') << 5),
                        0x72A00008 | (int.from_bytes(raw[2:4], 'little') << 5),

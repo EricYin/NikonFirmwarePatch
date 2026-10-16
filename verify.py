@@ -56,15 +56,23 @@ def decode(raw):
     return b
 
 
-def verify_pair(original, candidate):
+def verify_pair(original, candidate, features=None):
     a, b = decode(original), decode(candidate)
     need(a[:112] == b[:112] and a[128:581844] == b[128:581844] and
          a[82389555:-16] == b[82389555:-16], 'Non-EG module or header changed')
     old, new = a[581844:82389555], b[581844:82389555]
-    profile = json.loads((HERE / 'resources/profile.json').read_text())
-    for r in profile['ranges']:
-        start, end = int(r['start'],16), int(r['end'],16)
-        need(sha(old[start:end]) == r['sha256'], 'Input compatibility guard: ' + r['purpose'])
+    profiles = {name: json.loads((HERE / ('resources/profile.json' if name == 'prores' else 'resources/precapture.json')).read_text())
+                for name in ('prores', 'precapture')}
+    if features is None:
+        features = []
+        for name, offset in [('prores', 0xeb62ec), ('precapture', 0xe0fe90)]:
+            if old[offset:offset+4] != new[offset:offset+4]:
+                features.append(name)
+    need(features and len(features) == len(set(features)) and set(features) <= set(profiles), 'Invalid feature selection')
+    for name in features:
+        for r in profiles[name]['ranges']:
+            start, end = int(r['start'],16), int(r['end'],16)
+            need(sha(old[start:end]) == r['sha256'], 'Input compatibility guard: ' + r['purpose'])
     identity = new[0x14EAA90:0x14EAA98]
     old_identity = old[0x14EAA90:0x14EAA98]
     spans = []
@@ -77,10 +85,20 @@ def verify_pair(original, candidate):
     need(tuple(map(int,identity[:5].split(b'.'))) > tuple(map(int,old_identity[:5].split(b'.'))), 'Version must increase')
     module = b'eg2070_' + identity[:5].replace(b'.',b'') + identity[6:] + b'.bi'
     need(b[112:128] == module.ljust(16,b'\0'), 'Output directory EG name mismatch')
-    for e in profile['patches']:
-        start, size = int(e['offset'],16), e['bytes']
-        need(sha(old[start:start+size]) == e['old_sha256'], 'Input patch bytes differ')
-        need(sha(new[start:start+size]) == e['new_sha256'], 'Output differs from reviewed ProRes patch bytes')
+    expected = {}
+    for name in ('prores', 'precapture'):
+        if name not in features:
+            continue
+        for e in profiles[name]['patches']:
+            start, size = int(e['offset'],16), e['bytes']
+            allowed = profiles[name]['loader_input_sha256'] if name == 'precapture' and start == 0x1024d8c else [e['old_sha256']]
+            need(sha(old[start:start+size]) in allowed, 'Input patch bytes differ')
+            if start in expected:
+                need(start == 0x1024d8c and size == expected[start]['bytes'] == 8, 'Unapproved feature overlap')
+            expected[start] = e
+    for start, e in expected.items():
+        size = e['bytes']
+        need(sha(new[start:start+size]) == e['new_sha256'], 'Output differs from reviewed feature patch bytes')
         spans.append((start,start+size))
     spans += [(0xEB29FC,0xEB2A08),(0x14EAA90,0x14EAA98),(len(old)-11,len(old)-3),(len(old)-2,len(old))]
     end = 0
@@ -89,7 +107,7 @@ def verify_pair(original, candidate):
         end = hi
     need(old[end:] == new[end:], 'Unlisted final change')
     return dict(status='PASS', input_sha256=sha(original), output_sha256=sha(candidate),
-                output_identity=identity.decode(), patch_matches_reviewed_profile=True,
+                output_identity=identity.decode(), features=sorted(features), patch_matches_reviewed_profile=True,
                 all_non_patch_EG_bytes_preserved=True, other_modules_preserved=True,
                 scope='Offline byte equivalence and integrity; not a camera test')
 
@@ -98,10 +116,11 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('original',type=Path)
     ap.add_argument('candidate',type=Path)
+    ap.add_argument('--features', nargs='+', choices=['prores','precapture'], help='Expected new features; otherwise detect changed entry hooks')
     a = ap.parse_args()
     # Bound file reads before decoding.
     need(a.original.stat().st_size == a.candidate.stat().st_size == 99051117, 'Wrong file lengths')
-    print(json.dumps(verify_pair(a.original.read_bytes(),a.candidate.read_bytes()),indent=2))
+    print(json.dumps(verify_pair(a.original.read_bytes(),a.candidate.read_bytes(),a.features),indent=2))
 
 
 if __name__ == '__main__':

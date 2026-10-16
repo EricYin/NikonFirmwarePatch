@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-17",
+  "status": "OFFLINE_CHECKS_PASSED_WITH_DOCUMENTED_SCOPE",
+  "supported_input": "Official Nikon Z8 C 3.11",
+  "features": [
+    "prores",
+    "precapture"
+  ],
+  "prores_regression_checks": 16,
+  "feature_regression_checks": 23,
+  "interactive_selection_verified": true,
+  "bounded_native_cases": 47,
+  "complete_nef_decodes": 15,
+  "corrupt_file_controls_rejected": 2,
+  "archived_input_mosaics_equal": true,
+  "diagnostic_filename_padding_zero": true,
+  "official_combined_boot_error_count": 0,
+  "hardware_observations": {
+    "pre_capture_nefs": 68,
+    "new_public_builds_hardware_certified": false
+  },
+  "reviewed_precapture_code_sha256": "0cc0416840a179a5c36fbcfdbfb451e6d8723467658d50dcbcd1645393168903",
+  "limitations": [
+    "Bounded execution uses explicit modeled services",
+    "Input photos and emulator runtime are not distributed",
+    "Compatible-input emulator startup warning retained; see validation.md",
+    "Only official C 3.11 is publicly supported"
+  ],
+  "source_sha256": {
+    "configure.py": "f6c7c27ffc0db14293e609f9a5b881d2bb5a8d785f7e360e565324f243a8bef6",
+    "features.py": "27228a20e68f7a3b6779aefaa44be28b0cdb63bb43dd320b0a10605066931d22",
+    "patch.py": "5251597ef2cd920e415de197c06cc3f5128dec3a1aabcded51bb2c893fb41445",
+    "resources/precapture.json": "d62d24da524e5080e7b05de3ed5e52bc63e9d3c424fbc52614097726fe48af9b",
+    "resources/profile.json": "5c82bd900476b7b65f829a72bdf4475d690f9aba991135de423f39cab540b27a",
+    "tests/validate.py": "c47cdd7e170cdad2551c86475faee04c7566fa847a73c2073d8d38c0f96427fd",
+    "tests/validate_features.py": "ab730f10b686fd63cdb5506ba95f1edb9c5879c5117a9232704a16f06d37284b",
+    "verify.py": "260aa987f60fea1ac8b75c1ff55b979e34a19af8fc1df0c4f42aa248ba613609",
+    "z8precapture/__init__.py": "2553af81f7abaa8443643c2a451a47d1547fa650b75b50d29bd215ea2c20bed6",
+    "z8precapture/config.py": "fc56c249d12ea642a9380d3afe48afc738034cc394d7b38e325ac36647a3ad04",
+    "z8precapture/crc32_table.inc": "fe021e684d78717732adddb6c9dde91f6fc6918f18cb0aeccfb349db5511a515",
+    "z8precapture/firmware.c": "71bc565f8c62b46d6698f1bdb664d16778cf4b91dc280b1dc1c301b4cb491492",
+    "z8precapture/linker.py": "a65a9ec04410fbc39c3c81b0b2ae7e6199901af387a74e8eefce0d15d4a1fa2b",
+    "z8precapture/patcher.py": "43c1c461b4c486692b541f3f03df1f7c06b41f2b9f7b701de95e511e17a36252",
+    "z8prores/__init__.py": "c4962da695a83c541133ad1a6565bb8d60601992b2e2514f8dfb361fba99dbe5",
+    "z8prores/a64.py": "64879c989f85c88bc550b5ac57270c881737c4f53bb246450d8d8c3ba61ba6ae",
+    "z8prores/back_half.py": "5ebece2e98464d0bb50c9c82453b264b8889f1ff526d2e408165180877c39e7d",
+    "z8prores/layout.py": "ba514703d98cbbf8ac71c10d4743a3b34f1e1d7cc9a00e9805b31d2982c3b3e0",
+    "z8prores/menu.py": "6c441f6bb9069b27cb9b3396e0f4b5f725943cf35746ceae1a4f0a9e97afa0b3",
+    "z8prores/package.py": "e908e18a00c9dde9892fcce5b5aa0ab7f61d21228ab7744ebfb48355df649ecb",
+    "z8prores/patcher.py": "2968e7b382463fda3ef79c7b93c2dbab4315717cf2c76172ef483a60c387b85c"
+  },
+  "compatible_input_boot_error_counts": [
+    1,
+    0
+  ],
+  "reference_boot_error_count": 0,
+  "startup_warning_preserved": true
+}

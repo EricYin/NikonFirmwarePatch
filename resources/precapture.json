@@ -1,0 +1,207 @@
+{
+  "id": "z8-c311-precapture-v1",
+  "payload_bytes": 81807711,
+  "code_bytes": 21229,
+  "code_sha256": "0cc0416840a179a5c36fbcfdbfb451e6d8723467658d50dcbcd1645393168903",
+  "entries": {
+    "precapture_history_entry": "0x40960000",
+    "precapture_tdec_release": "0x40960304",
+    "precapture_writer_file_done": "0x40960dd0"
+  },
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)",
+  "compiler_flags": [
+    "--target=aarch64-none-elf",
+    "-O2",
+    "-ffreestanding",
+    "-fno-builtin",
+    "-fno-stack-protector",
+    "-fno-unwind-tables",
+    "-fno-asynchronous-unwind-tables",
+    "-mgeneral-regs-only",
+    "-mstrict-align",
+    "-Wall",
+    "-Wextra",
+    "-Werror"
+  ],
+  "ranges": [
+    {
+      "start": "0x17aa4c",
+      "end": "0x17b1d0",
+      "purpose": "pre-capture dependency 0x402daa4c",
+      "sha256": "0edf15282089bb757c300a8df9b39195324d3fcf29b4f4c5ccf7d8aa29818e1f"
+    },
+    {
+      "start": "0xe0fe04",
+      "end": "0xe10034",
+      "purpose": "pre-capture dependency 0x40f6fe04",
+      "sha256": "fa5ab727580da97b332fa578ae1b8a9eb7c23c7ebb4169f8f09a2a7e68ec1e15"
+    },
+    {
+      "start": "0xd4340c",
+      "end": "0xd43800",
+      "purpose": "pre-capture dependency 0x40ea340c",
+      "sha256": "d03cb7088de365154d556bb30778311b7612441b9163c7961b69ea1f7ab7b2f3"
+    },
+    {
+      "start": "0xd48fc8",
+      "end": "0xd491d4",
+      "purpose": "pre-capture dependency 0x40ea8fc8",
+      "sha256": "e6f055710d5a54f555268685431b6acc1fcb07ba25c4752a4d5dae8d7790317d"
+    },
+    {
+      "start": "0xd444d0",
+      "end": "0xd445e4",
+      "purpose": "pre-capture dependency 0x40ea44d0",
+      "sha256": "13071989e766bd3d0284a2badf9692e3827d68a5598a4a7b1cf23387c9b64b80"
+    },
+    {
+      "start": "0xeed5c0",
+      "end": "0xeed680",
+      "purpose": "pre-capture dependency 0x4104d5c0",
+      "sha256": "e40796b5a781ef325e159550c442a8f06aba790db84e3ffab2cf132417625b85"
+    },
+    {
+      "start": "0xeedea4",
+      "end": "0xeedf60",
+      "purpose": "pre-capture dependency 0x4104dea4",
+      "sha256": "40435315b15fba59050b73f607f612f7b17718c1c8cd8ea73ac6c177d26b75ef"
+    },
+    {
+      "start": "0xe33098",
+      "end": "0xe33328",
+      "purpose": "pre-capture dependency 0x40f93098",
+      "sha256": "3a07250c20f328d300613ba0156bfb371892d2323a4c7c396b242a7f7132580c"
+    },
+    {
+      "start": "0xbcb8b8",
+      "end": "0xbcb95c",
+      "purpose": "pre-capture dependency 0x40d2b8b8",
+      "sha256": "bb93c46e9a96fcdadb6eda2109724c8b22e2bb90ffa8a4534364e982206abf78"
+    },
+    {
+      "start": "0xbcc408",
+      "end": "0xbcc480",
+      "purpose": "pre-capture dependency 0x40d2c408",
+      "sha256": "1f374af0c7656808a4436f63a4692943a47f6958f3be5470d4db0dc87e7eddb5"
+    },
+    {
+      "start": "0xb1c778",
+      "end": "0xb1c794",
+      "purpose": "pre-capture dependency 0x40c7c778",
+      "sha256": "08cd2323b6c27701819719faa4439cc05bf7da4cd40f0c4372805a3513cd8813"
+    },
+    {
+      "start": "0x6fa8e0",
+      "end": "0x6fa970",
+      "purpose": "pre-capture dependency 0x4085a8e0",
+      "sha256": "0adcbb688bdd801bf6a030dcb5dc5bbd0b2fa9941c5106eca80339e4f49a0337"
+    },
+    {
+      "start": "0x6faa7c",
+      "end": "0x6faad0",
+      "purpose": "pre-capture dependency 0x4085aa7c",
+      "sha256": "165afdd1ac1a1aa8515c61311f0ddf11125b7ddabc4545e0d202d941006f7cf4"
+    },
+    {
+      "start": "0x6fbfe0",
+      "end": "0x6fc020",
+      "purpose": "pre-capture dependency 0x4085bfe0",
+      "sha256": "bc3f13be4128e3c4a65ccb1828559909d1d73d71282956c8cce5e2644d8db1e3"
+    },
+    {
+      "start": "0x1026718",
+      "end": "0x1026894",
+      "purpose": "pre-capture dependency 0x41186718",
+      "sha256": "2b0fbd3b8b9039e5727198b5c94a93889c431f8b8a88d2a74317b8353f83b506"
+    },
+    {
+      "start": "0x56ddf8",
+      "end": "0x56e07c",
+      "purpose": "pre-capture dependency 0x406cddf8",
+      "sha256": "40cf0b2906b979767a7c80465f719a603eb2a1e4ed2059ff2064018e7193389d"
+    },
+    {
+      "start": "0xbb7368",
+      "end": "0xbb73c0",
+      "purpose": "pre-capture dependency 0x40d17368",
+      "sha256": "8ba77ff789a5457d979ef42e77a57adbe25c2b59bf4a4b88b898e7d8487eeea6"
+    },
+    {
+      "start": "0xd51fd4",
+      "end": "0xd52100",
+      "purpose": "pre-capture dependency 0x40eb1fd4",
+      "sha256": "81ce186220295ae88ac35a7c5bed57a8c72b78e9c69e9f931ef7cdfbb9c0a5a7"
+    },
+    {
+      "start": "0x800000",
+      "end": "0x810000",
+      "purpose": "reserved code space",
+      "sha256": "de2f256064a0af797747c2b97505dc0b9f3df0de4f489eac731c23ae9ca9cc31"
+    },
+    {
+      "start": "0x4d2ffc0",
+      "end": "0x4d2ffd0",
+      "purpose": "compressed allocation requests",
+      "sha256": "540e3e29ec386f747b3754136dde1bf67ba9628f89f2a60d8635f4e8f44db0e7"
+    }
+  ],
+  "patches": [
+    {
+      "offset": "0xe0fe90",
+      "bytes": 4,
+      "purpose": "history submission hook",
+      "old_sha256": "27af073012fac2bb86b9e7dacd89756c34d6cd000b285d80bca1116705a7528c",
+      "new_sha256": "49175a4f2703a2406dfa7f50d75b8b80e5e0809bf3e3019041029212c028bd29"
+    },
+    {
+      "offset": "0xd4915c",
+      "bytes": 12,
+      "purpose": "retain compressed historical frames",
+      "old_sha256": "95109b212f615942ee0df7b74ed5f197426d467e48d761af60ec4142b02f0b35",
+      "new_sha256": "bccae67c4bf8ff7afcd996333f60a985c503172b1643ba22956405ffec55fded"
+    },
+    {
+      "offset": "0xd4367c",
+      "bytes": 4,
+      "purpose": "save NEF after matching JPEG",
+      "old_sha256": "3d9e4dfbe53894c443371a7c1d77baf47d9c0a1f9f8063629ec63f6e2d2fb545",
+      "new_sha256": "e1c501e7527d738be2d1f1c3b006962b58d872461ba700b9ae2238e6f702ae97"
+    },
+    {
+      "offset": "0x4d2ffc0",
+      "bytes": 4,
+      "purpose": "C30 frame record capacity",
+      "old_sha256": "5e1d4844aceee4a6302de2518f38ccd7ebf93d13f779a99369c20f845b3ca9f9",
+      "new_sha256": "bec97d15a74565ab5ef41a83213e08fe4c22d5c2c40df718ead65db041147823"
+    },
+    {
+      "offset": "0x4d2ffcc",
+      "bytes": 4,
+      "purpose": "C15 frame record capacity",
+      "old_sha256": "5e1d4844aceee4a6302de2518f38ccd7ebf93d13f779a99369c20f845b3ca9f9",
+      "new_sha256": "bec97d15a74565ab5ef41a83213e08fe4c22d5c2c40df718ead65db041147823"
+    },
+    {
+      "offset": "0x800000",
+      "bytes": 21229,
+      "purpose": "compiled pre-capture code and constants",
+      "old_sha256": "1d8e1fc79aef05524fdd0b1e11fa1a188ea7061f1b3789e3221ec53b84935344",
+      "new_sha256": "0cc0416840a179a5c36fbcfdbfb451e6d8723467658d50dcbcd1645393168903"
+    },
+    {
+      "offset": "0x1024d8c",
+      "bytes": 8,
+      "purpose": "extend text copy to 0x40970000",
+      "old_sha256": "bda28137c2144d68e201a3cd3b59a3c006df0ece63bb4c270da16ab9505f5405",
+      "new_sha256": "358811743bb777fe9243250116eefd2d9ce5d1f7fa157fb3701afc6f57cb0e89"
+    }
+  ],
+  "loader_input_sha256": [
+    "bda28137c2144d68e201a3cd3b59a3c006df0ece63bb4c270da16ab9505f5405",
+    "b1a236384039ff913578cca24bf8cf646780acfa87170ec379cc7ba001c8ecd2"
+  ],
+  "source_sha256": {
+    "firmware.c": "71bc565f8c62b46d6698f1bdb664d16778cf4b91dc280b1dc1c301b4cb491492",
+    "crc32_table.inc": "fe021e684d78717732adddb6c9dde91f6fc6918f18cb0aeccfb349db5511a515"
+  }
+}

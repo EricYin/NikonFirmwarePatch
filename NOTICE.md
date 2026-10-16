@@ -8,7 +8,23 @@ The original tool source is licensed under **GPL-3.0-only**; see [LICENSE](LICEN
 
 - The Nikon package XOR indexing format was studied with reference to [Nikon Hacker's Package.cs](https://github.com/simeonpilgrim/nikon-firmware-tools/blob/main/Nikon-Patch/LocalUI/Package.cs). This repository includes neither that C# source nor its lookup tables. The implementation recovers equivalent parameters from the user-supplied package.
 - [Capstone 5.0.7](https://github.com/capstone-engine/capstone/tree/5.0.7) is installed separately to inspect generated ARM64 instructions. Its code and runtime are not bundled here; its license is available in [LICENSE.TXT](https://github.com/capstone-engine/capstone/blob/5.0.7/LICENSE.TXT).
+- [Clang/LLVM](https://clang.llvm.org/) is an external build dependency for the pre-capture C source. No compiler or runtime is bundled.
 
 The compatibility profile contains hashes and layout parameters, not firmware contents. New patch instructions are generated from source; menu structures and text are read from the user's input.
 
 The screenshots document the firmware interface running in an emulator. The tool's source-code license does not relicense the depicted firmware interface.
+
+## Emulator acknowledgements
+
+- [RdWing/z8-qemu](https://github.com/RdWing/z8-qemu): Z8 adaptation used as the basis of the offline camera-model environment.
+- [WonderLantern/z9-qemu](https://github.com/WonderLantern/z9-qemu): upstream camera model and supporting tools on which the Z8 adaptation builds.
+- [WonderLantern/z7-qemu](https://github.com/WonderLantern/z7-qemu): emulator and protocol-reference work consulted during development.
+- [QEMU](https://www.qemu.org/) ([source repository](https://gitlab.com/qemu-project/qemu)): underlying emulation infrastructure.
+
+These are external development tools and references. This repository does not redistribute their source or binaries, claim authorship of their work, or imply that their maintainers endorse this patch. Their respective notices and licenses remain applicable.
+
+## Experimental use and responsibility
+
+The generated firmware is experimental. Building, installing or using it can cause data loss, camera malfunction or permanent damage. Users must assess the risks and decide for themselves whether to install it. To the extent permitted by applicable law, the authors and contributors provide no warranty and accept no liability for data loss, camera damage or other losses arising from this project or its outputs. The limitations and disclaimer supplement the warranty and liability provisions in LICENSE; they do not alter third-party rights.
+
+本项目生成的是测试版固件。构建、安装或使用可能造成数据丢失、相机故障或永久损坏。使用者须自行衡量风险并决定是否上机。在适用法律允许的范围内，作者及贡献者不提供担保，不对由此造成的数据损失、相机损失或其他损失承担责任。以上说明补充 LICENSE 中的无担保与责任限制条款，不改变第三方权利。

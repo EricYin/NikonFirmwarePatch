@@ -21,6 +21,11 @@ local_data/
 *.yuv
 *.npy
 *.npz
+*.dmp
+*.DMP
+*.o
+*.CFG
+*.cfg
 .venv/
 venv/
 __pycache__/

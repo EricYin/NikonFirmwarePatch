@@ -41,7 +41,7 @@ def plain_png(data):
 BLOCKED_SUFFIXES = {
     '.bin', '.payload', '.bi', '.elf', '.dtb', '.img', '.iso', '.dmg',
     '.zip', '.tar', '.tgz', '.7z', '.cube', '.dylib', '.so', '.dll', '.a',
-    '.o', '.class', '.nef', '.dng', '.mov', '.mp4', '.nev', '.r3d', '.rmd', '.exr', '.mxf', '.avi', '.wav',
+    '.o', '.class', '.nef', '.dng', '.dmp', '.cfg', '.mov', '.mp4', '.nev', '.r3d', '.rmd', '.exr', '.mxf', '.avi', '.wav',
     '.yuv', '.rgb', '.npz', '.npy', '.gpr', '.gzf', '.idb', '.i64', '.pem', '.key',
 }
 BLOCKED_PARTS = {

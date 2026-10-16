@@ -59,7 +59,7 @@ def main():
     bad = bytearray(package.eg); bad[0x14EAA94] = ord('2')
     reject('inconsistent identity', lambda: compatibility(crc(bad)), 'versions disagree')
     reject('bad display version syntax', lambda: public_words('3.22'), 'two digits')
-    reject('non-increasing version', lambda: build(package.eg,'03.11','u0'), 'higher')
+    reject('non-increasing version', lambda: build(package.eg,'03.11','p0'), 'higher')
     reject('bad tag', lambda: build(package.eg,'03.23','toolong'), 'Tag')
 
     # Build via public CLI to cover default tag, output naming, exclusive writes and independent verifier.
@@ -70,8 +70,8 @@ def main():
         check(run.returncode == 0, run.stderr)
         patched = (out/'Z_8_0323.bin').read_bytes()
         record = verify_pair(data,patched)
-        check(record['output_identity'] == '03.23.u0','Default tag is not u0')
-        check(sha(patched) == '0885322ac5178134c08c6f6099b6eff9a9699ac1a116043a5ffc063e1fa6c3f1',
+        check(record['output_identity'] == '03.23.p0','Default tag is not p0')
+        check(sha(patched) == '780d2a3a6f724743a4619ca646b22c29d2ca43ce17cf7d4c1ad2d0b7ae8df922',
               'Stock ProRes output differs from the verified reference')
         results.append(dict(test='stock firmware via CLI',**record))
         run = subprocess.run([sys.executable,'-B',str(HERE/'patch.py'),str(a.stock.resolve()),
@@ -94,8 +94,8 @@ def main():
     sentinel = crc(sentinel)
     custom_packet,_ = package.replace_eg(sentinel,'eg2070_0311b0.bi')
     custom = Package(custom_packet)
-    changed,metadata = build(custom.eg,'04.07','u0')
-    output,_ = custom.replace_eg(changed,'eg2070_0407u0.bi')
+    changed,metadata = build(custom.eg,'04.07','p0')
+    output,_ = custom.replace_eg(changed,'eg2070_0407p0.bi')
     record = verify_pair(custom_packet,output)
     results.append(dict(test='custom table bytes preserved; custom major/minor version 04.07',**record))
     for site in [0x14E5000,0x2400000,0x3E00000]:
@@ -103,7 +103,7 @@ def main():
 
     # Repair all envelopes, then ensure independent verifier still rejects an unrelated byte edit.
     bad = bytearray(changed);bad[0x14E5000] ^= 1
-    tampered,_ = custom.replace_eg(crc(bad),'eg2070_0407u0.bi')
+    tampered,_ = custom.replace_eg(crc(bad),'eg2070_0407p0.bi')
     reject('repaired CRC/SHA1 with unrelated changed byte',lambda:verify_pair(custom_packet,tampered),'outside declared')
 
     check(a.stock.read_bytes() == data,'Stock input changed')
@@ -111,6 +111,7 @@ def main():
                   source_sha256={str(p.relative_to(HERE)):sha(p.read_bytes()) for p in
                                  sorted([*HERE.glob('*.py'),*HERE.glob('z8prores/*.py'),*HERE.glob('resources/*.json'),Path(__file__).resolve()])})
     if a.report:
+        a.report.parent.mkdir(parents=True, exist_ok=True)
         with a.report.open('x') as f:
             json.dump(result,f,ensure_ascii=False,indent=2);f.write('\n')
     print(json.dumps(result,ensure_ascii=False,indent=2))
