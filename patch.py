@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 
 sys.dont_write_bytecode = True
-from z8prores.package import Package, PACKAGE_BYTES, RESOURCES, require, sha
+from z8prores.package import Package, PACKAGE_BYTES, RESOURCES, require, require_official_input, sha
 from features import build, compatibility
 from z8precapture.config import CONFIG_NAME, build_config
 
@@ -21,12 +21,16 @@ def main():
     group = ap.add_mutually_exclusive_group()
     group.add_argument('--features', nargs='+', choices=['prores', 'precapture'], help='One or both features; default prores')
     group.add_argument('--interactive', action='store_true', help='Choose ProRes, menu-controlled RAW capture, or both')
-    ap.add_argument('--compiler', default='clang', help='Clang executable for pre-capture; output must match the reviewed recipe')
+    ap.add_argument('--code-source', choices=['prebuilt', 'source'], default='prebuilt',
+                    help='Pre-capture code: prebuilt Release bytes (default), or explicitly compile from source')
+    ap.add_argument('--compiler', help='Clang executable; requires --code-source source; default clang')
     ap.add_argument('--output', type=Path, help='New output directory; must not already exist')
     a = ap.parse_args()
+    if a.compiler and a.code_source != 'source':
+        ap.error('--compiler requires --code-source source')
     if not a.check and (not a.version or not a.output):
         ap.error('Building requires --version and --output; use --check for read-only inspection')
-    if a.check and (a.output or a.version or a.tag != 'p0' or a.interactive):
+    if a.check and (a.output or a.version or a.tag != 'p0' or a.interactive or a.compiler or a.code_source != 'prebuilt'):
         ap.error('--check cannot be combined with output options')
     if a.interactive:
         print('1: ProRes quality / ProRes 画质\n2: HE RAW capture / HE RAW 连拍与预拍\n3: Both / 两项同时启用')
@@ -39,6 +43,7 @@ def main():
     if not a.check:
         require(not a.output.exists(), 'Output directory already exists; use a new directory')
     data = a.firmware.read_bytes()
+    require_official_input(data)
     package = Package(data)
     profiles, identity = compatibility(package.eg, selected)
     if a.check:
@@ -46,12 +51,12 @@ def main():
                               identity=identity, features=selected,
                               profiles={f:p['id'] for f,p in profiles.items()}, modules=package.modules), indent=2))
         return
-    eg, report = build(package.eg, a.version, a.tag, selected, a.compiler)
+    eg, report = build(package.eg, a.version, a.tag, selected, a.compiler or 'clang', a.code_source)
     module_name = 'eg2070_' + a.version.replace('.', '') + a.tag + '.bi'
     packet, checked = package.replace_eg(eg, module_name)
     name = 'Z_8_' + a.version.replace('.', '') + '.bin'
     from verify import verify_pair
-    independent = verify_pair(data, packet, selected)
+    independent = verify_pair(data, packet, selected, expected_version=a.version, expected_tag=a.tag)
     report.update(status='BUILT_AND_LOCALLY_VERIFIED', input_sha256=package.sha256,
                   input_filename=a.firmware.name, input_bytes=len(data), output_sha256=sha(packet),
                   output_bytes=len(packet), output_filename=name, output_eg_sha256=sha(eg),

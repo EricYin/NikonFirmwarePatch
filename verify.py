@@ -56,7 +56,17 @@ def decode(raw):
     return b
 
 
-def verify_pair(original, candidate, features=None):
+def verify_pair(original, candidate, features=None, *, expected_version=None, expected_tag=None):
+    # Trusted published data only: do not accept a candidate's own manifest as its specification.
+    requested_features = features is not None
+    source = json.loads((HERE / 'resources/input.json').read_text())
+    need(len(original) == source['bytes'] and sha(original) == source['sha256'],
+         'Original must match the official Nikon Z8 C 3.11 SHA-256')
+    need(expected_version is not None or expected_tag is None, 'Expected tag requires an expected version')
+    if expected_version is not None:
+        need(re.fullmatch(r'[0-9]{2}\.[0-9]{2}', expected_version), 'Invalid expected version')
+        expected_tag = 'p0' if expected_tag is None else expected_tag
+        need(re.fullmatch(r'[a-z][0-9]', expected_tag), 'Invalid expected tag')
     a, b = decode(original), decode(candidate)
     need(a[:112] == b[:112] and a[128:581844] == b[128:581844] and
          a[82389555:-16] == b[82389555:-16], 'Non-EG module or header changed')
@@ -75,6 +85,8 @@ def verify_pair(original, candidate, features=None):
             need(sha(old[start:end]) == r['sha256'], 'Input compatibility guard: ' + r['purpose'])
     identity = new[0x14EAA90:0x14EAA98]
     old_identity = old[0x14EAA90:0x14EAA98]
+    if expected_version is not None:
+        need(identity == f'{expected_version}.{expected_tag}'.encode(), 'Output identity differs from requested version/tag')
     spans = []
     for buf, text in [(old, old_identity), (new, identity)]:
         need(re.fullmatch(rb'[0-9]{2}\.[0-9]{2}\.[a-z]\d', text) and buf[-11:-3] == text, 'Internal identity mismatch')
@@ -108,6 +120,8 @@ def verify_pair(original, candidate, features=None):
     need(old[end:] == new[end:], 'Unlisted final change')
     return dict(status='PASS', input_sha256=sha(original), output_sha256=sha(candidate),
                 output_identity=identity.decode(), features=sorted(features), patch_matches_reviewed_profile=True,
+                official_input_verified=True, requested_identity_checked=expected_version is not None,
+                requested_features_checked=requested_features,
                 all_non_patch_EG_bytes_preserved=True, other_modules_preserved=True,
                 scope='Offline byte equivalence and integrity; not a camera test')
 
@@ -117,10 +131,13 @@ def main():
     ap.add_argument('original',type=Path)
     ap.add_argument('candidate',type=Path)
     ap.add_argument('--features', nargs='+', choices=['prores','precapture'], help='Expected new features; otherwise detect changed entry hooks')
+    ap.add_argument('--version', help='Expected output version NN.NN; otherwise check identity consistency only')
+    ap.add_argument('--tag', help='Expected output tag; requires --version; default p0 when --version is set')
     a = ap.parse_args()
     # Bound file reads before decoding.
     need(a.original.stat().st_size == a.candidate.stat().st_size == 99051117, 'Wrong file lengths')
-    print(json.dumps(verify_pair(a.original.read_bytes(),a.candidate.read_bytes(),a.features),indent=2))
+    print(json.dumps(verify_pair(a.original.read_bytes(),a.candidate.read_bytes(),a.features,
+                                expected_version=a.version, expected_tag=a.tag),indent=2))
 
 
 if __name__ == '__main__':

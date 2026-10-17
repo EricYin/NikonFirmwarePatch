@@ -1,6 +1,6 @@
 {
   "date": "2026-10-18",
-  "status": "OFFLINE_CHECKS_PASSED_WITH_DOCUMENTED_SCOPE",
+  "status": "DISTRIBUTION_REGRESSION_PASSED_WITH_RETAINED_IMPLEMENTATION_EVIDENCE",
   "supported_input": "Official Nikon Z8 C 3.11",
   "features": [
     "prores",
@@ -96,31 +96,170 @@
     "Only official C 3.11 is publicly supported"
   ],
   "source_sha256": {
-    "NOTICE.md": "7bc50aa9497da36d465efb05df2195913d465c9875345a75d57613c14063640a",
-    "README.md": "2c5d235ddd42ccad6e9fcc2778cee8fe47e532b1fa1bf6575626bda807c307c4",
+    "LICENSE": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+    "NOTICE.md": "1f2defd8713ef17d8c6b91781eaa9dd9dce663760cea98d48624f395fec3f440",
+    "README.md": "3fc0df916fa1e18218bb434364437d29f148ad15cea7a817694b0c7b6ad00c20",
     "configure.py": "f45bfac908c1730ad40b435b857ff402ef0e91df5f046679ea83ced32cdd0ff4",
-    "docs/raw-precapture.md": "31678f26f101d6f6b7ff8cde18ccaa7bb62fe6efbd7a3efc0e72cb5381506e1d",
-    "docs/validation.md": "1d7e62038ca9f7f4fbb1cfa5ac0f3f81718128d61aab93803ea431b6acaa40dd",
-    "features.py": "27228a20e68f7a3b6779aefaa44be28b0cdb63bb43dd320b0a10605066931d22",
-    "patch.py": "8f088cf4d85814c6e8b246ed3e2873988077bf302350c1d15972ded025ad5353",
+    "docs/raw-precapture.md": "e8541341408cc55263f7ca39cb5b7f7104c2d5ee9641c607912e148197700747",
+    "docs/releases.md": "f1b08eb201fc312def88f92235c61a2e19c7dead0989dcb7b1480da111e598bd",
+    "docs/validation.md": "55318bac49143b2299ebff6e4095b61dd9a88021707898fc3e8be212b8cd6245",
+    "features.py": "196c2caadcafce5d25e9d5d773fedd05a69014086cbac704116b038a09560cba",
+    "patch.py": "f85e95092ce140ff0119ecc98d13179abe68e7b6d481fc5b91a070b9fdcd218e",
+    "requirements.txt": "6b8a703c0a562d2b528575457d1b76ae5decc8d4d53093ba6515a32137098d1b",
+    "resources/input.json": "d100e8f0f8d2ceddc3ea38f2298aac30143d19514a4c571b63eedbb887cb00be",
     "resources/precapture.json": "be5aaa1c6bac8a4cc4f5c2ae6b1d9d3e9c401fe03382ba6549cc8bdfc6312fa2",
     "resources/profile.json": "5c82bd900476b7b65f829a72bdf4475d690f9aba991135de423f39cab540b27a",
-    "tests/validate.py": "c47cdd7e170cdad2551c86475faee04c7566fa847a73c2073d8d38c0f96427fd",
-    "tests/validate_features.py": "4284da0f729bbf2978017e70d746e52a695a8f3567cb7622756e15fae05d2b4d",
+    "tests/validate.py": "32c4632b3e32838e748fd4399575a30d2660598f949e17716da549e07362a505",
+    "tests/validate_distribution.py": "d6e63b0301a0f2a73e5380937bc4c2c02039673dff97f58259bf343ba5e3dc7b",
+    "tests/validate_features.py": "83b9289f448cd2f16042162fa2cb1eec9da6deba49df842099bcb3c161839b4e",
+    "tools/build_release.py": "6721faffb2bbe86ef3856ace71a866f4e31981f8b8df1268726232796d86358c",
+    "tools/check_release.py": "306764d16c135e62a4c2b92dbcb5ff782a28721e59e2a14d4df4da6774df2eed",
     "tools/check_repository.py": "8b120cfecf113aca271c8aac47b96f859a642408d81b6ae48c26bf940fa4e2c7",
-    "verify.py": "260aa987f60fea1ac8b75c1ff55b979e34a19af8fc1df0c4f42aa248ba613609",
+    "verify.py": "7bc59464ba4135f5d0055d97d03e9386c2f0a475c9d0bf8fee9a4eba3a8a71b2",
     "z8precapture/__init__.py": "2553af81f7abaa8443643c2a451a47d1547fa650b75b50d29bd215ea2c20bed6",
     "z8precapture/config.py": "9210666adb21999b590b8e39b3eddbaf6afff92a21fd53805822f5c4394b8076",
     "z8precapture/crc32_table.inc": "fe021e684d78717732adddb6c9dde91f6fc6918f18cb0aeccfb349db5511a515",
     "z8precapture/firmware.c": "236087f6a331c7dc1949e78b5e9444b2a682b78881cdb4834fbf29777ef99422",
     "z8precapture/linker.py": "a65a9ec04410fbc39c3c81b0b2ae7e6199901af387a74e8eefce0d15d4a1fa2b",
-    "z8precapture/patcher.py": "fb76a1d8ed69f946bc2e2645938da1d1cfe76178e2aae86650997e6751e09514",
+    "z8precapture/patcher.py": "f514b636214d79320947d6f970a062323c5c16cda30f950820916f329259807c",
     "z8prores/__init__.py": "c4962da695a83c541133ad1a6565bb8d60601992b2e2514f8dfb361fba99dbe5",
     "z8prores/a64.py": "64879c989f85c88bc550b5ac57270c881737c4f53bb246450d8d8c3ba61ba6ae",
     "z8prores/back_half.py": "5ebece2e98464d0bb50c9c82453b264b8889f1ff526d2e408165180877c39e7d",
     "z8prores/layout.py": "ba514703d98cbbf8ac71c10d4743a3b34f1e1d7cc9a00e9805b31d2982c3b3e0",
     "z8prores/menu.py": "6c441f6bb9069b27cb9b3396e0f4b5f725943cf35746ceae1a4f0a9e97afa0b3",
-    "z8prores/package.py": "e908e18a00c9dde9892fcce5b5aa0ab7f61d21228ab7744ebfb48355df649ecb",
+    "z8prores/package.py": "2534fa3c6e40fda3e2e7b6198e75f81c5582757133c3b5a8d7241af695d931e7",
     "z8prores/patcher.py": "2968e7b382463fda3ef79c7b93c2dbab4315717cf2c76172ef483a60c387b85c"
+  },
+  "implementation_evidence": {
+    "source_commit": "d155b8b183e359140ac36147297f33707b9374e5",
+    "summary": "docs/validation-implementation-v3.json",
+    "sha256": "3d025c61181b9ff5e36fd3f399fcb6ec4bd10a8276282d14a00d8a408abf5239",
+    "native_decode_and_hardware_tests_rerun": false,
+    "basis": "Unchanged code bytes and feature recipes; historical implementation evidence retained"
+  },
+  "distribution": {
+    "toolkit_version": "v0.1.0",
+    "default_code_source": "prebuilt",
+    "source_build_option": "--code-source source",
+    "host": "macOS arm64",
+    "python": "3.14.6",
+    "capstone": "5.0.7",
+    "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)",
+    "windows_linux_full_builds_tested": false,
+    "official_input_sha256_enforced": true,
+    "expected_features_version_tag_verified": true,
+    "prebuilt_tests_with_empty_PATH": true,
+    "checks": [
+      {
+        "test": "prebuilt/source: prores 04.03.p0",
+        "result": "PASS",
+        "output_sha256": "b56881c1ee28fec44ad93b7583e8684e43a9638c10cac8f36659531d61769f5e"
+      },
+      {
+        "test": "prebuilt/source: precapture 04.03.p0",
+        "result": "PASS",
+        "output_sha256": "5051d873730e0b9f4f3ce8a7c59433c934a1757b56fcba649edb9865d819c127"
+      },
+      {
+        "test": "prebuilt/source: prores+precapture 04.03.p0",
+        "result": "PASS",
+        "output_sha256": "7047c831e0517e5e5352ae3721e21a0b1ad1f9aa12ddca52eb81cf927e81af9c"
+      },
+      {
+        "test": "prebuilt/source: prores 17.42.x7",
+        "result": "PASS",
+        "output_sha256": "b0783a1faee393504f7c05b025d663f0598e503eec852693cd06944bd3c4fc1f"
+      },
+      {
+        "test": "prebuilt/source: precapture 17.42.x7",
+        "result": "PASS",
+        "output_sha256": "3963ea46eb2d295efad792d5d3beb4a71554b2ac44227ae905c40d20eff8365b"
+      },
+      {
+        "test": "prebuilt/source: prores+precapture 17.42.x7",
+        "result": "PASS",
+        "output_sha256": "13baa9ee393097f7b3ba8b2c33a68818720cb7e32100c9fd64887a122b120c79"
+      },
+      {
+        "test": "wrong requested version",
+        "result": "REJECTED"
+      },
+      {
+        "test": "wrong requested tag",
+        "result": "REJECTED"
+      },
+      {
+        "test": "tag without version",
+        "result": "REJECTED"
+      },
+      {
+        "test": "wrong selected feature",
+        "result": "REJECTED"
+      },
+      {
+        "test": "inferred options reported separately from explicitly checked options",
+        "result": "PASS"
+      },
+      {
+        "test": "changed hook with repaired checksums",
+        "result": "REJECTED"
+      },
+      {
+        "test": "changed code with repaired checksums",
+        "result": "REJECTED"
+      },
+      {
+        "test": "wrong shared loader with repaired checksums",
+        "result": "REJECTED"
+      },
+      {
+        "test": "unlisted byte with repaired checksums",
+        "result": "REJECTED"
+      },
+      {
+        "test": "version instruction opcode changed",
+        "result": "REJECTED"
+      },
+      {
+        "test": "trailer identity changed",
+        "result": "REJECTED"
+      },
+      {
+        "test": "module identity changed",
+        "result": "REJECTED"
+      },
+      {
+        "test": "modified input with valid envelope",
+        "result": "REJECTED"
+      },
+      {
+        "test": "public CLI enforces exact original under python -O before output creation",
+        "result": "PASS"
+      },
+      {
+        "test": "missing prebuilt has no fallback",
+        "result": "REJECTED"
+      },
+      {
+        "test": "truncated prebuilt",
+        "result": "REJECTED"
+      },
+      {
+        "test": "corrupt prebuilt",
+        "result": "REJECTED"
+      },
+      {
+        "test": "missing Release asset aborts CLI without output or fallback",
+        "result": "PASS"
+      },
+      {
+        "test": "explicit source mode works without prebuilt asset",
+        "result": "PASS"
+      }
+    ],
+    "prores_checks": 16,
+    "feature_checks": 42,
+    "camera_installation": false,
+    "card_write": false
   }
 }

@@ -29,6 +29,7 @@ def main():
     ap.add_argument('--stock', required=True, type=Path)
     ap.add_argument('--report', type=Path, required=True)
     ap.add_argument('--compiler', default='clang')
+    ap.add_argument('--code-source', choices=['prebuilt', 'source'], default='prebuilt')
     a = ap.parse_args()
     check(not a.report.exists(), 'Report already exists')
     data = a.stock.read_bytes()
@@ -51,7 +52,9 @@ def main():
             name = '+'.join(names)
             out = temp/name
             cmd = [sys.executable, '-B', str(ROOT/'patch.py'), str(a.stock.resolve()), '--features', *names,
-                   '--version', '04.01', '--output', str(out), '--compiler', a.compiler]
+                   '--version', '04.01', '--output', str(out), '--code-source', a.code_source]
+            if a.code_source == 'source':
+                cmd += ['--compiler', a.compiler]
             pr = subprocess.run(cmd, capture_output=True, text=True)
             check(pr.returncode == 0, pr.stderr)
             candidate = (out/'Z_8_0401.bin').read_bytes()
@@ -88,7 +91,7 @@ def main():
         source = bytearray(package.eg); source[0x2400000:0x2400004] = b'\x13\x27\x42\x91'
         source[-2:] = binascii.crc_hqx(source[:-2],0).to_bytes(2,'big')
         from features import build
-        output,_ = build(bytes(source),'04.02','p0',['prores','precapture'],a.compiler)
+        output,_ = build(bytes(source),'04.02','p0',['prores','precapture'],a.compiler,a.code_source)
         check(output[0x2400000:0x2400004] == source[0x2400000:0x2400004], 'Unselected bytes changed')
         rows.append(dict(test='unselected input bytes preserved',result='PASS'))
         # Optimized Python must not disable the input guards.

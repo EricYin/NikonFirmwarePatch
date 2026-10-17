@@ -1,4 +1,4 @@
-"""Compile and validate the pre-capture patch against a pinned public recipe."""
+"""Load or compile the pre-capture patch against the same pinned public recipe."""
 import json
 from pathlib import Path
 import struct
@@ -10,6 +10,20 @@ from .linker import link
 
 HERE = Path(__file__).resolve().parent
 LOADER = 0x1024D8C
+
+
+def prebuilt_code():
+    profile = json.loads((RESOURCES / 'precapture.json').read_text())
+    path = RESOURCES / 'precapture.bin'
+    require(path.is_file(),
+            'Prebuilt pre-capture code is missing. Extract the complete matching GitHub Release toolkit, '
+            'or explicitly use --code-source source with the reviewed compiler. No automatic fallback.')
+    require(path.stat().st_size == profile['code_bytes'], 'Prebuilt pre-capture code has the wrong size')
+    code = path.read_bytes()
+    require(len(code) == profile['code_bytes'] and sha(code) == profile['code_sha256'],
+            'Prebuilt pre-capture code does not match the reviewed SHA-256; no output was written')
+    return code, dict(code_source='prebuilt', profile=profile['id'],
+                     code_sha256=sha(code), code_bytes=len(code))
 
 
 def compatibility(eg):
@@ -40,7 +54,7 @@ def compile_code(compiler='clang'):
             '. No firmware output was written; use a matching toolchain.')
     for name, address in profile['entries'].items():
         require(symbols[name]['va'] == address, 'Compiled entry address differs: ' + name)
-    return code, dict(compiler=subprocess.check_output([compiler, '--version'], text=True).splitlines()[0],
+    return code, dict(code_source='source', compiler=subprocess.check_output([compiler, '--version'], text=True).splitlines()[0],
                      code_sha256=sha(code), code_bytes=len(code), sections=sections)
 
 

@@ -25,6 +25,8 @@ The ordinary **RAW recording** compression choice does not affect these extra NE
 
 ### Build and migrate
 
+Use the complete Release toolkit linked in the [README](../README.md#build). Prebuilt capture code is the default; explicit `--code-source source` retains source builds. Both modes require the exact official input and independently verify the selected options.
+
 1. Start from a fresh official C 3.11 package. Choose `--features precapture` for this function or `--features prores precapture` to include ProRes. Keep the input, manifest and checksums, and verify the generated package against the same input. **Do not apply this release on top of an earlier pre-capture output.** Choose an output version higher than the camera's installed version; the script cannot read that version or guarantee downgrade/recovery.
 2. Read Nikon's [update instructions and precautions](https://downloadcenter.nikonimglib.com/en/download/fw/606.html). Installation is manual, with adequate battery power and no interruption. The tools do not write a card or operate a camera.
 3. Back up a card and leave ample space. Trials used SD; other card timings are not established. Initially use only one recording card. Copy the generated update package to its root, update following Nikon's procedure, and confirm the displayed version.
@@ -33,7 +35,7 @@ The ordinary **RAW recording** compression choice does not affect these extra NE
 
 ```sh
 python patch.py "/path/to/Z_8_0311.bin" --features precapture --version 04.03 --output build/capture
-python verify.py "/path/to/Z_8_0311.bin" "build/capture/Z_8_0403.bin" --features precapture
+python verify.py "/path/to/Z_8_0311.bin" "build/capture/Z_8_0403.bin" --features precapture --version 04.03 --tag p0
 
 # Regenerate the normal menu-controlled configuration locally
 python configure.py --output build/config-menu
@@ -95,6 +97,8 @@ RAW 和 RAW+JPEG 现在都带全尺寸内嵌预览；本版菜单控制模式正
 
 ### 构建与升级
 
+使用 [README](../README.md#构建)链接的完整 Release 工具包，默认加载预编译补丁；可用 `--code-source source` 显式选择源码编译。两种方式都要求精确匹配官方输入，并独立核验所选功能及版本。
+
 1. 从全新的官方 C 3.11 包构建，选择 `--features precapture`，或用 `--features prores precapture` 同时加入 ProRes。保留输入、manifest 和校验值，用同一原始输入核验输出。**不要叠加到上一版预拍补丁输出上。** 输出版本须高于机身已安装版本；脚本不读取机身版本，不保证降级或恢复。
 2. 阅读 Nikon 的[更新步骤与注意事项](https://downloadcenter.nikonimglib.com/en/download/fw/606.html)，手动决定和执行安装，保证电量充足，不中断更新。工具不会写卡或操作相机。
 3. 备份存储卡并留足空间。实测使用 SD，其他卡的耗时未验证。初次只插入一张记录卡，将生成的更新包放到卡根目录，按官方流程更新并核对版本。
@@ -103,7 +107,7 @@ RAW 和 RAW+JPEG 现在都带全尺寸内嵌预览；本版菜单控制模式正
 
 ```sh
 python patch.py "/path/to/Z_8_0311.bin" --features precapture --version 04.03 --output build/capture
-python verify.py "/path/to/Z_8_0311.bin" "build/capture/Z_8_0403.bin" --features precapture
+python verify.py "/path/to/Z_8_0311.bin" "build/capture/Z_8_0403.bin" --features precapture --version 04.03 --tag p0
 
 # 本地重新生成普通菜单控制配置
 python configure.py --output build/config-menu

@@ -2,6 +2,16 @@
 
 2026-10-18. Public input support remains **official Nikon Z8 C 3.11**. Recorded implementation tests, public-source regression and installation of a newly generated package are distinct evidence.
 
+## Precompiled distribution update
+
+The release changes code delivery and offline validation, without changing the reviewed ARM64 patch or its feature recipes. The 30,301-byte pre-capture module retains SHA-256 `479f4e37db3968a9e796fc97d865246793ebbac83b28f10a95711535c45cb715`. The original implementation evidence below is retained from source commit `d155b8b183e359140ac36147297f33707b9374e5`; its hash-bound summary is preserved in [implementation validation](validation-implementation-v3.json). Native execution, image decoding and camera tests were not repeated for this packaging change.
+
+Current distribution regression compares prebuilt and explicit-source full outputs for all three feature selections, at both `04.03.p0` and custom `17.42.x7`. Default builds run with an empty executable search path to catch accidental compiler use. The official `04.03.p0` combined output remains identical to the preceding public build. Separate checks cover wrong requested version/tag/features, modified input with a repaired envelope, changed hooks/code/shared loader, unrelated edits, version opcodes, trailer/module names, missing/truncated/corrupted prebuilt code, and an explicit source build without any prebuilt asset. The ProRes and feature/configuration regression suites are also rerun.
+
+The public builder and independent verifier now require the exact official input hash. Prior compatible-input model work below remains historical implementation evidence; it is not a supported way to use the current public CLI. Both delivery modes verify the requested options and every allowed edit, not a candidate's own self-reported digest. Release packaging has a fixed member allowlist and an independent source/archive checker; it excludes complete firmware and original photos. Detailed results and host scope are in the [current validation summary](validation-summary.json). Full integration was tested on macOS; Windows/Linux full firmware builds have not been independently run.
+
+本次更新只改变分发、构建和离线验证，预拍摄机器码及功能配方保持相同。此前 `d155b8b` 的原指令执行、像素／文件检查和相机观察作为既有实现证据保留，原始摘要单独存档；没有为了打包变化重复全部仿真和图像解码。当前回归比较三种功能组合、两组版本／tag 的源码与预编译完整输出，并覆盖错误声明、合法封装下的非法修改、缺失或损坏机器码、源码独立构建及既有功能检查。默认构建测试清空 PATH，确保未暗中调用编译器。当前公开 CLI 严格拒绝非官方输入；下文的兼容修改输入试验只属于历史实现证据。此次发布没有安装相机或写卡，也没有新增上机认证。
+
 ## Hardware observations
 
 The current implementation was tested on a camera with the ordinary Image quality menu controlling C15/C30. File type, JPEG grade and ★ selection matched the menu in these groups:

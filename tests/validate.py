@@ -96,15 +96,16 @@ def main():
     custom = Package(custom_packet)
     changed,metadata = build(custom.eg,'04.07','p0')
     output,_ = custom.replace_eg(changed,'eg2070_0407p0.bi')
-    record = verify_pair(custom_packet,output)
-    results.append(dict(test='custom table bytes preserved; custom major/minor version 04.07',**record))
+    reject('modified input is outside public support even when locally preserved',
+           lambda: verify_pair(custom_packet,output), 'official Nikon Z8 C 3.11 SHA-256')
     for site in [0x14E5000,0x2400000,0x3E00000]:
         check(changed[site:site+4] == sentinel[site:site+4],'Input table changed')
 
     # Repair all envelopes, then ensure independent verifier still rejects an unrelated byte edit.
-    bad = bytearray(changed);bad[0x14E5000] ^= 1
-    tampered,_ = custom.replace_eg(crc(bad),'eg2070_0407p0.bi')
-    reject('repaired CRC/SHA1 with unrelated changed byte',lambda:verify_pair(custom_packet,tampered),'outside declared')
+    clean_changed,_ = build(package.eg,'04.07','p0')
+    bad = bytearray(clean_changed);bad[0x14E5000] ^= 1
+    tampered,_ = package.replace_eg(crc(bad),'eg2070_0407p0.bi')
+    reject('repaired CRC/SHA1 with unrelated changed byte',lambda:verify_pair(data,tampered),'outside declared')
 
     check(a.stock.read_bytes() == data,'Stock input changed')
     result = dict(status='PASS',tests=results,

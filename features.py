@@ -35,8 +35,9 @@ def compatibility(eg, features):
     return profiles, old_identity
 
 
-def build(eg, version, tag, features, compiler='clang'):
+def build(eg, version, tag, features, compiler='clang', code_source='prebuilt'):
     features = selected_features(features)
+    require(code_source in ('prebuilt', 'source'), 'Select prebuilt or source code')
     profiles, old_identity = compatibility(eg, features)
     public_words(version)
     require(re.fullmatch(r'[a-z][0-9]', tag), 'Tag must be a lowercase letter and digit')
@@ -64,8 +65,8 @@ def build(eg, version, tag, features, compiler='clang'):
                     sha(e['new']) == row['new_sha256'], 'ProRes differs from the reviewed recipe')
             add(at, e['new'], row['purpose'], 'prores')
     if 'precapture' in features:
-        from z8precapture.patcher import compile_code, edits as raw_edits
-        code, details['precapture'] = compile_code(compiler)
+        from z8precapture.patcher import compile_code, prebuilt_code, edits as raw_edits
+        code, details['precapture'] = prebuilt_code() if code_source == 'prebuilt' else compile_code(compiler)
         for e in raw_edits(code):
             add(e['offset'], e['new'], e['purpose'], 'precapture')
     text = f'{version}.{tag}'.encode()

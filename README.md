@@ -12,11 +12,15 @@ Build a local Nikon Z8 firmware update with the features you select:
 
 **Experimental firmware — install at your own risk.** A successful build or test does not guarantee safe operation. Installation or use may cause lost images, corrupted cards, camera malfunction or permanent camera damage. You must assess and accept these risks before installing. To the extent permitted by applicable law, the repository, its authors and contributors provide no warranty and accept no liability for data loss, camera damage or other losses caused by building, installing or using the output. Do not use it for irreplaceable work. See [LICENSE](LICENSE) and [NOTICE.md](NOTICE.md).
 
-The publicly supported input is **official Nikon Z8 C 3.11**. Download it yourself from [Nikon](https://downloadcenter.nikonimglib.com/en/download/fw/606.html), subject to Nikon's terms. This repository distributes **no firmware, RAW files or prebuilt patch binaries**. It contains source, compatibility fingerprints and the existing menu screenshots. Output firmware is generated locally. The tool does not copy files to a card or operate a camera.
+The publicly supported input is **official Nikon Z8 C 3.11**. Download it yourself from [Nikon](https://downloadcenter.nikonimglib.com/en/download/fw/606.html), subject to Nikon's terms. The source repository contains code, compatibility fingerprints and the existing menu screenshots. **Releases also provide the reviewed precompiled patch, with its corresponding source. No original or modified complete firmware, or RAW photos, are distributed.** Output firmware is generated locally. The tool does not copy files to a card or operate a camera.
 
 ### Build
 
-Requires Python 3.10+ and the pinned Python dependency. RAW pre-capture also requires Clang with the AArch64 target. The reviewed compiler is **Apple clang 21.0.0 (clang-2100.1.1.101)**. Another compiler is accepted only if it generates the identical reviewed patch bytes; otherwise the build stops. Use `--compiler /path/to/clang` to select it. ProRes-only does not require Clang.
+Download and extract **[NikonFirmwarePatch-v0.1.0-toolkit.zip](https://github.com/XinmiaoZhao/NikonFirmwarePatch/releases/download/v0.1.0/NikonFirmwarePatch-v0.1.0-toolkit.zip)** from the [Release](https://github.com/XinmiaoZhao/NikonFirmwarePatch/releases/tag/v0.1.0). Use the toolkit asset, which includes `resources/precapture.bin`; GitHub's automatically generated source archives and a Git clone contain source only. The toolkit release number is unrelated to the output firmware version you choose.
+
+Requires Python 3.10+ and the pinned Python dependency. **The default prebuilt mode does not need Clang.** It checks the bundled machine code against the published size and SHA-256 before applying it. Missing or incorrect code stops the build; there is no automatic download, compilation fallback or force option. ProRes patches continue to be generated in Python and checked against their unchanged recipe.
+
+Run the commands below from the extracted toolkit directory. On Windows, create the environment with `py -3 -m venv .venv` and activate it in PowerShell with `.\.venv\Scripts\Activate.ps1`, then use the same `python` commands. The macOS/Linux activation commands are shown below. Full firmware integration tests for this release ran on macOS; Windows/Linux complete builds have not yet been independently exercised.
 
 ```sh
 python3 -m venv .venv
@@ -35,8 +39,16 @@ python patch.py "/path/to/Z_8_0311.bin" --features prores precapture --version 0
 python patch.py "/path/to/Z_8_0311.bin" --interactive --version 04.03 --output build/chosen
 
 # Independent verification of the combined build
-python verify.py "/path/to/Z_8_0311.bin" "build/combined/Z_8_0403.bin" --features prores precapture
+python verify.py "/path/to/Z_8_0311.bin" "build/combined/Z_8_0403.bin" --features prores precapture --version 04.03 --tag p0
 ```
+
+Developers can explicitly compile from the corresponding source, including from a source-only checkout:
+
+```sh
+python patch.py "/path/to/Z_8_0311.bin" --features prores precapture --version 04.03 --code-source source --compiler clang --output build/from-source
+```
+
+The reviewed compiler is **Apple clang 21.0.0 (clang-2100.1.1.101)** with the AArch64 target. Another toolchain is accepted only if the compiled bytes and entry addresses match the reviewed recipe. `--compiler` requires `--code-source source`; it does not silently switch the default mode. Source and prebuilt modes use the same patch bytes and independent verifier. See [release contents and verification](docs/releases.md).
 
 Without `--features` or `--interactive`, the legacy ProRes-only behavior is retained. `--version` accepts `NN.NN`; the example is not a required version. Choose a number higher than both the input and the firmware installed on your camera. The tool checks only the input version, not the camera. `--tag` is an optional lowercase letter and digit, default `p0`. A changed version number does not add compatibility or guarantee that the camera will accept an update. Downgrade/recovery is not guaranteed.
 
@@ -64,7 +76,9 @@ These screenshots show the firmware UI in an emulator, not a camera recording te
 
 ### Verification and scope
 
-The package has five modules and is 99,051,117 bytes. Input checks cover module identities, integrity, required code/data regions and patch-window fingerprints. Output verification independently checks the selected recipes, their shared loader edit, version fields and all bytes outside the declared windows. No force/bypass switch is provided. Selecting an already-applied or conflicting feature is rejected. Only the official 3.11 input is publicly supported; passing regional checks on another input is not a support or safety guarantee.
+The package has five modules and is 99,051,117 bytes. Both the builder and independent verifier require the exact official C 3.11 input SHA-256, then check its container and dependency fingerprints. Modified and previously patched inputs are rejected. Output verification checks selected patch bytes, the approved shared loader, version instructions and strings, module identity, recalculated integrity fields, and every byte outside the allowed edits. The builder passes the requested features, version and tag explicitly to the verifier.
+
+A fixed whole-output hash applies only to a fixed input, feature selection, version and tag. Custom outputs are checked against the published per-feature recipes and identity rules. Their locally generated hashes identify the files for later readback; a locally generated hash alone is not proof of a correct build. When running `verify.py` separately, supply `--features`, `--version` and `--tag` to check your intended options. Omitting them checks detected features and consistent identity and reports that distinction.
 
 Hardware records for the current implementation contain **328 C15/C30 HE NEFs: 256 historical and 72 full-press/post-release frames**, plus an ordinary single-shot regression. All 328 passed file checks and complete Adobe DNG Converter 18.1.1 decoding, including full-size embedded previews. Menu tests covered RAW, RAW+JPEG fine/basic/fine★ and JPEG normal★; all six JPEG grades and the menu-setting composition also have bounded machine-code coverage.
 
@@ -73,6 +87,8 @@ Frame correspondence was checked by automated image comparison, supplemented by 
 ```sh
 python tests/validate.py --stock "/path/to/Z_8_0311.bin" --report build/prores-tests.json
 python tests/validate_features.py --stock "/path/to/Z_8_0311.bin" --report build/feature-tests.json
+# Developer equivalence tests also need the reviewed compiler
+python tests/validate_distribution.py --stock "/path/to/Z_8_0311.bin" --compiler clang --report build/distribution-tests.json
 python tools/check_repository.py --staged
 ```
 
@@ -98,11 +114,15 @@ Thanks to [RdWing/z8-qemu](https://github.com/RdWing/z8-qemu) for its Z8 emulati
 
 **这是测试版固件，上机风险由使用者自行衡量和承担。** 构建、校验或既有测试通过不保证安全。安装或使用可能导致照片丢失、存储卡损坏、相机故障乃至永久损坏。在适用法律允许的范围内，本仓库及其作者、贡献者不作任何担保，不对构建、安装或使用本项目产物造成的数据损失、相机损失或其他损失承担责任。请勿用于不可重拍的重要工作。详见 [LICENSE](LICENSE) 和 [NOTICE.md](NOTICE.md)。
 
-公开支持范围仅为**官方 Nikon Z8 C 3.11 固件**。请自行从 [Nikon 下载中心](https://downloadcenter.nikonimglib.com/en/download/fw/606.html)获取并遵守其条款。仓库**不提供固件本身、原始照片或预编译补丁二进制**，只提供源码、兼容性指纹及原有菜单截图。固件在本地生成；脚本不会自动写卡或操作相机。
+公开支持范围仅为**官方 Nikon Z8 C 3.11 固件**。请自行从 [Nikon 下载中心](https://downloadcenter.nikonimglib.com/en/download/fw/606.html)获取并遵守其条款。代码库提供源码、兼容性指纹及原有菜单截图；**Release 另提供已审阅的预编译补丁及对应源码，不提供原厂或修改后的完整固件，也不提供原始照片。** 完整固件在用户本地生成；脚本不会自动写卡或操作相机。
 
 ### 构建
 
-需要 Python 3.10+ 和固定的 Python 依赖。预拍摄功能还需支持 AArch64 的 Clang；当前审阅的编译器是 **Apple clang 21.0.0 (clang-2100.1.1.101)**。其他编译器只有生成完全相同的已审阅补丁字节才会被接受，否则停止构建。可用 `--compiler /path/to/clang` 指定。仅构建 ProRes 不需要 Clang。
+从 [Release 页面](https://github.com/XinmiaoZhao/NikonFirmwarePatch/releases/tag/v0.1.0)下载并解压 **[NikonFirmwarePatch-v0.1.0-toolkit.zip](https://github.com/XinmiaoZhao/NikonFirmwarePatch/releases/download/v0.1.0/NikonFirmwarePatch-v0.1.0-toolkit.zip)**。请选这个完整工具包：其中含 `resources/precapture.bin`；GitHub 自动生成的 Source code 压缩包和 Git 克隆只有源码。工具包版本与用户选择的固件版本号无关。
+
+需要 Python 3.10+ 和固定的 Python 依赖。**默认使用预编译机器码，不需要 Clang。** 应用前核对机器码大小及公开 SHA-256；缺失或不符立即停止，不自动下载、不回退编译，也没有强制跳过选项。ProRes 仍由 Python 生成修改字节并匹配原有配方。
+
+在解压后的工具包目录运行以下命令。Windows 可用 `py -3 -m venv .venv` 创建环境，在 PowerShell 中用 `.\.venv\Scripts\Activate.ps1` 激活，然后运行相同的 `python` 命令。下方展示 macOS／Linux 的激活方式。本次完整固件集成测试运行于 macOS；尚未独立实测 Windows／Linux 上的完整构建。
 
 ```sh
 python3 -m venv .venv
@@ -121,8 +141,16 @@ python patch.py "/path/to/Z_8_0311.bin" --features prores precapture --version 0
 python patch.py "/path/to/Z_8_0311.bin" --interactive --version 04.03 --output build/chosen
 
 # 独立核验组合包
-python verify.py "/path/to/Z_8_0311.bin" "build/combined/Z_8_0403.bin" --features prores precapture
+python verify.py "/path/to/Z_8_0311.bin" "build/combined/Z_8_0403.bin" --features prores precapture --version 04.03 --tag p0
 ```
+
+开发者可显式选择源码编译，只有源码的克隆也可以这样使用：
+
+```sh
+python patch.py "/path/to/Z_8_0311.bin" --features prores precapture --version 04.03 --code-source source --compiler clang --output build/from-source
+```
+
+当前审阅的编译器是支持 AArch64 的 **Apple clang 21.0.0 (clang-2100.1.1.101)**。其他工具链只有生成完全相同的补丁字节和入口地址才会被接受。`--compiler` 必须配合 `--code-source source`，不会暗中切换默认模式。两条路径使用相同补丁和独立验证器，详见[发布包与验证说明](docs/releases.md)。
 
 未指定 `--features` 或 `--interactive` 时，保留原先只添加 ProRes 的行为。`--version` 接受 `NN.NN`；示例不是规定版本。输出号必须高于输入号，安装时还须高于机身当前版本。脚本只能检查输入包，不读取机身版本。`--tag` 为一个小写字母加一位数字，默认 `p0`。改变版本号不代表支持其他固件布局，也不保证相机受理更新；不保证可以降级或恢复。
 
@@ -144,7 +172,9 @@ python verify.py "/path/to/Z_8_0311.bin" "build/combined/Z_8_0403.bin" --feature
 
 ### 核验与支持边界
 
-支持的更新包为五模块、99,051,117 字节。输入检查包括模块身份、封装完整性、依赖代码／数据和补丁窗口指纹；独立输出核验检查所选补丁、共同的装载范围、版本字段及所有窗口外字节。没有强制绕过选项；重复选择已应用或冲突的功能会被拒绝。公开支持仅限官方 3.11，其他输入即使通过局部指纹检查，也不代表兼容性或上机安全承诺。
+支持的更新包为五模块、99,051,117 字节。构建器与独立验证器都强制要求官方 C 3.11 的整包 SHA-256，再检查封装、依赖和修改位置指纹；修改过的输入或旧补丁产物会被拒绝。输出检查覆盖所选补丁字节、允许的共享装载修改、版本指令与字符串、模块名、重算的校验字段，以及修改范围之外的每个字节。构建器明确传入用户指定的功能、版本和 tag，独立核对输出是否符合选择。
+
+固定整包哈希只适用于输入、功能组合、版本和 tag 全部固定的构建。自定义产物通过公开功能配方及版本规则核验；本地产生的哈希用于后续读回确认，不能单凭“生成了哈希”证明构建正确。单独运行 `verify.py` 时，传入 `--features`、`--version`、`--tag` 可核对预期选项；省略时检查实际检测出的功能和版本一致性，报告会区分两者。
 
 当前实现的上机记录包含 **328 张 C15／C30 HE NEF：256 张历史帧、72 张全按当帧及后拍帧**，另有普通单拍回归。328 张全部文件检查和 Adobe DNG Converter 18.1.1 完整解码通过，均带全尺寸内嵌预览。菜单上机覆盖 RAW、RAW+JPEG fine／basic／fine★ 及 JPEG normal★；六档 JPEG 和菜单三项组合另有原指令限定执行覆盖。
 
@@ -153,6 +183,8 @@ python verify.py "/path/to/Z_8_0311.bin" "build/combined/Z_8_0403.bin" --feature
 ```sh
 python tests/validate.py --stock "/path/to/Z_8_0311.bin" --report build/prores-tests.json
 python tests/validate_features.py --stock "/path/to/Z_8_0311.bin" --report build/feature-tests.json
+# 开发者等价性测试另需已审阅编译器
+python tests/validate_distribution.py --stock "/path/to/Z_8_0311.bin" --compiler clang --report build/distribution-tests.json
 python tools/check_repository.py --staged
 ```
 

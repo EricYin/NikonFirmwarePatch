@@ -33,6 +33,12 @@ def require(condition, message):
         raise ValueError(message)
 
 
+def require_official_input(raw):
+    profile = json.loads((RESOURCES / 'input.json').read_text())
+    require(len(raw) == profile['bytes'] and sha(raw) == profile['sha256'],
+            'Input must match the official Nikon Z8 C 3.11 SHA-256; modified inputs are not supported')
+
+
 def recover_tables(encoded):
     """Recover an equivalent XOR factorization without shipping reference tables.
 

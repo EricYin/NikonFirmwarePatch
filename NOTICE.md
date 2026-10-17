@@ -2,15 +2,15 @@
 
 Copyright (C) 2026 NikonFirmwarePatch contributors.
 
-The original tool source is licensed under **GPL-3.0-only**; see [LICENSE](LICENSE). This license does not grant rights to user-supplied Nikon firmware. Output licensing depends on its contents, including any generated code; the complete output firmware is not represented as a GPL-licensed distribution. See [GNU's explanation of program output](https://www.gnu.org/licenses/gpl-faq.en.html#WhatCaseIsOutputGPL).
+The original tool source and the precompiled patch built from it are licensed under **GPL-3.0-only**; see [LICENSE](LICENSE). This license does not grant rights to user-supplied Nikon firmware. Output licensing depends on its contents, including any generated code; the complete output firmware is not represented as a GPL-licensed distribution. See [GNU's explanation of program output](https://www.gnu.org/licenses/gpl-faq.en.html#WhatCaseIsOutputGPL).
 
 ## References and dependencies
 
 - The Nikon package XOR indexing format was studied with reference to [Nikon Hacker's Package.cs](https://github.com/simeonpilgrim/nikon-firmware-tools/blob/main/Nikon-Patch/LocalUI/Package.cs). This repository includes neither that C# source nor its lookup tables. The implementation recovers equivalent parameters from the user-supplied package.
 - [Capstone 5.0.7](https://github.com/capstone-engine/capstone/tree/5.0.7) is installed separately to inspect generated ARM64 instructions. Its code and runtime are not bundled here; its license is available in [LICENSE.TXT](https://github.com/capstone-engine/capstone/blob/5.0.7/LICENSE.TXT).
-- [Clang/LLVM](https://clang.llvm.org/) is an external build dependency for the pre-capture C source. No compiler or runtime is bundled.
+- [Clang/LLVM](https://clang.llvm.org/) is an optional external dependency for explicit pre-capture source builds and release preparation. The default Release toolkit uses the reviewed precompiled patch. No compiler or runtime is bundled.
 
-The compatibility profile contains hashes and layout parameters, not firmware contents. New patch instructions are generated from source; menu structures and text are read from the user's input.
+The compatibility profile contains hashes and layout parameters, not firmware contents. The Release toolkit includes only the pre-capture code and constants compiled from the corresponding published C source, plus the complete tool source, build scripts and license. No Nikon input image or complete patched output is included. Other patch instructions are generated from source; menu structures and text are read from the user's input. The release manifest binds the source commit, compiler recipe and individual files.
 
 The screenshots document the firmware interface running in an emulator. The tool's source-code license does not relicense the depicted firmware interface.
 
