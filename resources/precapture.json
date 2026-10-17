@@ -1,13 +1,17 @@
 {
-  "id": "z8-c311-precapture-v2",
+  "id": "z8-c311-precapture-v3",
   "payload_bytes": 81807711,
-  "code_bytes": 25485,
-  "code_sha256": "1934f00fa3fbc75fceede6d24db07a03a5fffeada6b8e86e640bbadf479e8ef5",
+  "code_bytes": 30301,
+  "code_sha256": "479f4e37db3968a9e796fc97d865246793ebbac83b28f10a95711535c45cb715",
   "entries": {
     "precapture_history_entry": "0x40960000",
-    "precapture_tdec_release": "0x40960304",
-    "precapture_write_file": "0x40960edc",
-    "precapture_main_rc": "0x40960da0"
+    "precapture_tdec_release": "0x40960484",
+    "precapture_write_file": "0x40961ea4",
+    "precapture_main_rc": "0x40961d64",
+    "precapture_current_entry": "0x4096044c",
+    "precapture_y_size_entry": "0x40967140",
+    "precapture_y_alloc_entry": "0x40967148",
+    "precapture_main_step": "0x409616c4"
   },
   "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)",
   "compiler_flags": [
@@ -180,6 +184,78 @@
       "end": "0x4cfb000",
       "purpose": "JPEG rate-control tables, jump table and NEF-preview quality pair",
       "sha256": "9f5f97f355d9c41d3bca1b34765e3d5aa8273db636916f7797d77fd358d09279"
+    },
+    {
+      "start": "0xd49f3c",
+      "end": "0xd49fe4",
+      "purpose": "output-resource allocation step and x23 contract",
+      "sha256": "f1bb0bc933c1bf8ab2c515ae8866a407e451adbaa6b04bb0eb79b7797700aebc"
+    },
+    {
+      "start": "0xee5000",
+      "end": "0xeee000",
+      "purpose": "output-resource capacity, pool allocation and layout",
+      "sha256": "4ea96a6c5b09007bdd7381d18595362a63c3789446823795054370bbad24fa10"
+    },
+    {
+      "start": "0xf00780",
+      "end": "0xf00c00",
+      "purpose": "preview descriptor initialization",
+      "sha256": "959ed2d7c2e080a3361f032e1123fde95b17f417348d6d471f3c755d5f3e8f88"
+    },
+    {
+      "start": "0xd22090",
+      "end": "0xd22400",
+      "purpose": "JPEG engine interface",
+      "sha256": "525ac94e73e9f593376802f46e5045dab1f9b22f19cf09ff2c53c40fb5274e21"
+    },
+    {
+      "start": "0xd58800",
+      "end": "0xd58900",
+      "purpose": "JPEG channel locking",
+      "sha256": "cfc1d9c50e84152c76d62c6b20a018b075316f7508aca5d53f93464f201ea1ea"
+    },
+    {
+      "start": "0x47add4",
+      "end": "0x47aed4",
+      "purpose": "ordinary Image quality menu composer",
+      "sha256": "1205c4d3969478d1852538928cf8b992990a47a5c0269c8e94c468ec5433884c"
+    },
+    {
+      "start": "0xef9000",
+      "end": "0xef9200",
+      "purpose": "image format and preview reuse helpers",
+      "sha256": "dca1f608066ce0de4dde3378b4b47c1ff2c837a12c07578fcd8f7843f25a9562"
+    },
+    {
+      "start": "0x3ec44c8",
+      "end": "0x3ec4618",
+      "purpose": "settings group layout for Image quality",
+      "sha256": "19fe6e81f230f1abc7c2616442ae72e81319cd9befc94757b8e7f5573b2194a6"
+    },
+    {
+      "start": "0x3eabbf8",
+      "end": "0x3eabc10",
+      "purpose": "Image quality file type/grade/star setting 4",
+      "sha256": "82ab01bf6ae06cf2486d0d1d5075072c8c0d167a4681f4f4121e82284850f413"
+    },
+    {
+      "start": "0x3eabc10",
+      "end": "0x3eabc28",
+      "purpose": "Image quality file type/grade/star setting 5",
+      "sha256": "bd081f4c065e974d549984cbe92f5bf9ab751d3ce601fe24056e0accaa1c2dee"
+    },
+    {
+      "start": "0x3eabc28",
+      "end": "0x3eabc40",
+      "purpose": "Image quality file type/grade/star setting 6",
+      "sha256": "82698c6bee251e88fc89d70e381294e179355ceb69e574dd0427fcafcad9bd09"
+    },
+    {
+      "start": "0x4d2f60c",
+      "end": "0x4d2ffc0",
+      "purpose": "output-resource capacity table",
+      "sha256": "78396da154bba60a3a2067f26b6d04bfa7686e3130bd20d4605482232672f932"
     }
   ],
   "patches": [
@@ -193,23 +269,58 @@
     {
       "offset": "0xd4915c",
       "bytes": 12,
-      "purpose": "retain compressed historical frames",
+      "purpose": "retain compressed frames and apply menu quality",
       "old_sha256": "95109b212f615942ee0df7b74ed5f197426d467e48d761af60ec4142b02f0b35",
-      "new_sha256": "bccae67c4bf8ff7afcd996333f60a985c503172b1643ba22956405ffec55fded"
+      "new_sha256": "e9803fa02b4e6117dfe34301043dec5909328e20f118ea8c38dd6e889fbea559"
     },
     {
       "offset": "0xd43638",
       "bytes": 4,
-      "purpose": "register and write NEF with the stock writer",
+      "purpose": "register and write NEF with stock writer",
       "old_sha256": "ac25b5a993ee70328996e6c4981cce939b6bfec6a2e4e6e8504fd8c9920b2f95",
-      "new_sha256": "8f214c27e03f4a26af49f5a53663e5244f18c8eeebdb88c6b227e70d6774c1fd"
+      "new_sha256": "e271a1e40ad5b28aed30692835a8fb2e6795d4ccaab77ab3125f7561b7a2731a"
     },
     {
       "offset": "0xd4eb60",
       "bytes": 4,
-      "purpose": "RAW-only full-size preview quality",
+      "purpose": "RAW-only preview quality",
       "old_sha256": "33fed37b30517aeec754863a31016ac367fb2934fe6489976294ccc3da654bbc",
-      "new_sha256": "fe3e98aa1b7d3780452deb1721cd783b2381ab2a325c658193b1b4a73bcb0c66"
+      "new_sha256": "3738972c75df894268f9ab76aad183a081011335194d639727da1cd5f6471419"
+    },
+    {
+      "offset": "0xe0ff38",
+      "bytes": 4,
+      "purpose": "full-press and post-release frame submission",
+      "old_sha256": "83957af20d60d0e60522f4fa7bd82e7769aa59eaac1f144d333ee70251cf94c7",
+      "new_sha256": "13efd0100016942192f5e0fc41a65e51a43ca8c44d6398ef8e660e617e88335e"
+    },
+    {
+      "offset": "0xee8e1c",
+      "bytes": 4,
+      "purpose": "capacity for separate NEF preview",
+      "old_sha256": "0c75d9ea2e49d4ca6a42410494a353bbab87cc2baa4d0d73f7ebe79ed1edf1f0",
+      "new_sha256": "5e353cf65bc1d30643129a17dccba64f2cfa2b566b86d561fda5cdae2cc321ea"
+    },
+    {
+      "offset": "0xd49fac",
+      "bytes": 4,
+      "purpose": "allocate and lay out separate NEF preview",
+      "old_sha256": "97dba574f77f0b493a416a9a11d49878808d1143cae14bc48b0936ecc55141b0",
+      "new_sha256": "d7546a5f3685ae7a6c835854e158e370489256d726124bc2ddc9422bdb309fda"
+    },
+    {
+      "offset": "0xd4eeec",
+      "bytes": 4,
+      "purpose": "encode separate NEF preview, pipeline 0",
+      "old_sha256": "ea90a6be6c2e651e73138ffbb5ccc1ae971c373669ab2a772eb9dafe89d625d5",
+      "new_sha256": "0518ad89daf83791f3d319eab4e12a5294da97faaf7f83e54d854ecaea842d79"
+    },
+    {
+      "offset": "0xd4ef10",
+      "bytes": 4,
+      "purpose": "encode separate NEF preview, pipeline 1",
+      "old_sha256": "cc0029408ed88a750ff669546d54fb80155c4552695a925098cfb925e0987b45",
+      "new_sha256": "07cc96942a2b4797b848bb67e0c7217f3d06d7b37a3c98c0c0c2bfd000d5cb46"
     },
     {
       "offset": "0x4d2ffc0",
@@ -227,10 +338,10 @@
     },
     {
       "offset": "0x800000",
-      "bytes": 25485,
-      "purpose": "compiled pre-capture code and constants",
-      "old_sha256": "3f320690e5b7982e24e87a75f3e083bbe08f14f6274b96447771b72067ff69bd",
-      "new_sha256": "1934f00fa3fbc75fceede6d24db07a03a5fffeada6b8e86e640bbadf479e8ef5"
+      "bytes": 30301,
+      "purpose": "compiled capture code and constants",
+      "old_sha256": "880c6b30eddbc5a8915cdf019e50e78c5052eb7b00d4d3cb3b30f3354dd40c98",
+      "new_sha256": "479f4e37db3968a9e796fc97d865246793ebbac83b28f10a95711535c45cb715"
     },
     {
       "offset": "0x1024d8c",
@@ -245,7 +356,7 @@
     "b1a236384039ff913578cca24bf8cf646780acfa87170ec379cc7ba001c8ecd2"
   ],
   "source_sha256": {
-    "firmware.c": "fc1ccbfc6a6d4ef4e2217e0b129da8de3327587982e0d8c6a0e20b7c806d8aeb",
+    "firmware.c": "236087f6a331c7dc1949e78b5e9444b2a682b78881cdb4834fbf29777ef99422",
     "crc32_table.inc": "fe021e684d78717732adddb6c9dde91f6fc6918f18cb0aeccfb349db5511a515"
   }
 }
