@@ -1,12 +1,13 @@
 {
-  "id": "z8-c311-precapture-v1",
+  "id": "z8-c311-precapture-v2",
   "payload_bytes": 81807711,
-  "code_bytes": 21229,
-  "code_sha256": "0cc0416840a179a5c36fbcfdbfb451e6d8723467658d50dcbcd1645393168903",
+  "code_bytes": 25485,
+  "code_sha256": "1934f00fa3fbc75fceede6d24db07a03a5fffeada6b8e86e640bbadf479e8ef5",
   "entries": {
     "precapture_history_entry": "0x40960000",
     "precapture_tdec_release": "0x40960304",
-    "precapture_writer_file_done": "0x40960dd0"
+    "precapture_write_file": "0x40960edc",
+    "precapture_main_rc": "0x40960da0"
   },
   "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)",
   "compiler_flags": [
@@ -143,6 +144,42 @@
       "end": "0x4d2ffd0",
       "purpose": "compressed allocation requests",
       "sha256": "540e3e29ec386f747b3754136dde1bf67ba9628f89f2a60d8635f4e8f44db0e7"
+    },
+    {
+      "start": "0x560000",
+      "end": "0x570000",
+      "purpose": "stock still-image writer and segment/attribute helpers",
+      "sha256": "d7538afb6d1ce25e98cc9023f12b0069f0b76e3313d2d30e48a557ac60bace9d"
+    },
+    {
+      "start": "0x6fa000",
+      "end": "0x716000",
+      "purpose": "stock file database and creation-lock interfaces",
+      "sha256": "b268ccbbaa3d21ebea1c49f7a08ef3b56d9d739a39ab7748768a1a4fc83e177e"
+    },
+    {
+      "start": "0xd4e9f0",
+      "end": "0xd4fb00",
+      "purpose": "main JPEG and NEF-preview parameter builders",
+      "sha256": "e925ac24ec636a21014fa9564bf24c1e78429ba0d4f969abbbaf9b24b7683039"
+    },
+    {
+      "start": "0xd57318",
+      "end": "0xd579c0",
+      "purpose": "JPEG rate control and quantization",
+      "sha256": "755f47dc02afd321fbb01cfcfe08ec2b62467e31baf341a38926e0e4a3aa7ec4"
+    },
+    {
+      "start": "0xb19000",
+      "end": "0xb19100",
+      "purpose": "image size classifier",
+      "sha256": "8228215b485f0ceeb95df36066eef867694e14de62cd9b8462fe0af8f986c082"
+    },
+    {
+      "start": "0x4cdb000",
+      "end": "0x4cfb000",
+      "purpose": "JPEG rate-control tables, jump table and NEF-preview quality pair",
+      "sha256": "9f5f97f355d9c41d3bca1b34765e3d5aa8273db636916f7797d77fd358d09279"
     }
   ],
   "patches": [
@@ -161,11 +198,18 @@
       "new_sha256": "bccae67c4bf8ff7afcd996333f60a985c503172b1643ba22956405ffec55fded"
     },
     {
-      "offset": "0xd4367c",
+      "offset": "0xd43638",
       "bytes": 4,
-      "purpose": "save NEF after matching JPEG",
-      "old_sha256": "3d9e4dfbe53894c443371a7c1d77baf47d9c0a1f9f8063629ec63f6e2d2fb545",
-      "new_sha256": "e1c501e7527d738be2d1f1c3b006962b58d872461ba700b9ae2238e6f702ae97"
+      "purpose": "register and write NEF with the stock writer",
+      "old_sha256": "ac25b5a993ee70328996e6c4981cce939b6bfec6a2e4e6e8504fd8c9920b2f95",
+      "new_sha256": "8f214c27e03f4a26af49f5a53663e5244f18c8eeebdb88c6b227e70d6774c1fd"
+    },
+    {
+      "offset": "0xd4eb60",
+      "bytes": 4,
+      "purpose": "RAW-only full-size preview quality",
+      "old_sha256": "33fed37b30517aeec754863a31016ac367fb2934fe6489976294ccc3da654bbc",
+      "new_sha256": "fe3e98aa1b7d3780452deb1721cd783b2381ab2a325c658193b1b4a73bcb0c66"
     },
     {
       "offset": "0x4d2ffc0",
@@ -183,10 +227,10 @@
     },
     {
       "offset": "0x800000",
-      "bytes": 21229,
+      "bytes": 25485,
       "purpose": "compiled pre-capture code and constants",
-      "old_sha256": "1d8e1fc79aef05524fdd0b1e11fa1a188ea7061f1b3789e3221ec53b84935344",
-      "new_sha256": "0cc0416840a179a5c36fbcfdbfb451e6d8723467658d50dcbcd1645393168903"
+      "old_sha256": "3f320690e5b7982e24e87a75f3e083bbe08f14f6274b96447771b72067ff69bd",
+      "new_sha256": "1934f00fa3fbc75fceede6d24db07a03a5fffeada6b8e86e640bbadf479e8ef5"
     },
     {
       "offset": "0x1024d8c",
@@ -201,7 +245,7 @@
     "b1a236384039ff913578cca24bf8cf646780acfa87170ec379cc7ba001c8ecd2"
   ],
   "source_sha256": {
-    "firmware.c": "71bc565f8c62b46d6698f1bdb664d16778cf4b91dc280b1dc1c301b4cb491492",
+    "firmware.c": "fc1ccbfc6a6d4ef4e2217e0b129da8de3327587982e0d8c6a0e20b7c806d8aeb",
     "crc32_table.inc": "fe021e684d78717732adddb6c9dde91f6fc6918f18cb0aeccfb349db5511a515"
   }
 }

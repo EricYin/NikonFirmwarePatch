@@ -23,10 +23,12 @@ def main():
     group.add_argument('--interactive', action='store_true', help='Choose ProRes, RAW pre-capture, or both')
     ap.add_argument('--compiler', default='clang', help='Clang executable for pre-capture; output must match the reviewed recipe')
     ap.add_argument('--output', type=Path, help='New output directory; must not already exist')
+    ap.add_argument('--capture-mode', choices=['raw-jpeg', 'raw-only'],
+                    help='Pre-capture configuration: raw-jpeg (default), or raw-only with full-size embedded preview')
     a = ap.parse_args()
     if not a.check and (not a.version or not a.output):
         ap.error('Building requires --version and --output; use --check for read-only inspection')
-    if a.check and (a.output or a.version or a.tag != 'p0' or a.interactive):
+    if a.check and (a.output or a.version or a.tag != 'p0' or a.interactive or a.capture_mode):
         ap.error('--check cannot be combined with output options')
     if a.interactive:
         print('1: ProRes quality / ProRes 画质\n2: HE RAW pre-capture / HE RAW 预拍\n3: Both / 两项同时启用')
@@ -34,6 +36,8 @@ def main():
         require(choice in ('1', '2', '3'), 'Select 1, 2 or 3')
         a.features = {'1': ['prores'], '2': ['precapture'], '3': ['prores', 'precapture']}[choice]
     selected = a.features or ['prores']
+    require(a.capture_mode is None or 'precapture' in selected, '--capture-mode requires the precapture feature')
+    a.capture_mode = a.capture_mode or 'raw-jpeg'
     require(a.firmware.is_file(), 'Input must be a regular firmware file')
     require(a.firmware.stat().st_size == PACKAGE_BYTES, 'Unsupported firmware length')
     if not a.check:
@@ -63,10 +67,10 @@ def main():
                                                   *RESOURCES.glob('*.json')]) if p.is_file() and p.suffix in ('.py','.c','.inc','.json')},
                   independent_verification=independent,
                   scope='Only selected patch windows, version fields and checksums changed; no camera test of this new output')
-    config = build_config() if 'precapture' in selected else None
+    config = build_config(capture_mode=a.capture_mode) if 'precapture' in selected else None
     if config is not None:
         report['configuration'] = dict(filename=CONFIG_NAME, sha256=sha(config), frames=30,
-                                       c15=True, c30=True, diagnostic_footer=False, budget_us=1500000)
+                                       capture_mode=a.capture_mode, format=2, c15=True, c30=True, diagnostic_footer=False, budget_us=1500000)
     # Create only after validation. Exclusive creation never replaces input or an earlier build.
     # On I/O failure the directory is kept, without a successful manifest, for inspection.
     a.output.mkdir(parents=True, exist_ok=False)

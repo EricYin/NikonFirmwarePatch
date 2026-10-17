@@ -56,7 +56,8 @@ def edits(code):
     values = {
         0xe0fe90: bl(0x40f6fe90, entries['precapture_history_entry']),
         0xd4915c: bytes.fromhex('e00317aa') + bl(0x40ea9160, entries['precapture_tdec_release']) + bytes.fromhex('1f2003d5'),
-        0xd4367c: bl(0x40ea367c, entries['precapture_writer_file_done']),
+        0xd43638: bl(0x40ea3638, entries['precapture_write_file']),
+        0xd4eb60: bl(0x40eaeb60, entries['precapture_main_rc']),
         0x4d2ffc0: struct.pack('<I', 0x1082600),
         0x4d2ffcc: struct.pack('<I', 0x1082600),
         0x800000: code,

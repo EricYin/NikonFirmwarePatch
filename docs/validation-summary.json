@@ -6,41 +6,92 @@
     "prores",
     "precapture"
   ],
+  "capture_modes": {
+    "raw-jpeg": {
+      "default": true,
+      "embedded_preview": [
+        1620,
+        1080
+      ],
+      "registered_playback": true
+    },
+    "raw-only": {
+      "embedded_preview": [
+        8256,
+        5504
+      ],
+      "registered_playback": true
+    }
+  },
+  "configuration_format": 2,
+  "previous_configuration_rejected": true,
   "prores_regression_checks": 16,
-  "feature_regression_checks": 23,
+  "feature_regression_checks": 36,
   "interactive_selection_verified": true,
-  "bounded_native_cases": 47,
-  "complete_nef_decodes": 15,
+  "same_firmware_for_both_capture_modes": true,
+  "bounded_native_cases": 107,
+  "defective_native_builds_rejected": 11,
+  "original_writer_cases": 10,
+  "defective_writer_builds_rejected": 3,
+  "nef_structure_checks": 55,
+  "complete_nef_decodes": 25,
   "corrupt_file_controls_rejected": 2,
   "archived_input_mosaics_equal": true,
   "diagnostic_filename_padding_zero": true,
-  "official_combined_boot_error_count": 0,
+  "compatible_input": {
+    "bounded_cases": 94,
+    "nef_files_byte_identical": 55,
+    "normalized_code_payload_package_match_hardware_reference": true,
+    "actual_package_byte_identical_to_hardware_reference": false
+  },
+  "qemu": {
+    "official_combined_build": true,
+    "ordinary_raw_still_saved": true,
+    "stock_preview_quantization": true,
+    "explicit_model_inputs": true,
+    "cpu_register_redirection": false,
+    "debugger_ram_patches": false,
+    "end_to_end_precapture_tested": false
+  },
   "hardware_observations": {
-    "pre_capture_nefs": 68,
+    "registered_raw_jpeg_nefs": 59,
+    "current_raw_only_planned_nefs": 59,
+    "current_raw_only_exploratory_nefs": 164,
+    "current_raw_only_total_nefs": 223,
+    "current_raw_only_timer_correspondence_frames": 139,
+    "current_raw_only_frames_without_visible_timer": 84,
+    "post_release_jpegs_kept_fine": 38,
+    "raw_jpeg_repeated_on_latest_preview_revision": false,
     "new_public_builds_hardware_certified": false
   },
-  "reviewed_precapture_code_sha256": "0cc0416840a179a5c36fbcfdbfb451e6d8723467658d50dcbcd1645393168903",
+  "reviewed_precapture_code_sha256": "1934f00fa3fbc75fceede6d24db07a03a5fffeada6b8e86e640bbadf479e8ef5",
   "limitations": [
-    "Bounded execution uses explicit modeled services",
+    "Bounded execution uses explicit modeled services and supplied JPEG streams",
+    "RAW+JPEG NEFs still have reduced embedded previews",
+    "Post-release frames remain JPEG-only in both modes",
     "Input photos and emulator runtime are not distributed",
-    "Compatible-input emulator startup warning retained; see validation.md",
     "Only official C 3.11 is publicly supported"
   ],
   "source_sha256": {
-    "configure.py": "f6c7c27ffc0db14293e609f9a5b881d2bb5a8d785f7e360e565324f243a8bef6",
+    "NOTICE.md": "7bc50aa9497da36d465efb05df2195913d465c9875345a75d57613c14063640a",
+    "README.md": "6d5ac1fae945d1f76d0b056854f5d210521cbf0f7d4584b28e50fcc12aeacfa8",
+    "configure.py": "3394662c132a5726cf478f41394b8d383fa9b69819ed6dca9d47ae693f52fc48",
+    "docs/raw-precapture.md": "5b9e73b71c5630631e299dae8d97c89cc42a1cd1b071a85c36ffae8cd8fdb47f",
+    "docs/validation.md": "007e4b60f0eb09346e7cb691b7d595edec447e226faa7ecc15934c2eb45d5d27",
     "features.py": "27228a20e68f7a3b6779aefaa44be28b0cdb63bb43dd320b0a10605066931d22",
-    "patch.py": "5251597ef2cd920e415de197c06cc3f5128dec3a1aabcded51bb2c893fb41445",
-    "resources/precapture.json": "d62d24da524e5080e7b05de3ed5e52bc63e9d3c424fbc52614097726fe48af9b",
+    "patch.py": "f5e8dca806b33fc07e292d804907a3c36fc7e8e1c5531b668ecb95e07fbac75e",
+    "resources/precapture.json": "1537fa971841304b4de6baef102c79639bb32f1deb2b5224767b1df415d27749",
     "resources/profile.json": "5c82bd900476b7b65f829a72bdf4475d690f9aba991135de423f39cab540b27a",
     "tests/validate.py": "c47cdd7e170cdad2551c86475faee04c7566fa847a73c2073d8d38c0f96427fd",
-    "tests/validate_features.py": "ab730f10b686fd63cdb5506ba95f1edb9c5879c5117a9232704a16f06d37284b",
+    "tests/validate_features.py": "e057d61cc15986da38e4db6daf9a4934993c1da44c9de9da0e60a7c92cec8c78",
+    "tools/check_repository.py": "8b120cfecf113aca271c8aac47b96f859a642408d81b6ae48c26bf940fa4e2c7",
     "verify.py": "260aa987f60fea1ac8b75c1ff55b979e34a19af8fc1df0c4f42aa248ba613609",
     "z8precapture/__init__.py": "2553af81f7abaa8443643c2a451a47d1547fa650b75b50d29bd215ea2c20bed6",
-    "z8precapture/config.py": "fc56c249d12ea642a9380d3afe48afc738034cc394d7b38e325ac36647a3ad04",
+    "z8precapture/config.py": "6533747ad6d5eab22c43d05859d0ab39ec19c257bbbcd7440eb2b164c759c85f",
     "z8precapture/crc32_table.inc": "fe021e684d78717732adddb6c9dde91f6fc6918f18cb0aeccfb349db5511a515",
-    "z8precapture/firmware.c": "71bc565f8c62b46d6698f1bdb664d16778cf4b91dc280b1dc1c301b4cb491492",
+    "z8precapture/firmware.c": "fc1ccbfc6a6d4ef4e2217e0b129da8de3327587982e0d8c6a0e20b7c806d8aeb",
     "z8precapture/linker.py": "a65a9ec04410fbc39c3c81b0b2ae7e6199901af387a74e8eefce0d15d4a1fa2b",
-    "z8precapture/patcher.py": "43c1c461b4c486692b541f3f03df1f7c06b41f2b9f7b701de95e511e17a36252",
+    "z8precapture/patcher.py": "4a08d228cf12fcff4ca5971c7346f3aaa4ecfc3d8301cb40c77e123923de5e96",
     "z8prores/__init__.py": "c4962da695a83c541133ad1a6565bb8d60601992b2e2514f8dfb361fba99dbe5",
     "z8prores/a64.py": "64879c989f85c88bc550b5ac57270c881737c4f53bb246450d8d8c3ba61ba6ae",
     "z8prores/back_half.py": "5ebece2e98464d0bb50c9c82453b264b8889f1ff526d2e408165180877c39e7d",
@@ -48,11 +99,5 @@
     "z8prores/menu.py": "6c441f6bb9069b27cb9b3396e0f4b5f725943cf35746ceae1a4f0a9e97afa0b3",
     "z8prores/package.py": "e908e18a00c9dde9892fcce5b5aa0ab7f61d21228ab7744ebfb48355df649ecb",
     "z8prores/patcher.py": "2968e7b382463fda3ef79c7b93c2dbab4315717cf2c76172ef483a60c387b85c"
-  },
-  "compatible_input_boot_error_counts": [
-    1,
-    0
-  ],
-  "reference_boot_error_count": 0,
-  "startup_warning_preserved": true
+  }
 }

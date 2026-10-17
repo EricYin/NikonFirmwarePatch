@@ -13,14 +13,16 @@ def main():
     ap.add_argument('--frames', type=int, default=30, help='Maximum historical frames, 1..30; default 30')
     ap.add_argument('--c15-only', action='store_true', help='Do not enable C30')
     ap.add_argument('--diagnostic-footer', action='store_true', help='Append optional timing data to each NEF')
+    ap.add_argument('--capture-mode', choices=['raw-jpeg', 'raw-only'], default='raw-jpeg',
+                    help='Historical frames: RAW+JPEG (default), or RAW-only with full-size embedded preview')
     a = ap.parse_args()
-    raw = build_config(a.frames, not a.c15_only, a.diagnostic_footer)
+    raw = build_config(a.frames, not a.c15_only, a.diagnostic_footer, a.capture_mode)
     require(not a.output.exists(), 'Output directory already exists')
     a.output.mkdir(parents=True, exist_ok=False)
     with (a.output / CONFIG_NAME).open('xb') as f:
         f.write(raw)
     print(json.dumps(dict(file=str(a.output / CONFIG_NAME), sha256=sha(raw), frames=a.frames,
-                          c30=not a.c15_only, diagnostic_footer=a.diagnostic_footer), indent=2))
+                          capture_mode=a.capture_mode, c30=not a.c15_only, diagnostic_footer=a.diagnostic_footer), indent=2))
 
 
 if __name__ == '__main__':

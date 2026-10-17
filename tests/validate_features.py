@@ -64,8 +64,8 @@ def main():
             check(cpath.exists() == ('precapture' in names), 'Unexpected card configuration')
             if cpath.exists():
                 c = cpath.read_bytes()
-                check(len(c) == 64 and c[:16] == b'Z8PRECFGv1'.ljust(16, b'\0'), 'Configuration format')
-                check(struct.unpack_from('<4I', c, 16) == (3,30,1500000,0), 'Default configuration values')
+                check(len(c) == 64 and c[:16] == b'Z8PRECFGv2'.ljust(16, b'\0'), 'Configuration format')
+                check(struct.unpack_from('<4I', c, 16) == (0x13,30,1500000,0), 'Default configuration values')
                 check(zlib.crc32(c[:60]) == struct.unpack_from('<I', c, 60)[0], 'Configuration CRC')
             rows.append(dict(test=name, result='PASS', output_sha256=sha(candidate), independently_verified=verified['status']))
             print(name + ': PASS', flush=True)
@@ -76,7 +76,7 @@ def main():
             check(repeated.returncode != 0 and 'already exists' in repeated.stderr and
                   (out/'Z_8_0401.bin').read_bytes() == candidate, 'Existing output changed')
         # Reject validly checksummed changes to required code and occupied patch space.
-        for offset in [0xe0fe90,0xd4915c,0xd4367c,0x800000,0x4d2ffc0,0x17aa4c]:
+        for offset in [0xe0fe90,0xd4915c,0xd43638,0xd4367c,0xd4eb60,0x56c134,0x7002cc,0x7148a8,0x715834,0x4cf4fd0,0x800000,0x4d2ffc0,0x17aa4c]:
             bad = bytearray(package.eg); bad[offset] ^= 1
             bad[-2:] = binascii.crc_hqx(bad[:-2],0).to_bytes(2,'big')
             reject(f'conflicting input {offset:#x}', lambda bad=bad: compatibility(bytes(bad),['precapture']), 'Incompatible')
@@ -101,6 +101,35 @@ def main():
                              '--version','04.01','--output',str(out)],capture_output=True,text=True)
         check(pr.returncode != 0 and not out.exists(), 'python -O disabled the compatibility guard')
         rows.append(dict(test='optimized Python rejects incompatible input without output',result='PASS'))
+    # Exercise the user-facing configuration command and reject options that cannot apply.
+    with tempfile.TemporaryDirectory(prefix='z8-config-tests-') as temporary:
+        temp = Path(temporary)
+        for mode in ('raw-jpeg', 'raw-only'):
+            out = temp/mode
+            cmd = [sys.executable, '-B', str(ROOT/'configure.py'), '--capture-mode', mode,
+                   '--frames', '5', '--c15-only', '--diagnostic-footer', '--output', str(out)]
+            pr = subprocess.run(cmd, capture_output=True, text=True)
+            check(pr.returncode == 0, pr.stderr)
+            expected = build_config(5, False, True, mode)
+            check((out/'Z8PRE.CFG').read_bytes() == expected, 'Configuration CLI differs')
+            pr = subprocess.run(cmd, capture_output=True, text=True)
+            check(pr.returncode != 0 and (out/'Z8PRE.CFG').read_bytes() == expected, 'Existing configuration overwritten')
+            rows.append(dict(test=mode+' configuration CLI and overwrite refusal', result='PASS'))
+        for opts in (['--features','prores','--capture-mode','raw-only','--version','04.02'],
+                     ['--features','precapture','--capture-mode','raw-only','--check']):
+            cmd = [sys.executable, '-B', str(ROOT/'patch.py'), str(a.stock.resolve()), *opts]
+            if '--check' not in opts: cmd += ['--output', str(temp/'rejected')]
+            pr = subprocess.run(cmd,capture_output=True,text=True)
+            check(pr.returncode != 0 and not (temp/'rejected').exists(), 'Inapplicable configuration option accepted')
+        rows.append(dict(test='capture mode requires a pre-capture build', result='PASS'))
+    for mode, flags in [('raw-jpeg', 0x13), ('raw-only', 0x77)]:
+        c = build_config(capture_mode=mode)
+        check(struct.unpack_from('<I', c, 16)[0] == flags, 'Mode flags differ')
+        check(zlib.crc32(c[:60]) == struct.unpack_from('<I', c, 60)[0], 'Mode CRC differs')
+        c = build_config(5, False, True, mode)
+        check(struct.unpack_from('<I', c, 16)[0] == (flags & ~2) | 8, 'C15 diagnostic flags differ')
+        rows.append(dict(test=mode+' configuration', result='PASS'))
+    reject('unsupported capture mode', lambda:build_config(capture_mode='unknown'), 'Capture mode')
     for selection in [[],['unknown'],['prores','prores']]:
         reject('invalid feature selection '+str(selection),lambda selection=selection:selected_features(selection),'Select')
     for frames in [0,31]:

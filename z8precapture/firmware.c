@@ -1,19 +1,9 @@
-/* Experimental RAW pre-capture: save C15/C30 pre-capture (history) frames as HE NEF beside the stock JPEG.
- *
- * Three call-site hooks, no trampolines, no writable globals:
- *   P1 0x40f6fe90  history drain  -> precapture_history_entry: bind a 128-byte record into the
- *                  frame's own E allocation tail, then the original submit 0x40f93098.
- *   P2 0x40ea915c  end of the Tdec stage -> precapture_tdec_release(R): for a recorded frame that
- *                  the card configuration selects, keep R+0x748 (E); otherwise the original
- *                  free and clear.
- *   P3 0x40ea367c  primary writer, after one file was written -> precapture_writer_file_done:
- *                  when that file is the retained frame's JPEG, assemble a NEF from the
- *                  JPEG's own header buffer (Exif, MakerNote, thumbnail, XMP), its MPF
- *                  preview streams, M and the untouched HE payload, write it beside the
- *                  JPEG, then free E. Finally the original header-buffer free.
- * A retained E whose JPEG never reaches P3 is freed by the original R cleanup 0x40ea44d0,
- * which frees any non-zero R+0x748. The CPU never reads the HE payload or the preview
- * streams; both go to WRITE by address.
+/* Experimental C15/C30 HE RAW pre-capture. Four call-site hooks retain historical
+ * frames, register NEFs in the stock photo database, write with the stock writer,
+ * and select the stock NEF-preview quality for retained RAW-only frames.
+ * RAW+JPEG keeps its fine JPEG and embeds the 1620x1080 preview in the NEF.
+ * RAW-only embeds an 8256x5504 preview at the stock NEF-preview quality.
+ * No writable globals; see docs/raw-precapture.md for supported configurations.
  */
 typedef unsigned char u8;
 typedef unsigned short u16;
@@ -30,7 +20,6 @@ typedef long s64;
 /* Original firmware interfaces (byte-audited by the build). */
 #define SUBMIT ((u64 (*)(void *,u32))0x40f93098ul)
 #define FREE_E ((void (*)(u64))0x4104df5cul)
-#define FREE_HDR ((void (*)(u64))0x4104d600ul)
 #define XLATE ((u64 (*)(u64))0x41186718ul)
 #define OPEN ((int (*)(const char *,u32,u32))0x402daa4cul)
 #define CREATE ((int (*)(const char *,u32))0x402dad04ul)
@@ -46,11 +35,23 @@ typedef long s64;
 #define DCF_GET ((u64 (*)(u32))0x4085a8e0ul)
 #define DCF_NAME ((u64 (*)(u64))0x4085bfe0ul)
 #define DCF_PUT ((void (*)(u64))0x4085aa7cul)
+/* Interfaces: the stock still-image writer and the stock DCF database interfaces. */
+#define ORIG_WRITE ((u32 (*)(u32,u32,u64))0x406cc134ul)             /* (0, mode, J) -> status */
+#define LOCK ((u32 (*)(u64,u32,u32))0x40875834ul)                   /* (lock, ticks, tries) */
+#define UNLOCK ((u32 (*)(u64))0x408758b4ul)
+#define DB_ADD ((u32 (*)(u64,u32,const void *))0x408602ccul)        /* (db, first id, entry) */
+#define DB_REMAIN ((void (*)(u32))0x408648a8ul)
+#define DB_CANCEL ((void (*)(u32))0x4085ac54ul)                     /* (file id), no result */
+/* Interface: the stock rate-control parameter builder of the JPEG encodes. */
+#define RC_PARAMS ((void (*)(u64,u32,u32,u64,u8 *))0x40eaecb4ul)   /* (R, mode, kind 0 main / 1 NEF preview / 2, template copy, rc) */
+#define G_PREVIEW_Q 0xa029e9fd0ul  /* the (quality index, table half) pair the stock NEF preview encode puts at rc+0x14/+0x18 */
 /* Original globals, only read. */
 #define G_MODE 0xa03bc6bc8ul       /* HSFC release mode: 6 = C15, 3 = C30 */
 #define G_LIMIT 0xa03bc6bacul      /* pre-capture count of the menu setting */
 #define G_DRAINED 0xa03bc5638ul    /* history frames drained at this full press */
 #define G_WRITER_JOB 0xa03b891b8ul /* job of the primary writer 0x40ea340c */
+#define G_CREATE_LOCK 0xa048229f0ul /* creation lock of 0x40866260 */
+#define G_DB 0xa04822af8ul         /* per-card DCF database pointers: slot 0, then slot 1 at +8 */
 
 #define PAYLOAD 0x01058600u
 #define OLD_ALLOCATION 0x01082400u
@@ -64,26 +65,41 @@ typedef long s64;
 #define NI 0x36000u                /* NEFInfo block, 1 KiB */
 #define FOOT 0x38000u              /* 512-byte footer */
 #define ZEROS 0x39000u             /* 4 KiB of zero for RAW alignment */
+#define JP 0x3a000u                /* parameter block J' for the stock writer, 0x290 bytes */
+#define JA 0x3a300u                /* descriptor pointer array, 4 x u64 */
+#define JD 0x3a340u                /* descriptor 0: width/height pair, 16 bytes */
+#define JT 0x3a360u                /* descriptor 3: thumbnail size, 32 bytes */
+#define PLAN 0x3a400u              /* plan_t */
 #define ENT_MAX 160u
+#define SEG_MAX 27u                /* capacity of the J+0x68.. segment table */
 #define CHUNK 0x100000u
-#define DEFAULT_BUDGET 1500000u    /* cooperative per-file timeout; not an interruptible I/O deadline */
+#define DEFAULT_BUDGET 1500000u    /* per-file fallback write budget in microseconds */
 #define FRESH_US 120000000ul
 #define F_ENABLE 1u
 #define F_C30 2u
 #define F_FULL 4u
 #define F_FOOTER 8u
-#define F_KNOWN 15u
+#define F_DCF 0x10u                /* register the NEF in the stock database and use the stock writer */
+#define F_RAWONLY 0x20u            /* RAW-only (needs F_DCF) */
+#define F_PVQ 0x40u                /* RAW-only: main JPEG at the stock NEF-preview quality, embedded (needs F_RAWONLY and F_FULL) */
+#define F_KNOWN 0x7fu
+#define PVQ_MARK 0x31515650u       /* "PVQ1": record +0x7c, written by P7 after the parameters were replaced */
 #define Q_MARKED 1u
 #define Q_RETAINED 2u
 #define S_DONE 1u
 #define S_BUDGET 3u
 #define S_WRITE_FAIL 4u
 #define S_RENAME_FAIL 5u
+#define S_MISSING 6u               /* the stock writer reported success but the NEF is not on the card */
+#define DB_OK 0x4320080u           /* stock success code of the database interfaces */
+#define RC_NO_DB 0xfff00001u       /* Patch internal result codes, never produced by stock code */
+#define RC_LOCK 0xfff00002u
+#define RC_INTERNAL 0xfff00003u
 
-static const u8 qual_magic[16] = "Z8PREQUALv1";
-static const u8 cfg_magic[16] = "Z8PRECFGv1";
-static const u8 foot_magic[16] = "Z8PREFOOTv1";
-static const u8 identity[8] = {'P','R','E','C','A','P','0','1'}; /* diagnostic format identity */
+static const u8 qual_magic[16] = "Z8PREQUALv2";
+static const u8 cfg_magic[16] = "Z8PRECFGv2";
+static const u8 foot_magic[16] = "Z8PREFOOTv2";
+static const u8 identity[8] = {'P','R','E','C','A','P','0','2'};
 /* MakerNote 0x0051 for HE (internal compression 4, budget 2): the original leaf 0x406ea044
  * writes this from M+0x2ac=2; identical in every camera HE NEF examined. */
 static const u8 he51[24] = {0x30,0x31,0x30,0x32,0x30,0x35,0x30,0x31,0,0,13,0,0,0,0,0,6,0,0,0,0,0,0,0};
@@ -182,6 +198,8 @@ static int read_cfg(char drive,u8 *out) {
     if(rc!=0 || cl!=0 || count!=64 || !equal(out,cfg_magic,16)) return 0;
     u32 flags=get32(out+0x10),pre=get32(out+0x14),budget=get32(out+0x18);
     if((flags&~F_KNOWN) || !(flags&F_ENABLE) || pre<1 || pre>30) return 0;
+    if((flags&F_RAWONLY) && !(flags&F_DCF)) return 0;         /* RAW-only needs the stock writer */
+    if((flags&F_PVQ) && (flags&(F_RAWONLY|F_FULL))!=(F_RAWONLY|F_FULL)) return 0;   /* the JPEG file must not be kept */
     if(budget && (budget<200000 || budget>5000000)) return 0;
     for(u32 i=0x20;i<0x3c;i++) if(out[i]) return 0;
     return get32(out+0x3c)==crc32(out,60);
@@ -213,7 +231,7 @@ __attribute__((used)) void precapture_tdec_release(u64 r) {
                 set32(q+0x68,budget); set32(q+0x6c,(u32)drive); set32(q+0x70,LOAD32(m+0x2508));
                 set32(q+0x74,get32(c+0x1c));
                 seal(q);
-                return;                      /* R+0x748 kept for P3 or the R cleanup */
+                return;                      /* R+0x748 kept for P3' or the R cleanup */
             }
         }
         unbind(q);
@@ -221,6 +239,47 @@ __attribute__((used)) void precapture_tdec_release(u64 r) {
     FREE_E(e);
     STORE64(r+0x748,0);
 }
+
+/* P7. Original: bl 0x40eaecb4 in 0x40eaea0c (x0=R, w1=mode, w2=0 main, x3=template copy, x4=rc), so the
+ * stock parameters are always built first. rc layout (u32): +0 mode, byte +4 size-target flag, +8 target,
+ * +0xc size class, +0x10 image size, +0x14 quality index, +0x18 table half, +0x1c, u64 +0x20 template.
+ * The JPEG driver's rate control 0x40eb7318 takes the scale from the table at 0xa029d1378 by
+ * (+0x18, size class, +0x10, +0x14) and, with the flag, may raise it from the template's statistics. */
+#ifndef PRE_PREVIEW_PROBE
+static void preview_quality(u8 *rc) {
+    set32(rc+0x14,LOAD32(G_PREVIEW_Q)); set32(rc+0x18,LOAD32(G_PREVIEW_Q+4));
+    rc[4]=0; set64(rc+0x20,0);       /* the table value exactly; the template written after this encode stays unusable */
+}
+__attribute__((used)) void precapture_main_rc(u64 r,u32 mode,u32 kind,u64 tmpl,u8 *rc) {
+    u64 e,m; u8 *q;
+    RC_PARAMS(r,mode,kind,tmpl,rc);
+#ifdef NEG_PVQ_ANY_FRAME              /* negative-control builds only: every main JPEG */
+    if(kind==0) preview_quality(rc);
+#endif
+    if(kind!=0 || !(e=LOAD64(r+0x748)) || !(q=bound(r,e,Q_RETAINED))) return;
+    m=LOAD64(r+0x790);
+    if((get32(q+0x60)&(F_PVQ|F_RAWONLY|F_FULL))!=(F_PVQ|F_RAWONLY|F_FULL) || get32(q+0x70)!=LOAD32(m+0x2508)) return;
+    preview_quality(rc);
+#ifndef NEG_PVQ_NO_MARK               /* negative-control builds only */
+    set32(q+0x7c,PVQ_MARK); CLEAN(q,128);   /* outside the record CRC (0..0x77); P1 clears it for the next frame */
+#endif
+}
+#else
+/* QEMU probe only (never packaged): the emulator shoots RAW stills, whose NEF preview encode 0x40eaf398 calls
+ * the same builder at 0x40eaf528 with kind 1. Mirror: replace that job's pair with PROBE_Q/PROBE_T and look at
+ * the DQT of the NEF's JpgFromRaw. */
+#ifndef PROBE_Q
+#define PROBE_Q 2u
+#endif
+#ifndef PROBE_T
+#define PROBE_T 1u
+#endif
+__attribute__((used)) void precapture_main_rc(u64 r,u32 mode,u32 kind,u64 tmpl,u8 *rc) {
+    RC_PARAMS(r,mode,kind,tmpl,rc);
+    if(kind!=1) return;
+    set32(rc+0x14,PROBE_Q); set32(rc+0x18,PROBE_T); rc[4]=0; set64(rc+0x20,0);
+}
+#endif
 
 /* ---------------- TIFF reading and writing ---------------- */
 typedef struct { const u8 *b; u32 n; } src_t;      /* little-endian TIFF, offsets from b */
@@ -452,7 +511,8 @@ static int build(out_t *w,const u8 *h,u32 hl,const u32 *hlen,u64 m,lay_t *L,u32 
     return !w->bad;
 }
 
-/* ---------------- P3 NEF write ---------------- */
+
+/* ---------------- P3' file write ---------------- */
 static int write_all(int fd,u64 p,u32 n) { u32 c=0; return WRITE(fd,p,n,&c)==0 && c==n; }
 static int jpg_name(u32 id,char *fin,char *tmp) {
     u64 fo=DCF_GET(id); if(!fo) return 0;
@@ -468,87 +528,396 @@ static int jpg_name(u32 id,char *fin,char *tmp) {
     DCF_PUT(fo);
     return ok;
 }
-__attribute__((noinline)) static void nef_write(u64 r,u64 m,u64 e,u64 J,u8 *q) {
-    u32 flags=get32(q+0x60),budget=get32(q+0x68); char drive=(char)get32(q+0x6c);
-    u64 t0=now(),hp,lp=LOAD64(J+0x18),da=LOAD64(J+0x10); u32 hlen[3],hcap,hl;
-    lay_t L; char fin[64],tmp[64];
-    zero((u8 *)fin,sizeof(fin)); zero((u8 *)tmp,sizeof(tmp));
-    if(!lp || !da) return;
-    hp=LOAD64(lp); hcap=LOAD32(lp+8); hl=LOAD32(lp+0xc); hlen[0]=hl; hlen[1]=LOAD32(lp+0x1c); hlen[2]=LOAD32(lp+0x2c);
-    if(!hp || hl<0x400 || hl>hcap || hl>0x40000) return;
-    if(!stream(LOAD64(da),&L.main) || !stream(LOAD64(da+8),&L.vga) || !stream(LOAD64(da+16),&L.fhd)) return;
-    if(stopped(drive)) return;            /* an earlier failure in this or a previous burst */
-    if(!jpg_name(LOAD32(J),fin,tmp) || EXISTS(fin)>=0 || EXISTS(tmp)>=0) return;
-    u8 *raw=(u8 *)ALLOC(WORK_BYTES+63,0); if(!raw) return;
-    u8 *wk=(u8 *)(((u64)raw+63)&~63ul);
-    zero(wk+TAB,WORK_BYTES-TAB);
-    out_t w; zero((u8 *)&w,sizeof(w)); w.o=wk; w.cap=HDR_MAX;
-    if(!build(&w,(const u8 *)XLATE(hp),hl,hlen,m,&L,flags,wk) || L.end_at<L.raw_at) { FREE(raw); return; }
-    u64 t1=now(),t2=0,t3=0,t4=0,t5=0; u32 status=S_DONE,written=0,chunks=0,times[17];
-    zero((u8 *)times,sizeof(times));
-#ifndef NEG_NO_CLEAN                 /* negative-control builds only */
-    CLEAN(wk,w.pos);
-#endif
-    CLEAN(wk+ZEROS,4096);
-    int fd=CREATE(tmp,0x20);
-    if(fd<0) { FREE(raw); stop_file(drive,S_WRITE_FAIL,get32(q+0x70)); return; }
-    t2=now();
-    if(!write_all(fd,(u64)wk,w.pos) || !write_all(fd,L.vga.addr,L.vga.size) || !write_all(fd,L.fhd.addr,L.fhd.size) ||
-       ((flags&F_FULL) && !write_all(fd,L.main.addr,L.main.size)) ||
-       (L.raw_at>L.main_at+((flags&F_FULL)?L.main.size:0) && !write_all(fd,(u64)(wk+ZEROS),L.raw_at-L.main_at-((flags&F_FULL)?L.main.size:0))))
-        status=S_WRITE_FAIL;
-    t3=now();
-    if(status==S_DONE && t3-t0>=budget) status=S_BUDGET;
-    u64 data=LOAD64(e+0x40);
-#ifdef NEG_READ_PAYLOAD               /* negative-control builds only */
-    if(LOAD32(data+0x1000)==0x12345678u) status=S_WRITE_FAIL;
-#endif
-    while(status==S_DONE && written<PAYLOAD) {
-        u32 part=PAYLOAD-written; if(part>CHUNK) part=CHUNK;
-        u32 c=0; int rc=WRITE(fd,data+written,part,&c);
-        written+=c<=part?c:0;
-        u64 after=now(); if(chunks<17) times[chunks]=(u32)(after-t0); chunks++;
-        if(rc!=0 || c!=part) status=S_WRITE_FAIL;
-        else if(after-t0>=budget && written<PAYLOAD) status=S_BUDGET;
-    }
-    t4=now();
-    if(flags&F_FOOTER) {
-        u8 *f=wk+FOOT; zero(f,512); copy(f,foot_magic,16);
-        set32(f+0x10,1); set32(f+0x14,status); set32(f+0x18,written); set32(f+0x1c,chunks);
-        set64(f+0x20,t0); set64(f+0x28,t1); set64(f+0x30,t2); set64(f+0x38,t3); set64(f+0x40,t4);
-        set32(f+0x58,w.pos); set32(f+0x5c,L.vga.size); set32(f+0x60,L.fhd.size); set32(f+0x64,(flags&F_FULL)?L.main.size:0);
-        set32(f+0x68,L.raw_at); set32(f+0x6c,L.end_at); set32(f+0x70,LOAD32(m+0x2508)); set32(f+0x74,LOAD32(m+0x120));
-        set32(f+0x78,LOAD32(J)); set32(f+0x7c,hl);
-        set64(f+0x80,r); set64(f+0x88,e); set64(f+0x90,m); set64(f+0x98,data); set64(f+0xa0,J);
-        set64(f+0xa8,L.vga.addr); set64(f+0xb0,L.fhd.addr); set64(f+0xb8,L.main.addr);
-        for(u32 i=0;i<17;i++) set32(f+0xc0+4*i,times[i]);
-        copy(f+0x108,identity,8); copy(f+0x110,(const u8 *)fin,48);
-        copy(f+0x140,q,128);
-        t5=now(); set64(f+0x48,t5);
-        set32(f+0x1fc,crc32(f,0x1fc)); CLEAN(f,512);
-        if(!write_all(fd,(u64)f,512) && status==S_DONE) status=S_WRITE_FAIL;
-    }
-    if(CLOSE(fd)!=0 && status==S_DONE) status=S_WRITE_FAIL;
-    if(status==S_DONE && RENAME(tmp,fin)!=0) status=S_RENAME_FAIL;
-    FREE(raw);
-    if(status!=S_DONE) stop_file(drive,status,get32(q+0x70));
+
+/* What the writer task's call identifies: the retained frame, its record and the card config. */
+typedef struct {
+    u64 r,m,e,J,t_enter;
+    u8 *q;
+    u32 flags,budget,shot,jid;
+    char drive;
+} job_t;
+/* Everything one NEF needs; lives in the work block so the task stack stays shallow. */
+typedef struct {
+    u64 r,m,e,J,data;
+    u64 t_enter,t_header,t_reg0,t_reg1,t_jpeg0,t_jpeg1,t_nef0,t_raw0,t_raw1,t_raw2;
+    u8 *q,*raw,*wk;
+    u32 flags,budget,shot,jid,nid,hl,hlen[3],hdr_bytes,total,nsegs,chunks,raw_status,reg_rc,st_jpeg,st_nef,cancel_ok,payload_bytes;
+    u32 mtype,stock_mode;                /* registered member type (NEF = 2) and the stock file's writer mode (JPEG = 0) */
+    u64 dims_src;                        /* the stock JPEG's descriptor 0 (width/height words), 0 if none */
+    char drive,fin[64],tmp[64];
+    lay_t L;
+} plan_t;
+
+/* The file the writer task is about to write is the JPEG of a retained frame. */
+__attribute__((unused)) static int eligible(u64 J,u32 mode,job_t *jb) {
+    u64 job,r,m,e,fe; u32 idx,flags; u8 *q;
+    if(mode!=0) return 0;
+    job=LOAD64(G_WRITER_JOB); if(!job || LOAD8(job+4)) return 0;
+    r=LOAD64(job+0x18); idx=LOAD32(job+0xbc)-1;
+    if(!r || idx>=4) return 0;
+    m=LOAD64(r+0x790); e=LOAD64(r+0x748);
+    if(!m || !e || LOAD32(m)!=3) return 0;
+    fe=job+0xc0+(u64)idx*0x2d8;
+    if(J!=fe+0x48) return 0;
+    q=bound(r,e,Q_RETAINED);
+    if(!q || LOAD64(J+8)!=m || (LOAD32(J)&15)!=0 || get32(q+0x70)!=LOAD32(m+0x2508)) return 0;
+    flags=get32(q+0x60);
+    /* Preview guard: without P7's mark the main JPEG has the menu quality; keep the NEF FHD-only */
+    if((flags&F_PVQ) && get32(q+0x7c)!=PVQ_MARK) flags&=~F_FULL;
+    /* the stock database path handles exactly one group of one file on the primary list */
+    if((flags&F_DCF) && !(LOAD32(r+0x14)==1 && LOAD32(r+0x18)==1 && LOAD32(r+0x1c)==LOAD32(J) && LOAD32(r+0x38)==0)) return 0;
+    jb->r=r; jb->m=m; jb->e=e; jb->J=J; jb->q=q; jb->flags=flags; jb->budget=get32(q+0x68);
+    jb->shot=get32(q+0x70); jb->jid=LOAD32(J); jb->drive=(char)get32(q+0x6c); jb->t_enter=now();
+    return 1;
 }
 
-/* P3. Original: bl 0x4104d600 (header resource of the file just written). */
-__attribute__((used)) void precapture_writer_file_done(u64 hres) {
-    u64 job=LOAD64(G_WRITER_JOB);
-    if(job && !LOAD8(job+4)) {
-        u64 r=LOAD64(job+0x18); u32 idx=LOAD32(job+0xbc)-1;
-        u64 m=r?LOAD64(r+0x790):0, e=r?LOAD64(r+0x748):0;
-        if(m && e && idx<4 && LOAD32(m)==3) {
-            u64 fe=job+0xc0+(u64)idx*0x2d8,J=fe+0x48; u8 *q=bound(r,e,Q_RETAINED);
-            if(q && LOAD64(J+8)==m && (LOAD32(J)&15)==0 && get32(q+0x70)==LOAD32(m+0x2508)) {
-                if(LOAD32(fe+0x2d0)==0) nef_write(r,m,e,J,q);
-                unbind(q);
-                FREE_E(e);
-                STORE64(r+0x748,0);
-            }
-        }
-    }
-    FREE_HDR(hres);
+/* Parse the JPEG's own buffers, check the names and build the NEF header block. CPU only:
+ * no card, database or lock is touched. Returns 0 (work block freed) when no NEF can be made. */
+__attribute__((noinline)) static plan_t *prepare(const job_t *jb) {
+    u64 J=jb->J,lp=LOAD64(J+0x18),da=LOAD64(J+0x10),hp; u32 hcap,hl;
+    u8 *raw,*wk; plan_t *p; out_t w;
+    if(!lp || !da) return 0;
+    hp=LOAD64(lp); hcap=LOAD32(lp+8); hl=LOAD32(lp+0xc);
+    if(!hp || hl<0x400 || hl>hcap || hl>0x40000) return 0;
+    raw=(u8 *)ALLOC(WORK_BYTES+63,0); if(!raw) return 0;
+    wk=(u8 *)(((u64)raw+63)&~63ul);
+    zero(wk+TAB,WORK_BYTES-TAB);
+    p=(plan_t *)(wk+PLAN);
+    p->raw=raw; p->wk=wk; p->r=jb->r; p->m=jb->m; p->e=jb->e; p->J=J; p->q=jb->q; p->flags=jb->flags;
+    p->budget=jb->budget; p->shot=jb->shot; p->jid=jb->jid; p->drive=jb->drive; p->t_enter=jb->t_enter;
+    p->nid=(jb->jid&~15u)|2u; p->data=LOAD64(jb->e+0x40);
+    p->hl=hl; p->hlen[0]=hl; p->hlen[1]=LOAD32(lp+0x1c); p->hlen[2]=LOAD32(lp+0x2c);
+    p->reg_rc=0; p->st_jpeg=0xffffffffu; p->st_nef=0xffffffffu; p->cancel_ok=0xffffffffu; p->payload_bytes=PAYLOAD;
+    p->mtype=2; p->stock_mode=0; p->dims_src=LOAD64(da);
+    if(!stream(LOAD64(da),&p->L.main) || !stream(LOAD64(da+8),&p->L.vga) || !stream(LOAD64(da+16),&p->L.fhd)) goto bad;
+    if(!jpg_name(p->jid,p->fin,p->tmp) || EXISTS(p->fin)>=0 || EXISTS(p->tmp)>=0) goto bad;
+    zero((u8 *)&w,sizeof(w)); w.o=wk; w.cap=HDR_MAX;
+    if(!build(&w,(const u8 *)XLATE(hp),hl,p->hlen,p->m,&p->L,p->flags,wk) || p->L.end_at<p->L.raw_at) goto bad;
+    p->hdr_bytes=w.pos; p->total=p->L.end_at+((p->flags&F_FOOTER)?512u:0u); p->t_header=now();
+    return p;
+bad:
+    FREE(raw);
+    return 0;
 }
+
+static void build_footer(plan_t *p,u32 route) {
+    u8 *f=p->wk+FOOT;
+    zero(f,512); copy(f,foot_magic,16);
+    set32(f+0x10,2); set32(f+0x14,route); set32(f+0x18,(p->flags&F_RAWONLY)?1u:0u); set32(f+0x1c,p->flags);
+    set64(f+0x20,p->t_enter); set64(f+0x28,p->t_header); set64(f+0x30,p->t_reg0); set64(f+0x38,p->t_reg1);
+    set64(f+0x40,p->t_jpeg0); set64(f+0x48,p->t_jpeg1); set64(f+0x50,p->t_nef0);
+    set32(f+0x58,p->reg_rc); set32(f+0x5c,p->st_jpeg);
+    set32(f+0x60,p->hdr_bytes); set32(f+0x64,p->L.vga.size); set32(f+0x68,p->L.fhd.size);
+    set32(f+0x6c,(p->flags&F_FULL)?p->L.main.size:0u); set32(f+0x70,p->L.raw_at); set32(f+0x74,p->L.end_at);
+    set32(f+0x78,p->shot); set32(f+0x7c,get32(p->q+0x18));
+    set32(f+0x80,p->jid); set32(f+0x84,p->nid); set32(f+0x88,p->hl); set32(f+0x8c,p->nsegs);
+    set64(f+0x90,p->r); set64(f+0x98,p->e); set64(f+0xa0,p->m); set64(f+0xa8,p->data); set64(f+0xb0,p->J);
+    set64(f+0xb8,(u64)(p->wk+JP));
+    set64(f+0xc0,p->L.vga.addr); set64(f+0xc8,p->L.fhd.addr); set64(f+0xd0,p->L.main.addr);
+    set64(f+0xd8,p->t_raw0); set64(f+0xe0,p->t_raw1); set64(f+0xe8,p->t_raw2);
+    set32(f+0xf0,p->chunks); set32(f+0xf4,p->raw_status);
+    copy(f+0x108,identity,8); copy(f+0x110,(const u8 *)p->fin,48);
+    copy(f+0x140,p->q,128);
+    set32(f+0x1fc,crc32(f,0x1fc));
+}
+
+/* Fallback route: raw file calls under a temporary name, then rename. Used without the DCF flag and
+ * as the fallback when registration fails. The NEF pairs with its JPEG after the next scan. */
+__attribute__((noinline)) static void raw_route(plan_t *p) {
+    u8 *wk=p->wk; const lay_t *L=&p->L;
+    u32 flags=p->flags,budget=p->budget,status=S_DONE,written=0,chunks=0,payload=p->payload_bytes;
+    u32 mainsz=(flags&F_FULL)?L->main.size:0u,pad=L->raw_at-L->main_at-mainsz;
+    u64 t0=now(),after; int fd;
+#ifndef NEG_NO_CLEAN                 /* negative-control builds only */
+    CLEAN(wk,p->hdr_bytes);
+#endif
+    CLEAN(wk+ZEROS,4096);
+    fd=CREATE(p->tmp,0x20);
+    if(fd<0) { stop_file(p->drive,S_WRITE_FAIL,p->shot); return; }
+    p->t_raw0=now();
+    if(!write_all(fd,(u64)wk,p->hdr_bytes) || !write_all(fd,L->vga.addr,L->vga.size) || !write_all(fd,L->fhd.addr,L->fhd.size) ||
+       (mainsz && !write_all(fd,L->main.addr,mainsz)) || (pad && !write_all(fd,(u64)(wk+ZEROS),pad)))
+        status=S_WRITE_FAIL;
+    p->t_raw1=now();
+    if(status==S_DONE && p->t_raw1-t0>=budget) status=S_BUDGET;
+#ifdef NEG_READ_PAYLOAD               /* negative-control builds only */
+    if(LOAD32(p->data+0x1000)==0x12345678u) status=S_WRITE_FAIL;
+#endif
+    while(status==S_DONE && written<payload) {
+        u32 part=payload-written,c=0; int rc;
+        if(part>CHUNK) part=CHUNK;
+        rc=WRITE(fd,p->data+written,part,&c);
+        written+=c<=part?c:0u; chunks++;
+        after=now();
+        if(rc!=0 || c!=part) status=S_WRITE_FAIL;
+        else if(after-t0>=budget && written<payload) status=S_BUDGET;
+    }
+    p->t_raw2=now(); p->chunks=chunks; p->raw_status=status;
+    if(flags&F_FOOTER) {
+        build_footer(p,2); CLEAN(wk+FOOT,512);
+        if(!write_all(fd,(u64)(wk+FOOT),512) && status==S_DONE) status=S_WRITE_FAIL;
+    }
+    if(CLOSE(fd)!=0 && status==S_DONE) status=S_WRITE_FAIL;
+    if(status==S_DONE && RENAME(p->tmp,p->fin)!=0) status=S_RENAME_FAIL;
+    if(status!=S_DONE) stop_file(p->drive,status,p->shot);
+}
+
+/* Add a member of the given DCF type (NEF = 2) to the group keyed by the first file id, exactly as the
+ * stock creation does for a RAW+JPEG shot: creation lock held around the member add and the
+ * remaining-shots update. */
+__attribute__((noinline)) static u32 register_member(const plan_t *p,u32 type) {
+    u32 drive=p->jid>>29,rc; u64 db; u8 ent[16] __attribute__((aligned(8)));
+    if(drive>1) return RC_NO_DB;
+    db=LOAD64(G_DB+8ul*drive); if(!db) return RC_NO_DB;
+    zero(ent,16); set32(ent,type); set64(ent+8,p->total);       /* {type, 0, exact file bytes} */
+    if(LOCK(G_CREATE_LOCK,0xc8,10)!=DB_OK) return RC_LOCK;
+    rc=DB_ADD(db,p->jid,ent);
+#ifndef NEG_NO_REMAIN                 /* negative-control builds only */
+    if(rc==DB_OK) DB_REMAIN(1);
+#endif
+#ifndef NEG_NO_UNLOCK                 /* negative-control builds only */
+    UNLOCK(G_CREATE_LOCK);
+#endif
+    return rc;
+}
+
+static int seg(u8 *jp,u32 *n,u64 addr,u32 size,u64 *sum) {
+    if(!size) return 1;                                         /* empty segments never enter the table */
+    if(*n>=SEG_MAX || !addr) return 0;
+    set64(jp+0x68+16*(*n),addr); set32(jp+0x70+16*(*n),size); (*n)++; *sum+=size;
+    return 1;
+}
+/* Write the registered NEF with the stock writer in its explicit-segment mode 3. */
+__attribute__((noinline)) static u32 stock_nef(plan_t *p,u32 raw_only) {
+    u8 *wk=p->wk,*jp=wk+JP,*a=wk+JA,*d=wk+JD,*t=wk+JT;
+    const lay_t *L=&p->L;
+    u32 n=0,mainsz=(p->flags&F_FULL)?L->main.size:0u,pad=L->raw_at-L->main_at-mainsz,nst;
+    u64 sum=0,c0,c1;
+    zero(jp,0x290); zero(a,32); zero(d,16); zero(t,32);
+    set32(jp,p->nid); set64(jp+8,p->m); set64(jp+0x10,(u64)a);
+    /* descriptor 0: the stock attribute step stores these two words as the object's width and
+     * height; they are the JPEG's own, so a sibling write leaves the values unchanged */
+#ifndef NEG_DIMS_ZERO                 /* negative-control builds only */
+    if(p->dims_src) { set16(d+8,LOAD16(p->dims_src+4)); set16(d+10,LOAD16(p->dims_src+6)); }
+#endif
+    set64(a,(u64)d);
+    if(raw_only && L->thumb_bytes && L->thumb_bytes<0x10000u) { set32(t+0x10,L->thumb_bytes); set64(a+0x18,(u64)t); }
+    if(pad>4096 || !seg(jp,&n,(u64)wk,p->hdr_bytes,&sum) || !seg(jp,&n,L->vga.addr,L->vga.size,&sum) ||
+       !seg(jp,&n,L->fhd.addr,L->fhd.size,&sum) || !seg(jp,&n,L->main.addr,mainsz,&sum) ||
+       !seg(jp,&n,(u64)(wk+ZEROS),pad,&sum) || !seg(jp,&n,p->data,p->payload_bytes,&sum)) goto bad;
+    p->t_nef0=now();
+    if(p->flags&F_FOOTER) {
+        p->nsegs=n+1;
+        build_footer(p,1); CLEAN(wk+FOOT,512);
+        if(!seg(jp,&n,(u64)(wk+FOOT),512,&sum)) goto bad;
+    } else p->nsegs=n;
+    if(sum!=p->total) goto bad;
+#ifdef NEG_BAD_TOTAL                  /* negative-control builds only */
+    sum+=1;
+#endif
+    set64(jp+0x30,sum); set16(jp+0x218,n);
+#ifndef NEG_NO_CLEAN                  /* negative-control builds only */
+    CLEAN(wk,p->hdr_bytes);
+#endif
+    CLEAN(wk+ZEROS,4096);
+#ifdef NEG_READ_PAYLOAD               /* negative-control builds only */
+    if(LOAD32(p->data+0x1000)==0x12345678u) goto bad;
+#endif
+#ifdef TEST_FORCE_BAD                 /* test builds only: take the internal-failure exit after registration */
+    goto bad;
+#endif
+    c0=now(); nst=ORIG_WRITE(0,3,(u64)jp); c1=now();
+    if(nst!=0) stop_file(p->drive,S_WRITE_FAIL,p->shot);        /* the stock writer cancelled the member itself */
+    else if(EXISTS(p->fin)<0) stop_file(p->drive,S_MISSING,p->shot);
+    else if(c1-c0>=p->budget) stop_file(p->drive,S_BUDGET,p->shot);
+    return nst;
+bad:
+#ifndef NEG_NO_CANCEL                 /* negative-control builds only */
+    DB_CANCEL(p->nid);                                          /* never leave a reservation nobody writes */
+#endif
+    stop_file(p->drive,S_WRITE_FAIL,p->shot);
+    return RC_INTERNAL;
+}
+
+/* RAW-only: the JPEG reservation is cancelled after the NEF is on the card. The cancel has no
+ * result, so look at the object afterwards: gone, or no longer in a reserved state (2, 3, 8). */
+__attribute__((noinline)) static int jpeg_cancelled(u32 jid) {
+    u64 o; u32 st;
+    DB_CANCEL(jid);
+    o=DCF_GET(jid); if(!o) return 1;
+    st=LOAD32(o+0x70); DCF_PUT(o);
+    return !(st==2 || st==3 || st==8);
+}
+
+static void release_e(const job_t *jb) { unbind(jb->q); FREE_E(jb->e); STORE64(jb->r+0x748,0); }
+
+/* Everything after the header is built: register, write the JPEG and the NEF, or fall back. */
+__attribute__((noinline)) static u32 flow(plan_t *p,u64 J) {
+    u32 st;
+    if(!(p->flags&F_DCF)) {                                              /* Unregistered fallback */
+        st=ORIG_WRITE(0,p->stock_mode,J); p->st_jpeg=st;
+        if(st==0) raw_route(p);
+        return st;
+    }
+    p->t_reg0=now(); p->reg_rc=register_member(p,p->mtype); p->t_reg1=now();
+    if(p->reg_rc!=DB_OK) {                                               /* no stock registration: JPEG, then Fallback route */
+        st=ORIG_WRITE(0,p->stock_mode,J); p->st_jpeg=st;
+        if(st==0) raw_route(p);
+    } else if(!(p->flags&F_RAWONLY)) {                                   /* RAW+JPEG: stock order JPEG, NEF */
+#ifdef NEG_ORDER                      /* negative-control builds only: NEF before JPEG */
+        p->st_nef=stock_nef(p,0);
+#endif
+        p->t_jpeg0=now(); st=ORIG_WRITE(0,p->stock_mode,J); p->t_jpeg1=now(); p->st_jpeg=st;
+#ifndef NEG_ORDER
+        p->st_nef=stock_nef(p,0);
+#endif
+    } else {                                                             /* RAW-only: NEF first, then drop the JPEG member */
+        p->st_nef=stock_nef(p,1);
+        if(p->st_nef==0) p->cancel_ok=jpeg_cancelled(p->jid);
+        if(p->st_nef==0 && p->cancel_ok==1) st=0;
+        else { p->t_jpeg0=now(); st=ORIG_WRITE(0,p->stock_mode,J); p->t_jpeg1=now(); p->st_jpeg=st; }   /* NEF failed or the cancel did not hold */
+    }
+    return st;
+}
+
+__attribute__((noinline,unused)) static u32 take(const job_t *jb,u64 J) {
+    plan_t *p; u32 st;
+    if(stopped(jb->drive)) { st=ORIG_WRITE(0,0,J); release_e(jb); return st; }   /* an earlier failure: JPEG only */
+    p=prepare(jb);
+    if(!p) { st=ORIG_WRITE(0,0,J); release_e(jb); return st; }          /* JPEG only, E released below */
+    st=flow(p,J);
+    FREE(p->raw);
+#ifndef NEG_LEAK_E                    /* negative-control builds only */
+    release_e(jb);
+#endif
+    return st;
+}
+
+#ifndef PRE_WRITER_PROBE
+/* P3'. Original: mov w0,wzr; mov w1,w21; mov x2,x20; bl 0x406cc134 (result stored by the caller). */
+__attribute__((used)) u32 precapture_write_file(u32 op,u32 mode,u64 J) {
+    job_t jb;
+    if(op!=0 || !eligible(J,mode,&jb)) return ORIG_WRITE(op,mode,J);
+    return take(&jb,J);
+}
+#else
+/* ---------------------------------------------------------------------------------------------
+ * QEMU probe: test builds only, never packaged. The emulator runs the same register / stock write /
+ * mode-3 write / cancel flow (flow() above) on the real database and still-image writer with a
+ * synthetic second file, and records the stock results in Z8PRELOG.BIN in the card root.
+ *   default      an ordinary JPEG still shot: JPEG by the stock writer, NEF registered (as delivered);
+ *   PROBE_MIRROR the emulator only models the RAW (lossless NEF) still path, whose group holds one NEF:
+ *                the NEF is written by the stock writer, a JPEG member is registered and written with
+ *                mode 3 (RAW-only: the JPEG first, then the NEF reservation is cancelled).
+ * --------------------------------------------------------------------------------------------- */
+#ifndef PROBE_FLAGS
+#define PROBE_FLAGS (F_ENABLE|F_FULL|F_FOOTER|F_DCF)
+#endif
+#define PROBE_PAYLOAD 0x100000u
+__attribute__((noinline)) static void probe_log(const plan_t *p,u32 st,u64 t_end) {
+    char path[24]="A:\\Z8PRELOG.BIN"; u8 rec[512] __attribute__((aligned(64))); u32 n; int fd; u64 o;
+    path[0]=p->fin[0];
+    zero(rec,512); copy(rec,(const u8 *)"Z8PREPROBE",10);
+    set32(rec+0x10,2); set32(rec+0x14,p->flags); set32(rec+0x18,p->reg_rc); set32(rec+0x1c,p->st_jpeg);
+    set32(rec+0x20,p->st_nef); set32(rec+0x24,p->cancel_ok); set32(rec+0x28,st);
+    o=DCF_GET(p->jid); set32(rec+0x2c,o?LOAD32(o+0x70):0xfffffffeu); if(o) DCF_PUT(o);
+    o=DCF_GET(p->nid); set32(rec+0x30,o?LOAD32(o+0x70):0xfffffffeu); if(o) DCF_PUT(o);
+    set32(rec+0x34,p->jid); set32(rec+0x38,p->nid); set32(rec+0x3c,p->total); set32(rec+0x40,p->hdr_bytes);
+    set32(rec+0x44,p->L.main.size); set32(rec+0x48,p->L.raw_at); set32(rec+0x4c,p->L.end_at); set32(rec+0x50,p->nsegs);
+    set64(rec+0x58,p->t_enter); set64(rec+0x60,p->t_reg0); set64(rec+0x68,p->t_reg1); set64(rec+0x70,p->t_jpeg0);
+    set64(rec+0x78,p->t_jpeg1); set64(rec+0x80,t_end); set64(rec+0x88,p->J);
+    set32(rec+0x90,EXISTS(p->fin)>=0 ? 1u : 0u);                 /* the registered member's file is on the card under the expected name */
+    set32(rec+0x94,p->mtype); set32(rec+0x98,p->stock_mode);
+    copy(rec+0x100,(const u8 *)p->fin,64);
+    CLEAN(rec,512);
+    fd=CREATE(path,0x20); if(fd<0) return;
+    WRITE(fd,(u64)rec,512,&n); CLOSE(fd);
+}
+#ifndef PROBE_MIRROR
+__attribute__((noinline)) static u32 probe(u64 J) {
+    u8 *raw,*payraw,*wk,*pay; plan_t *p; u64 da=LOAD64(J+0x10); u32 st,i; char lg[24]="A:\\Z8PRELOG.BIN";
+    raw=(u8 *)ALLOC(WORK_BYTES+63,0); payraw=(u8 *)ALLOC(PROBE_PAYLOAD+63,0);
+    if(!raw || !payraw) goto plain;
+    wk=(u8 *)(((u64)raw+63)&~63ul); pay=(u8 *)(((u64)payraw+63)&~63ul);
+    zero(wk+TAB,WORK_BYTES-TAB);
+    p=(plan_t *)(wk+PLAN);
+    p->raw=raw; p->wk=wk; p->J=J; p->m=LOAD64(J+8); p->flags=PROBE_FLAGS; p->budget=6000000;
+    p->jid=LOAD32(J); p->nid=(p->jid&~15u)|2u; p->q=wk+0x3b000; p->payload_bytes=PROBE_PAYLOAD; p->drive='A';
+    p->reg_rc=0; p->st_jpeg=0xffffffffu; p->st_nef=0xffffffffu; p->cancel_ok=0xffffffffu;
+    p->mtype=2; p->stock_mode=0; p->dims_src=da?LOAD64(da):0;
+    p->t_enter=now();
+    if(!da || !stream(LOAD64(da),&p->L.main) || !jpg_name(p->jid,p->fin,p->tmp)) goto plain;
+    lg[0]=p->fin[0];
+    if(EXISTS(lg)>=0 || EXISTS(p->fin)>=0) goto plain;           /* one probe per card */
+    for(i=0;i<4096;i++) wk[i]=(u8)(0xA5^i);
+    p->hdr_bytes=4096; p->L.thumb_bytes=4000;
+    p->L.main_at=4096; p->L.raw_at=(4096+p->L.main.size+4095)&~4095u; p->L.end_at=p->L.raw_at+PROBE_PAYLOAD;
+    p->total=p->L.end_at+((p->flags&F_FOOTER)?512u:0u);
+    p->data=(u64)pay; for(i=0;i<PROBE_PAYLOAD;i++) pay[i]=(u8)(i*7+3);
+    CLEAN(pay,PROBE_PAYLOAD);
+    p->t_header=now();
+    st=flow(p,J);
+    probe_log(p,st,now());
+    FREE(raw); FREE(payraw);
+    return st;
+plain:
+    if(raw) FREE(raw);
+    if(payraw) FREE(payraw);
+    return ORIG_WRITE(0,0,J);
+}
+__attribute__((used)) u32 precapture_write_file(u32 op,u32 mode,u64 J) {
+    if(op!=0 || mode!=0 || (LOAD32(J)&15)!=0) return ORIG_WRITE(op,mode,J);
+    return probe(J);
+}
+#else
+/* DCF name of the NEF with the extension changed to JPG: where the registered JPEG member must appear. */
+static int nef_to_jpg_name(u32 id,char *fin) {
+    u64 fo=DCF_GET(id); if(!fo) return 0;
+    u64 nm=DCF_NAME(fo); u32 len=nm?LOAD32(nm+0x20):0; int ok=0;
+    if(nm && len>=12 && len<60) {
+        for(u32 i=0;i<len;i++) fin[i]=(char)LOAD8(nm+i);
+        fin[len]=0; ok=1;
+        char *x=fin+len-4;
+        if(x[0]!='.' || (x[1]|32)!='n' || (x[2]|32)!='e' || (x[3]|32)!='f') ok=0;
+        if(ok) { x[1]='J'; x[2]='P'; x[3]='G'; }
+    }
+    DCF_PUT(fo);
+    return ok;
+}
+__attribute__((noinline)) static u32 probe(u64 J) {
+    u8 *raw,*payraw,*wk,*pay; plan_t *p; u32 st,i; char lg[24]="A:\\Z8PRELOG.BIN";
+    raw=(u8 *)ALLOC(WORK_BYTES+63,0); payraw=(u8 *)ALLOC(PROBE_PAYLOAD+63,0);
+    if(!raw || !payraw) goto plain;
+    wk=(u8 *)(((u64)raw+63)&~63ul); pay=(u8 *)(((u64)payraw+63)&~63ul);
+    zero(wk+TAB,WORK_BYTES-TAB);
+    p=(plan_t *)(wk+PLAN);
+    p->raw=raw; p->wk=wk; p->J=J; p->m=LOAD64(J+8); p->flags=PROBE_FLAGS; p->budget=6000000;
+    p->jid=LOAD32(J); p->nid=p->jid&~15u; p->q=wk+0x3b000; p->payload_bytes=PROBE_PAYLOAD; p->drive='A';
+    p->reg_rc=0; p->st_jpeg=0xffffffffu; p->st_nef=0xffffffffu; p->cancel_ok=0xffffffffu;
+    p->mtype=0; p->stock_mode=1; p->dims_src=0;                  /* registered member: JPEG (type 0); stock file: NEF (mode 1) */
+    p->t_enter=now();
+    if(!nef_to_jpg_name(p->jid,p->fin)) goto plain;
+    lg[0]=p->fin[0];
+    if(EXISTS(lg)>=0 || EXISTS(p->fin)>=0) goto plain;           /* one probe per card */
+    for(i=0;i<4096;i++) wk[i]=(u8)(0xA5^i);
+    p->hdr_bytes=4096; p->L.thumb_bytes=4000;
+    p->L.main_at=4096; p->L.raw_at=4096; p->L.end_at=4096+PROBE_PAYLOAD;
+    p->total=p->L.end_at+((p->flags&F_FOOTER)?512u:0u);
+    p->data=(u64)pay; for(i=0;i<PROBE_PAYLOAD;i++) pay[i]=(u8)(i*7+3);
+    CLEAN(pay,PROBE_PAYLOAD);
+    p->t_header=now();
+    st=flow(p,J);
+    probe_log(p,st,now());
+    FREE(raw); FREE(payraw);
+    return st;
+plain:
+    if(raw) FREE(raw);
+    if(payraw) FREE(payraw);
+    return ORIG_WRITE(0,1,J);
+}
+__attribute__((used)) u32 precapture_write_file(u32 op,u32 mode,u64 J) {
+    if(op!=0 || mode!=1 || (LOAD32(J)&15)!=2) return ORIG_WRITE(op,mode,J);
+    return probe(J);
+}
+#endif
+#endif
