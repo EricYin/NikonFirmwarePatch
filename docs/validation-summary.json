@@ -98,11 +98,11 @@
   "source_sha256": {
     "LICENSE": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
     "NOTICE.md": "1f2defd8713ef17d8c6b91781eaa9dd9dce663760cea98d48624f395fec3f440",
-    "README.md": "3fc0df916fa1e18218bb434364437d29f148ad15cea7a817694b0c7b6ad00c20",
+    "README.md": "973420ddc41519f5c1b73ca0b537885d0f4fc39b0669438f531d55663a3e0418",
     "configure.py": "f45bfac908c1730ad40b435b857ff402ef0e91df5f046679ea83ced32cdd0ff4",
-    "docs/raw-precapture.md": "e8541341408cc55263f7ca39cb5b7f7104c2d5ee9641c607912e148197700747",
-    "docs/releases.md": "f1b08eb201fc312def88f92235c61a2e19c7dead0989dcb7b1480da111e598bd",
-    "docs/validation.md": "55318bac49143b2299ebff6e4095b61dd9a88021707898fc3e8be212b8cd6245",
+    "docs/raw-precapture.md": "ffbc6cf992409eb77c6d021b5d2872fd4e23acc48f65111b778f468c6d15f5ac",
+    "docs/releases.md": "2c677c805deb979887473aa421fab0455fb05bcda4e71b944336ab37c899cc31",
+    "docs/validation.md": "3d3375731c8692f75e1afb281da137ceed1dfa7a22d18fff201f597e58022243",
     "features.py": "196c2caadcafce5d25e9d5d773fedd05a69014086cbac704116b038a09560cba",
     "patch.py": "f85e95092ce140ff0119ecc98d13179abe68e7b6d481fc5b91a070b9fdcd218e",
     "requirements.txt": "6b8a703c0a562d2b528575457d1b76ae5decc8d4d53093ba6515a32137098d1b",
@@ -261,5 +261,24 @@
     "feature_checks": 42,
     "camera_installation": false,
     "card_write": false
+  },
+  "incident_notice": {
+    "date": "2026-10-19",
+    "issue": "https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3",
+    "status": "USER_REPORT_CAUSE_UNCONFIRMED",
+    "reported_version": "04.03",
+    "reported_features": [
+      "prores",
+      "precapture"
+    ],
+    "reported_symptoms": [
+      "one camera fails to boot after flashing",
+      "another loses RAW pre-capture after card changes"
+    ],
+    "affected_file_sha256": null,
+    "additional_failure_evidence_available": false,
+    "recommendation": "Pause physical-camera installation pending investigation",
+    "existing_tests_do_not_rule_out_report": true,
+    "firmware_implementation_changed": false
   }
 }
