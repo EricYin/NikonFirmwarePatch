@@ -98,11 +98,11 @@
   "source_sha256": {
     "LICENSE": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
     "NOTICE.md": "1f2defd8713ef17d8c6b91781eaa9dd9dce663760cea98d48624f395fec3f440",
-    "README.md": "07eb73f716c321ccb1fa47492b3c6939097e2db9b74c4e575472187bdc83569f",
+    "README.md": "79a66310440f14c20768ba3e7643db322230f1c432bf0883be832cc8d7650ce5",
     "configure.py": "f45bfac908c1730ad40b435b857ff402ef0e91df5f046679ea83ced32cdd0ff4",
-    "docs/raw-precapture.md": "ffbc6cf992409eb77c6d021b5d2872fd4e23acc48f65111b778f468c6d15f5ac",
-    "docs/releases.md": "2c677c805deb979887473aa421fab0455fb05bcda4e71b944336ab37c899cc31",
-    "docs/validation.md": "ed3d555887e23b0cfc3b34cd9256d1af56748b943bbbff1aa46d3382166eedaa",
+    "docs/raw-precapture.md": "319eefbc3d937320201271c32bcdea1405956cf342f539c67bb4a08ce0e3fa6a",
+    "docs/releases.md": "250d086c741840ae67746698d3c9ffe1fc8f8a3219a054eb57dd39ef0f722833",
+    "docs/validation.md": "3d18e7a057fe0eb4304a92653bc3f149796c41bef833b6badc0152ab6ad2e846",
     "features.py": "196c2caadcafce5d25e9d5d773fedd05a69014086cbac704116b038a09560cba",
     "patch.py": "f85e95092ce140ff0119ecc98d13179abe68e7b6d481fc5b91a070b9fdcd218e",
     "requirements.txt": "6b8a703c0a562d2b528575457d1b76ae5decc8d4d53093ba6515a32137098d1b",
@@ -265,7 +265,7 @@
   "incident_notice": {
     "date": "2026-10-19",
     "issue": "https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3",
-    "status": "USER_REPORT_CAUSE_UNCONFIRMED",
+    "status": "FAILURE_REPORT_RETAINED_WITH_SEPARATE_MAINTAINER_NON_REPRODUCTION",
     "reported_version": "04.03",
     "reported_features": [
       "prores",
@@ -279,7 +279,15 @@
     "additional_failure_evidence_available": false,
     "recommendation": "Pause physical-camera installation pending investigation",
     "existing_tests_do_not_rule_out_report": true,
-    "firmware_implementation_changed": false
+    "firmware_implementation_changed": false,
+    "received_reporter_package_sha256": "7047c831e0517e5e5352ae3721e21a0b1ad1f9aa12ddca52eb81cf927e81af9c",
+    "received_reporter_config_sha256": "a8067db1a7e8350c07e1e76bda32aaeb3dde22fb327e829fddc1c9f262704f1f",
+    "received_files_match_reference": true,
+    "affected_camera_flash_readback_verified": false,
+    "failure_process_logs_available": false,
+    "issue_retained": true,
+    "issue_state_at_update": "open",
+    "latest_observation": "Maintainer reports normal boot, no abnormal card-change behavior, and pre-capture enabled with CFG card; includes powered-on insertion/removal"
   },
   "boot_investigation_20261019": {
     "status": "FOUR_MAIN_IMAGES_REACH_NATIVE_MENU_WITH_FIXED_MODEL",
@@ -385,5 +393,40 @@
     "visual_menu_response_confirmed": true,
     "physical_camera_installation_paused": true,
     "physical_failure_cause": "unconfirmed; user report only"
+  },
+  "reporter_artifact_comparison_20261019": {
+    "status": "BYTE_IDENTICAL_TO_REFERENCE_AND_PRETEST_CARD_READBACK",
+    "package_sha256": "7047c831e0517e5e5352ae3721e21a0b1ad1f9aa12ddca52eb81cf927e81af9c",
+    "configuration_sha256": "a8067db1a7e8350c07e1e76bda32aaeb3dde22fb327e829fddc1c9f262704f1f",
+    "independent_package_verification": "PASS",
+    "reported_code_source": "source",
+    "reference_code_source": "prebuilt",
+    "affected_camera_flash_readback_verified": false
+  },
+  "maintainer_hardware_observation_20261019": {
+    "evidence_type": "maintainer_report",
+    "date": "2026-10-19",
+    "firmware_identity": "04.03.p0",
+    "features": [
+      "prores",
+      "precapture"
+    ],
+    "package_sha256": "7047c831e0517e5e5352ae3721e21a0b1ad1f9aa12ddca52eb81cf927e81af9c",
+    "configuration_sha256": "a8067db1a7e8350c07e1e76bda32aaeb3dde22fb327e829fddc1c9f262704f1f",
+    "package_identity_basis": "Pre-test received-file comparison and staged-card readback; subsequent maintainer report",
+    "normal_boot_reported": true,
+    "failure_to_boot_observed_in_this_test": false,
+    "card_changes_without_abnormality_reported": true,
+    "powered_on_card_insertion_removal_without_abnormality_reported": true,
+    "pre_capture_enabled_with_cfg_card_reported": true,
+    "repetition_count": null,
+    "active_write_during_removal_documented": false,
+    "new_capture_files_or_device_logs_provided": false,
+    "new_raw_decode_validation_performed": false,
+    "affected_camera_flash_readback_verified": false,
+    "original_issue_retained": true,
+    "root_cause_confirmed": false,
+    "general_hardware_safety_established": false,
+    "installation_warning_retained": true
   }
 }
