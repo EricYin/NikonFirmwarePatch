@@ -1,8 +1,8 @@
 # C15/C30 HE RAW capture / C15/C30 HE RAW 连拍与预拍
 
-> **Unresolved serious incident report — installation warning retained (2026-10-19).** [Issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) reports failure to boot after flashing and persistent loss of RAW pre-capture after card changes. The subsequently supplied firmware and configuration are byte-identical to the project reference. In a separate physical-camera test, the maintainer reports normal boot and no abnormality during card changes, including insertion/removal while powered on; pre-capture could be enabled with a CFG-equipped card. **The original failure report remains unresolved, and the recommendation to pause physical-camera installation is retained.** This limited observation does not establish general safety or a recovery procedure.
+> **Unresolved serious incident report — installation warning retained (2026-10-19).** [Issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) reports failure to boot after flashing and persistent loss of RAW pre-capture after card changes. The subsequently supplied firmware and configuration are byte-identical to the project reference. In my test on a Z8, the camera booted normally and I observed no abnormality during card changes, including insertion/removal while powered on. I could enable pre-capture with a CFG-equipped card. **The original failure report remains unresolved, and the recommendation to pause physical-camera installation is retained.** This limited observation does not establish general safety or a recovery procedure.
 
-> **故障报告仍待查：保留暂停刷写提示（2026-10-19）。** [Issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) 中的刷写后不开机和换卡后 RAW 预拍摄持续失效报告继续保留。随后收到的固件与配置已确认和项目参考逐字节相同。维护者另一次实机测试报告正常开机，换卡以及开机状态下插拔卡未见异常，插有 CFG 的卡时可启用预拍摄。**原故障原因仍未确认，暂停实体机刷写的建议继续保留。** 本次有限观察不等于普遍安全结论，也不构成已确认的恢复方法。
+> **故障报告仍待查：保留暂停刷写提示（2026-10-19）。** [Issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) 中的刷写后不开机和换卡后 RAW 预拍摄持续失效报告继续保留。随后收到的固件与配置已确认和项目参考逐字节相同。我在自己的 Z8 上测试时，相机正常开机；换卡以及开机状态下插拔卡均未见异常，插有 CFG 的卡时可以启用预拍摄。**原故障原因仍未确认，暂停实体机刷写的建议继续保留。** 本次有限观察不等于普遍安全结论，也不构成已确认的恢复方法。
 
 [English](#english) · [简体中文](#简体中文)
 
@@ -61,7 +61,7 @@ Switch between the three formats only after the previous burst is finished. The 
 
 ### Buffer behavior and limits
 
-A limited maintainer test on 2026-10-19 reported normal startup and card changes, including insertion/removal while powered on, with pre-capture available when a CFG-equipped card was inserted. Write activity at the instant of removal was not documented. See the [physical-observation record](validation.md#maintainer-hardware-observation-2026-10-19); the unresolved failure report and existing handling guidance remain in effect.
+In my test on 2026-10-19, the camera started normally and I observed no abnormality during card changes, including insertion/removal while powered on. I could enable pre-capture with a CFG-equipped card inserted. Write activity at the instant of removal was not documented. See the [physical-observation record](validation.md#maintainer-hardware-observation-2026-10-19); the unresolved failure report and existing handling guidance remain in effect.
 
 - **Capture cadence is not card-writing speed.** Limited RAW+JPEG trials showed roughly 0.45–0.69 s between frame writes; RAW-only showed 0.24–0.32 s. A 14-trigger RAW+JPEG stress sequence saved 308 pairs and took about 155 s to finish writing. These are scene/card-specific observations, not limits or guarantees of sustained 30-fps RAW.
 - The pre-capture **“!”** indicator appeared during accumulated writes. One stress trigger had **zero historical frames and three current frames**. Waiting until the normal indication returns is necessary before expecting a full history window, and filling that window still takes time. The exact buffer threshold has not been established; no guarantee of unlimited retriggering or a particular Max-duration burst is made.
@@ -135,7 +135,7 @@ python configure.py --diagnostic-footer --output build/config-diagnostic
 
 ### 缓冲与限制
 
-2026-10-19 的维护者有限实测报告正常开机、换卡及开机状态下插拔卡未见异常，有 CFG 的卡插入时可启用预拍摄；拔卡瞬间是否正在写入未记录。详见[实机观察记录](validation.md#maintainer-hardware-observation-2026-10-19)，原故障报告及现有取卡操作说明继续保留。
+我在 2026-10-19 的实机测试中正常开机，换卡及开机状态下插拔卡未见异常，有 CFG 的卡插入时可以启用预拍摄；本次记录没有确认拔卡瞬间是否正在写入。详见[实机观察记录](validation.md#maintainer-hardware-observation-2026-10-19)，原故障报告及现有取卡操作说明继续保留。
 
 - **拍摄帧率不等于写卡速度。** 有限实测中，RAW+JPEG 每帧写入间隔约 0.45–0.69 秒，RAW-only 约 0.24–0.32 秒；一次连续触发 14 次的压力试验保存 308 对文件，约 155 秒写完。这些是特定场景和卡的测量，不保证持续每秒写入 30 张 RAW。
 - 写入积压时预拍图标曾出现 **“!”**。压力试验中一次触发**没有历史帧，仅有三张正式帧**。期待完整预拍窗口前需等正常标志恢复，之后还需时间填满历史缓存；确切阈值尚未确认，不保证无限连续触发或某个 Max 后拍长度。

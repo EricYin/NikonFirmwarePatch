@@ -2,11 +2,11 @@
 
 [English](#english) · [简体中文](#简体中文)
 
-> **Unresolved serious incident report — installation warning retained (2026-10-19).** [Issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) reports failure to boot after flashing and persistent loss of RAW pre-capture after card changes. The subsequently supplied firmware and configuration are byte-identical to the project reference. In a separate physical-camera test, the maintainer reports normal boot and no abnormality during card changes, including insertion/removal while powered on; pre-capture could be enabled with a CFG-equipped card. **The original failure report remains unresolved, and the recommendation to pause physical-camera installation is retained.** This limited observation does not establish general safety or a recovery procedure.
+> **Unresolved serious incident report — installation warning retained (2026-10-19).** [Issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) reports failure to boot after flashing and persistent loss of RAW pre-capture after card changes. The subsequently supplied firmware and configuration are byte-identical to the project reference. In my test on a Z8, the camera booted normally and I observed no abnormality during card changes, including insertion/removal while powered on. I could enable pre-capture with a CFG-equipped card. **The original failure report remains unresolved, and the recommendation to pause physical-camera installation is retained.** This limited observation does not establish general safety or a recovery procedure.
 
-> **故障报告仍待查：保留暂停刷写提示（2026-10-19）。** [Issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) 中的刷写后不开机和换卡后 RAW 预拍摄持续失效报告继续保留。随后收到的固件与配置已确认和项目参考逐字节相同。维护者另一次实机测试报告正常开机，换卡以及开机状态下插拔卡未见异常，插有 CFG 的卡时可启用预拍摄。**原故障原因仍未确认，暂停实体机刷写的建议继续保留。** 本次有限观察不等于普遍安全结论，也不构成已确认的恢复方法。
+> **故障报告仍待查：保留暂停刷写提示（2026-10-19）。** [Issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) 中的刷写后不开机和换卡后 RAW 预拍摄持续失效报告继续保留。随后收到的固件与配置已确认和项目参考逐字节相同。我在自己的 Z8 上测试时，相机正常开机；换卡以及开机状态下插拔卡均未见异常，插有 CFG 的卡时可以启用预拍摄。**原故障原因仍未确认，暂停实体机刷写的建议继续保留。** 本次有限观察不等于普遍安全结论，也不构成已确认的恢复方法。
 
-[2026-10-19 physical observation and investigation / 实机观察与调查进展](docs/validation.md#maintainer-hardware-observation-2026-10-19): the maintainer reports normal boot and card changes with the same firmware/configuration bytes; issue #3 remains unresolved. / 同一固件与配置在维护者实机测试中正常开机、换卡未见异常，原故障报告及风险提示继续保留。
+[2026-10-19 physical observation and investigation / 实机观察与调查进展](docs/validation.md#maintainer-hardware-observation-2026-10-19): I tested the same firmware/configuration bytes on my Z8 and observed normal boot and card changes; issue #3 remains unresolved. / 我在自己的 Z8 上测试了相同字节的固件与配置，正常开机、换卡未见异常，原故障报告及风险提示继续保留。
 
 ## English
 

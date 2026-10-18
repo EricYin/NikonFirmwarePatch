@@ -1,20 +1,20 @@
 # Validation scope / 验证范围
 
-> **Unresolved serious incident report — installation warning retained (2026-10-19).** [Issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) reports failure to boot after flashing and persistent loss of RAW pre-capture after card changes. The subsequently supplied firmware and configuration are byte-identical to the project reference. In a separate physical-camera test, the maintainer reports normal boot and no abnormality during card changes, including insertion/removal while powered on; pre-capture could be enabled with a CFG-equipped card. **The original failure report remains unresolved, and the recommendation to pause physical-camera installation is retained.** This limited observation does not establish general safety or a recovery procedure.
+> **Unresolved serious incident report — installation warning retained (2026-10-19).** [Issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) reports failure to boot after flashing and persistent loss of RAW pre-capture after card changes. The subsequently supplied firmware and configuration are byte-identical to the project reference. In my test on a Z8, the camera booted normally and I observed no abnormality during card changes, including insertion/removal while powered on. I could enable pre-capture with a CFG-equipped card. **The original failure report remains unresolved, and the recommendation to pause physical-camera installation is retained.** This limited observation does not establish general safety or a recovery procedure.
 
-> **故障报告仍待查：保留暂停刷写提示（2026-10-19）。** [Issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) 中的刷写后不开机和换卡后 RAW 预拍摄持续失效报告继续保留。随后收到的固件与配置已确认和项目参考逐字节相同。维护者另一次实机测试报告正常开机，换卡以及开机状态下插拔卡未见异常，插有 CFG 的卡时可启用预拍摄。**原故障原因仍未确认，暂停实体机刷写的建议继续保留。** 本次有限观察不等于普遍安全结论，也不构成已确认的恢复方法。
+> **故障报告仍待查：保留暂停刷写提示（2026-10-19）。** [Issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) 中的刷写后不开机和换卡后 RAW 预拍摄持续失效报告继续保留。随后收到的固件与配置已确认和项目参考逐字节相同。我在自己的 Z8 上测试时，相机正常开机；换卡以及开机状态下插拔卡均未见异常，插有 CFG 的卡时可以启用预拍摄。**原故障原因仍未确认，暂停实体机刷写的建议继续保留。** 本次有限观察不等于普遍安全结论，也不构成已确认的恢复方法。
 
 2026-10-18. Public input support remains **official Nikon Z8 C 3.11**. Recorded implementation tests, public-source regression and installation of a newly generated package are distinct evidence.
 
 ## Maintainer hardware observation 2026-10-19
 
-Following the initial incident report and QEMU checks, the maintainer tested the staged public **04.03.p0 ProRes + pre-capture** build on a physical Z8 and reported:
+Following the initial incident report and QEMU checks, I tested the staged public **04.03.p0 ProRes + pre-capture** build on my Z8. I observed:
 
 - Normal startup; the reported failure-to-boot symptom was not observed in this test.
 - No abnormality during card changes, including card insertion/removal with the camera powered on.
 - Pre-capture could be enabled with a card containing `Z8PRE.CFG` inserted.
 
-The reporter-supplied firmware/configuration, the locally rebuilt reference, and the files read back from the maintainer's card before this test are byte-identical:
+The reporter-supplied firmware/configuration, the locally rebuilt reference, and the files read back from my card before this test are byte-identical:
 
 | File | Bytes | SHA-256 |
 |---|---:|---|
@@ -23,11 +23,11 @@ The reporter-supplied firmware/configuration, the locally rebuilt reference, and
 
 The supplied manifest records source compilation; the reference used the default precompiled path. Their final files match exactly, and independent verification of the supplied firmware passed. This comparison identifies the received files; it is not a readback of the affected camera's flashed memory.
 
-**Evidence scope:** these are the maintainer's reported physical observations, associated with the pre-test package/configuration identities and card readback. No new capture files, RAW decoding, device logs, repetition count, or exact card-write activity at removal were supplied for this update. It does not establish safety for removal during active writes, every card/slot/dual-card arrangement, or long-term reliability. Existing image-decoding counts below are unchanged. The original issue remains open and its failure report is retained; this successful test does not resolve its cause or invalidate the reporter's experience. The installation warning remains in place.
+**Test scope:** these observations cover this test on my camera, using the firmware and configuration identified by the pre-test comparison and card readback. This update includes no new capture-file checks, RAW decoding, device logs, repeat count, or record of write activity at removal. The test does not establish safety for removal during active writes, every card/slot/dual-card arrangement, or long-term reliability. Existing image-decoding counts below are unchanged. I am keeping the original issue open and retaining the failure report: I have not established its cause, and this successful test does not invalidate the reporter's experience. The installation warning remains in place.
 
-在先前故障报告与 QEMU 对照之后，维护者用已写卡核对的公开 **04.03.p0 ProRes＋预拍摄组合包**进行了实机测试，报告正常开机；换卡以及开机状态下插拔卡均未见异常，插着有 CFG 的卡时可以启用预拍摄。收到的反馈者固件／配置、本地参考及测试前卡上读回文件逐字节一致，具体身份见上表；对方采用源码编译，本地采用预编译路径，最终字节相同。
+在先前故障报告与 QEMU 对照之后，我用已写卡核对的公开 **04.03.p0 ProRes＋预拍摄组合包**在自己的 Z8 上进行了测试，相机正常开机；换卡以及开机状态下插拔卡均未见异常，插着有 CFG 的卡时可以启用预拍摄。收到的反馈者固件／配置、本地参考及测试前卡上读回文件逐字节一致，具体身份见上表；对方采用源码编译，本地采用预编译路径，最终字节相同。
 
-这是维护者报告的有限实机观察，未附带新的照片、RAW 解码、设备日志、重复次数或拔卡时写入状态记录；不外推到写入中拔卡、全部卡型／卡槽／双卡组合或长期可靠性，也没有增加下文旧实拍的文件检查数量。没有对故障相机的已刷内容做读回。**保留原 issue 和故障报告，不把此次未遇到异常写成“故障不存在”或“已修复”；暂停刷写建议及风险声明继续保留。**
+以上是我这次在自己相机上的观察。本次更新没有新增照片检查、RAW 解码、设备日志、重复次数或拔卡时写入状态记录，因此不能外推到写入中拔卡、全部卡型／卡槽／双卡组合或长期可靠性；下文旧实拍的文件检查数量保持不变。我也没有对故障相机的已刷内容做读回。**我会保留原 issue 和故障报告：这次测试没有遇到异常，但原故障的原因仍未确认，不能据此认定已排除或修复；暂停刷写建议及风险声明继续保留。**
 
 ## Boot investigation 2026-10-19
 
@@ -127,4 +127,4 @@ C15／C30 合计 **328 张 NEF：256 张历史帧、72 张全按当帧及后拍�
 
 官方输入组合包在既有 QEMU 模型完成普通 RAW 单拍，内嵌 JPEG 和 RAW 条带与原厂对照相同；模型中会变化的 ShotInfo 之外只差版本文字。使用明确的模型输入，没有 CPU 寄存器重定向或调试器 RAM 补丁；**不是 C15／C30 端到端仿真或实体相机测试**。CPU 测试的 JPEG 引擎及若干服务是边界模型，码流由测试提供，不证明真实硬件的编码耗时或持续吞吐。
 
-[验证摘要](validation-summary.json)绑定源码和本轮结果。公开版使用独立标识及 v3 配置，旧 v1／v2 配置必须重新生成，默认不加诊断尾标。原始开发与模型告警记录保留在本地，成功运行不等于长期可靠。此前 v0.1.0 发布准备阶段没有给实体相机安装新公开包；之后的维护者实机观察见本页上节。仓库不分发固件、照片、完整设备元数据、模拟器映像或存档输入；只克隆源码无法重现全部帧与硬件核查，也不保证不会冻结、丢帧、损坏数据或相机。
+[验证摘要](validation-summary.json)绑定源码和本轮结果。公开版使用独立标识及 v3 配置，旧 v1／v2 配置必须重新生成，默认不加诊断尾标。原始开发与模型告警记录保留在本地，成功运行不等于长期可靠。此前 v0.1.0 发布准备阶段没有给实体相机安装新公开包；我的后续实机测试见本页上节。仓库不分发固件、照片、完整设备元数据、模拟器映像或存档输入；只克隆源码无法重现全部帧与硬件核查，也不保证不会冻结、丢帧、损坏数据或相机。

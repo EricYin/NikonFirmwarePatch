@@ -98,11 +98,11 @@
   "source_sha256": {
     "LICENSE": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
     "NOTICE.md": "1f2defd8713ef17d8c6b91781eaa9dd9dce663760cea98d48624f395fec3f440",
-    "README.md": "79a66310440f14c20768ba3e7643db322230f1c432bf0883be832cc8d7650ce5",
+    "README.md": "29337e1e651fd512f9027b3f2199089c0595754dd367e9751834e326cf230405",
     "configure.py": "f45bfac908c1730ad40b435b857ff402ef0e91df5f046679ea83ced32cdd0ff4",
-    "docs/raw-precapture.md": "319eefbc3d937320201271c32bcdea1405956cf342f539c67bb4a08ce0e3fa6a",
-    "docs/releases.md": "250d086c741840ae67746698d3c9ffe1fc8f8a3219a054eb57dd39ef0f722833",
-    "docs/validation.md": "3d18e7a057fe0eb4304a92653bc3f149796c41bef833b6badc0152ab6ad2e846",
+    "docs/raw-precapture.md": "51d76d68a7524203bac5a3968bca990952c09a6a8dbb46ff8984be1062278262",
+    "docs/releases.md": "9270de6342685bf1994031f5623706541c6bbeba12626fd28653754642068f5c",
+    "docs/validation.md": "34afebff5f1c033eea64dbe2d9b9c4d19c6b74c61b9a990bf23e4e0cd7e9b1c6",
     "features.py": "196c2caadcafce5d25e9d5d773fedd05a69014086cbac704116b038a09560cba",
     "patch.py": "f85e95092ce140ff0119ecc98d13179abe68e7b6d481fc5b91a070b9fdcd218e",
     "requirements.txt": "6b8a703c0a562d2b528575457d1b76ae5decc8d4d53093ba6515a32137098d1b",
@@ -287,7 +287,7 @@
     "failure_process_logs_available": false,
     "issue_retained": true,
     "issue_state_at_update": "open",
-    "latest_observation": "Maintainer reports normal boot, no abnormal card-change behavior, and pre-capture enabled with CFG card; includes powered-on insertion/removal"
+    "latest_observation": "In my Z8 test, I observed normal boot and no abnormality during card changes, including powered-on insertion/removal; I could enable pre-capture with a CFG-equipped card"
   },
   "boot_investigation_20261019": {
     "status": "FOUR_MAIN_IMAGES_REACH_NATIVE_MENU_WITH_FIXED_MODEL",
@@ -413,7 +413,7 @@
     ],
     "package_sha256": "7047c831e0517e5e5352ae3721e21a0b1ad1f9aa12ddca52eb81cf927e81af9c",
     "configuration_sha256": "a8067db1a7e8350c07e1e76bda32aaeb3dde22fb327e829fddc1c9f262704f1f",
-    "package_identity_basis": "Pre-test received-file comparison and staged-card readback; subsequent maintainer report",
+    "package_identity_basis": "Pre-test received-file comparison and staged-card readback; subsequent first-person physical-camera observation",
     "normal_boot_reported": true,
     "failure_to_boot_observed_in_this_test": false,
     "card_changes_without_abnormality_reported": true,
