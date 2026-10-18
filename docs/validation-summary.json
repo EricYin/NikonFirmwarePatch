@@ -98,11 +98,11 @@
   "source_sha256": {
     "LICENSE": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
     "NOTICE.md": "1f2defd8713ef17d8c6b91781eaa9dd9dce663760cea98d48624f395fec3f440",
-    "README.md": "973420ddc41519f5c1b73ca0b537885d0f4fc39b0669438f531d55663a3e0418",
+    "README.md": "07eb73f716c321ccb1fa47492b3c6939097e2db9b74c4e575472187bdc83569f",
     "configure.py": "f45bfac908c1730ad40b435b857ff402ef0e91df5f046679ea83ced32cdd0ff4",
     "docs/raw-precapture.md": "ffbc6cf992409eb77c6d021b5d2872fd4e23acc48f65111b778f468c6d15f5ac",
     "docs/releases.md": "2c677c805deb979887473aa421fab0455fb05bcda4e71b944336ab37c899cc31",
-    "docs/validation.md": "3d3375731c8692f75e1afb281da137ceed1dfa7a22d18fff201f597e58022243",
+    "docs/validation.md": "ed3d555887e23b0cfc3b34cd9256d1af56748b943bbbff1aa46d3382166eedaa",
     "features.py": "196c2caadcafce5d25e9d5d773fedd05a69014086cbac704116b038a09560cba",
     "patch.py": "f85e95092ce140ff0119ecc98d13179abe68e7b6d481fc5b91a070b9fdcd218e",
     "requirements.txt": "6b8a703c0a562d2b528575457d1b76ae5decc8d4d53093ba6515a32137098d1b",
@@ -280,5 +280,110 @@
     "recommendation": "Pause physical-camera installation pending investigation",
     "existing_tests_do_not_rule_out_report": true,
     "firmware_implementation_changed": false
+  },
+  "boot_investigation_20261019": {
+    "status": "FOUR_MAIN_IMAGES_REACH_NATIVE_MENU_WITH_FIXED_MODEL",
+    "date": "2026-10-19",
+    "cases": [
+      {
+        "case": "stock",
+        "status": "NATIVE_MENU_REACHED_AND_RESPONSIVE",
+        "package_sha256": "d67413c2ede6b9ce8887175f20700bd9fbad2a973a4820968c45503d15d80d96",
+        "main_sha256": "2b43a31c9de838f84b12416de4348a7004e65be07f853ec56ec2b10f3a8e3853",
+        "wall_seconds": 46.26173691707663,
+        "first_ready_virtual_seconds": 20.404270655,
+        "final_virtual_seconds": 26.089126011,
+        "menu_screens": {
+          "menu-ready.png": "5f4b8f96aad941f030c99a757f0fa3a06af5d325a7f0ccff31ad01ca6f6d47fb",
+          "menu-down.png": "d7253abc311533751863e6f2f5df2122f6d62a2bb38f9e1f49cf44f9579d5700",
+          "menu-up.png": "50a90bbf42b8a8e76fdd9524f4e57c093fbf8be5ce83cc5e95afd85356d59ab4"
+        },
+        "evidence": {
+          "result.json": "1eaf9ae1c706c1ea766b13910403e392f8684fb7be962215166a92498e9f7188",
+          "stderr.log": "3d477df8e8a8b93027a4e68b51fb28e8a90bcfde652555f4b82ff5b65be0e398",
+          "runner.py": "8804386218cb9e9cd8607c487569f7b7d82c222c84ecf492be785cec2f4fe0f3",
+          "final.png": "50a90bbf42b8a8e76fdd9524f4e57c093fbf8be5ce83cc5e95afd85356d59ab4"
+        },
+        "owned_qemu_stopped": true
+      },
+      {
+        "case": "prores",
+        "status": "NATIVE_MENU_REACHED_AND_RESPONSIVE",
+        "package_sha256": "b56881c1ee28fec44ad93b7583e8684e43a9638c10cac8f36659531d61769f5e",
+        "main_sha256": "af4412feccf5de25a112e0e327ca6d2a8e10655b89f4a29dbd821d4a589bffd3",
+        "wall_seconds": 45.750558166066185,
+        "first_ready_virtual_seconds": 20.450089666,
+        "final_virtual_seconds": 26.143778006,
+        "menu_screens": {
+          "menu-ready.png": "5f4b8f96aad941f030c99a757f0fa3a06af5d325a7f0ccff31ad01ca6f6d47fb",
+          "menu-down.png": "d7253abc311533751863e6f2f5df2122f6d62a2bb38f9e1f49cf44f9579d5700",
+          "menu-up.png": "50a90bbf42b8a8e76fdd9524f4e57c093fbf8be5ce83cc5e95afd85356d59ab4"
+        },
+        "evidence": {
+          "result.json": "93a76ed100a4a693750c7a5db9af9d3a7223272b8cbfe2fea034ef5faf1297fd",
+          "stderr.log": "bdfa9c54acb6ec4219c43b512e1894d6a3d646ba557ccdb9143835ff7d860763",
+          "runner.py": "8804386218cb9e9cd8607c487569f7b7d82c222c84ecf492be785cec2f4fe0f3",
+          "final.png": "50a90bbf42b8a8e76fdd9524f4e57c093fbf8be5ce83cc5e95afd85356d59ab4"
+        },
+        "owned_qemu_stopped": true
+      },
+      {
+        "case": "precapture",
+        "status": "NATIVE_MENU_REACHED_AND_RESPONSIVE",
+        "package_sha256": "5051d873730e0b9f4f3ce8a7c59433c934a1757b56fcba649edb9865d819c127",
+        "main_sha256": "bf303d3be250a8a195f0c7f94c544b31976ee00388df27324fe173a18da389f1",
+        "wall_seconds": 45.29674845817499,
+        "first_ready_virtual_seconds": 20.500559162,
+        "final_virtual_seconds": 26.085334439,
+        "menu_screens": {
+          "menu-ready.png": "5f4b8f96aad941f030c99a757f0fa3a06af5d325a7f0ccff31ad01ca6f6d47fb",
+          "menu-down.png": "d7253abc311533751863e6f2f5df2122f6d62a2bb38f9e1f49cf44f9579d5700",
+          "menu-up.png": "50a90bbf42b8a8e76fdd9524f4e57c093fbf8be5ce83cc5e95afd85356d59ab4"
+        },
+        "evidence": {
+          "result.json": "81906a25e1fb63da915543364c2725a9bf5ec7e0028fd5df6fe3681a9397bfbf",
+          "stderr.log": "0819b151d2782b0fdc0e5e0776f4060828be1f5b2d1b50bb66240a8904212dec",
+          "runner.py": "8804386218cb9e9cd8607c487569f7b7d82c222c84ecf492be785cec2f4fe0f3",
+          "final.png": "50a90bbf42b8a8e76fdd9524f4e57c093fbf8be5ce83cc5e95afd85356d59ab4"
+        },
+        "owned_qemu_stopped": true
+      },
+      {
+        "case": "combined",
+        "status": "NATIVE_MENU_REACHED_AND_RESPONSIVE",
+        "package_sha256": "7047c831e0517e5e5352ae3721e21a0b1ad1f9aa12ddca52eb81cf927e81af9c",
+        "main_sha256": "6519aa9bee02d067042cb352b2b46cdd58e176aaf51fc7ee34fc6d00ec3ab27a",
+        "wall_seconds": 45.90057979198173,
+        "first_ready_virtual_seconds": 20.482062065,
+        "final_virtual_seconds": 26.212047545,
+        "menu_screens": {
+          "menu-ready.png": "5f4b8f96aad941f030c99a757f0fa3a06af5d325a7f0ccff31ad01ca6f6d47fb",
+          "menu-down.png": "d7253abc311533751863e6f2f5df2122f6d62a2bb38f9e1f49cf44f9579d5700",
+          "menu-up.png": "50a90bbf42b8a8e76fdd9524f4e57c093fbf8be5ce83cc5e95afd85356d59ab4"
+        },
+        "evidence": {
+          "result.json": "c0036d551c4964db8e00a797abceff5d78d863c27d3b30d26de485cc6cb20f31",
+          "stderr.log": "f72debdfc1029d834937c7a22d6ff7450e70e39831a1712baa23ada266d479bf",
+          "runner.py": "8804386218cb9e9cd8607c487569f7b7d82c222c84ecf492be785cec2f4fe0f3",
+          "final.png": "50a90bbf42b8a8e76fdd9524f4e57c093fbf8be5ce83cc5e95afd85356d59ab4"
+        },
+        "owned_qemu_stopped": true
+      }
+    ],
+    "model_inputs_identical": true,
+    "reported_no_boot_reproduced": false,
+    "issue3_excluded": false,
+    "hardware_safety_established": false,
+    "firmware_installation_tested": false,
+    "active_card_reinsertion_tested": false,
+    "card_configuration_present": false,
+    "scope": "Decrypted MAIN boot and menu response with synthetic inputs and fresh virtual card only",
+    "board_commit": "0b48ea878b74e3dc12d23e11ef9b9832850e0bb7",
+    "board_binary_sha256": "092dfa1fe3ba6bc3f0ddde3a3896c0e1ebf0bab9b31e0040155a9d98d11bb011",
+    "tools_commit": "c24e33460ab311b8b120b19ba25f532ccef1b391",
+    "public_toolkit_sha256": "4f2dde963e888987c1ad6f03f151de6b335780d378206f4320d9ecc864cf4a53",
+    "visual_menu_response_confirmed": true,
+    "physical_camera_installation_paused": true,
+    "physical_failure_cause": "unconfirmed; user report only"
   }
 }

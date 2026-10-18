@@ -6,6 +6,8 @@
 
 > **严重故障报告：请暂停实体相机刷写（2026-10-19）。** [Issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) 报告，一台 Z8 刷入 C 4.03 的 ProRes＋RAW 预拍摄组合包后无法开机，另一台换卡后 RAW 预拍摄持续失效。目前只有用户反馈，未取得实刷文件哈希、更新过程或启动日志，原因和影响范围尚未确认。**调查期间请勿刷入这些实验固件，包括 v0.1.0 工具生成的包。** 离线校验或 QEMU 启动通过不能证明实机安全、排除该报告，也不能证明恢复方法有效；本调查尚无已确认的恢复流程。
 
+[2026-10-19 boot investigation / 启动调查结果](docs/validation.md#boot-investigation-2026-10-19): the four MAIN images reached the menu in a fixed QEMU model; the reported real-camera failures remain unresolved. / 四个 MAIN 在固定模型中进入菜单，实机故障仍未定位，暂停刷写提示继续有效。
+
 ## English
 
 Build a local Nikon Z8 firmware update with the features you select:

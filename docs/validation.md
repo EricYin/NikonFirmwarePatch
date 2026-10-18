@@ -6,6 +6,23 @@
 
 2026-10-18. Public input support remains **official Nikon Z8 C 3.11**. Recorded implementation tests, public-source regression and installation of a newly generated package are distinct evidence.
 
+## Boot investigation 2026-10-19
+
+The exact public `v0.1.0` toolkit was downloaded again and verified against SHA-256 `4f2dde963e888987c1ad6f03f151de6b335780d378206f4320d9ecc864cf4a53`. With the official C 3.11 input, all three feature selections were built in default precompiled mode with an empty executable search path, using output identity `04.03.p0`. Independent package verification passed and the output hashes matched the release's existing records.
+
+| MAIN image | Result in the fixed QEMU model |
+|---|---|
+| Official C 3.11 control | Reached the native photo menu; down/up inputs responded |
+| ProRes only, 04.03.p0 | Reached the native photo menu; down/up inputs responded |
+| RAW pre-capture only, 04.03.p0 | Reached the native photo menu; down/up inputs responded |
+| Combined, 04.03.p0 | Reached the native photo menu; down/up inputs responded |
+
+The four runs used the same pinned board, tools, synthetic ROM/sensor/MCU inputs and fresh file-backed virtual NVMe card. Down selected **Extended menu banks** and up selected **Shooting menu bank**; corresponding screenshots were byte-identical across all four runs and visually checked. No unmodeled-MMIO abort occurred. Each owned emulator process was stopped. Full package and MAIN hashes, model identities and screen hashes are recorded under `boot_investigation_20261019` in the [validation summary](validation-summary.json).
+
+**This does not resolve or exclude issue #3.** The emulator loads the decrypted MAIN at `0x40160000`; it does not test flashing, the boot ROM, real persistent settings/calibration, power behavior or the full camera startup chain. The virtual card was initially blank, with no `Z8PRE.CFG`; C15/C30 capture and live card removal/reinsertion were not tested. The reporter's actual package hash and update/boot evidence are still unavailable. The warning to pause physical-camera installation remains in force, and no recovery procedure is established.
+
+本轮重新下载实际公开的 v0.1.0 工具包，按默认预编译方式生成三个 `04.03.p0` 功能包，整包哈希均与既有发布记录一致。原厂正控和三个修改 MAIN 在同一固定 QEMU 条件下都进入原生拍摄菜单并响应上下按键，对应截图逐字节一致，目视确认选中行正确。**没有复现这一入口和模型条件下的不开机，不等于排除实机故障。** 本轮不覆盖升级／刷写、完整上电链、真实保留设置／校准或真实卡状态；空白虚拟卡无配置文件，没有测试 C15／C30 或运行中换卡。缺少故障包哈希和刷写／启动证据，根因尚未确认，暂停刷写提示不撤销。下一步应先取得已有故障文件的身份及具体故障过程，不能靠重复相同模拟运行宣布安全或恢复成功。
+
 ## Precompiled distribution update
 
 The release changes code delivery and offline validation, without changing the reviewed ARM64 patch or its feature recipes. The 30,301-byte pre-capture module retains SHA-256 `479f4e37db3968a9e796fc97d865246793ebbac83b28f10a95711535c45cb715`. The original implementation evidence below is retained from source commit `d155b8b183e359140ac36147297f33707b9374e5`; its hash-bound summary is preserved in [implementation validation](validation-implementation-v3.json). Native execution, image decoding and camera tests were not repeated for this packaging change.
