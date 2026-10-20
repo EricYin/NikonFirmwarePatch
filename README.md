@@ -2,12 +2,6 @@
 
 [English](#english) · [简体中文](#简体中文)
 
-> **Unresolved serious incident report — installation warning retained (2026-10-19).** [Issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) reports failure to boot after flashing and persistent loss of RAW pre-capture after card changes. The subsequently supplied firmware and configuration are byte-identical to the project reference. In my test on a Z8, the camera booted normally and I observed no abnormality during card changes, including insertion/removal while powered on. I could enable pre-capture with a CFG-equipped card. **The original failure report remains unresolved, and the recommendation to pause physical-camera installation is retained.** This limited observation does not establish general safety or a recovery procedure.
-
-> **故障报告仍待查：保留暂停刷写提示（2026-10-19）。** [Issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) 中的刷写后不开机和换卡后 RAW 预拍摄持续失效报告继续保留。随后收到的固件与配置已确认和项目参考逐字节相同。我在自己的 Z8 上测试时，相机正常开机；换卡以及开机状态下插拔卡均未见异常，插有 CFG 的卡时可以启用预拍摄。**原故障原因仍未确认，暂停实体机刷写的建议继续保留。** 本次有限观察不等于普遍安全结论，也不构成已确认的恢复方法。
-
-[2026-10-19 physical observation and investigation / 实机观察与调查进展](docs/validation.md#maintainer-hardware-observation-2026-10-19): I tested the same firmware/configuration bytes on my Z8 and observed normal boot and card changes; issue #3 remains unresolved. / 我在自己的 Z8 上测试了相同字节的固件与配置，正常开机、换卡未见异常，原故障报告及风险提示继续保留。
-
 ## English
 
 Build a local Nikon Z8 firmware update with the features you select:
@@ -88,7 +82,7 @@ A fixed whole-output hash applies only to a fixed input, feature selection, vers
 
 Hardware records for the current implementation contain **328 C15/C30 HE NEFs: 256 historical and 72 full-press/post-release frames**, plus an ordinary single-shot regression. All 328 passed file checks and complete Adobe DNG Converter 18.1.1 decoding, including full-size embedded previews. Menu tests covered RAW, RAW+JPEG fine/basic/fine★ and JPEG normal★; all six JPEG grades and the menu-setting composition also have bounded machine-code coverage.
 
-Frame correspondence was checked by automated image comparison, supplemented by visual review where repeated timer readings made the score ambiguous. The reviewed readings matched their own RAW/JPEG frames; no frame mismatch was identified. This is limited implementation testing, **not hardware certification of each newly generated public package or feature combination**. See the [validation scope](docs/validation.md).
+Frame correspondence was checked by automated image comparison, supplemented by visual review where repeated timer readings made the score ambiguous. The reviewed readings matched their own RAW/JPEG frames; no frame mismatch was identified. This is limited implementation testing, **not hardware certification of each newly generated public package or feature combination**. See the [validation scope](docs/validation.md). The reporter’s later hardware feedback and closure of issue #3 are recorded in the [2026-10-20 follow-up](docs/validation.md#issue-3-follow-up-2026-10-20).
 
 ```sh
 python tests/validate.py --stock "/path/to/Z_8_0311.bin" --report build/prores-tests.json
@@ -184,7 +178,7 @@ python patch.py "/path/to/Z_8_0311.bin" --features prores precapture --version 0
 
 当前实现的上机记录包含 **328 张 C15／C30 HE NEF：256 张历史帧、72 张全按当帧及后拍帧**，另有普通单拍回归。328 张全部文件检查和 Adobe DNG Converter 18.1.1 完整解码通过，均带全尺寸内嵌预览。菜单上机覆盖 RAW、RAW+JPEG fine／basic／fine★ 及 JPEG normal★；六档 JPEG 和菜单三项组合另有原指令限定执行覆盖。
 
-画面对应通过自动图像比对检查，并对计时器重复读数造成的评分歧义进行了目视复核；复核读数与本帧 RAW／JPEG 一致，未发现帧错配。这是有限的实现测试，**不是每个公开新包或功能组合的上机认证**。详细边界见[验证范围](docs/validation.md)。
+画面对应通过自动图像比对检查，并对计时器重复读数造成的评分歧义进行了目视复核；复核读数与本帧 RAW／JPEG 一致，未发现帧错配。这是有限的实现测试，**不是每个公开新包或功能组合的上机认证**。详细边界见[验证范围](docs/validation.md)。测试者的后续实机反馈与 issue #3 关闭说明见 [2026-10-20 记录](docs/validation.md#issue-3-follow-up-2026-10-20)。
 
 ```sh
 python tests/validate.py --stock "/path/to/Z_8_0311.bin" --report build/prores-tests.json

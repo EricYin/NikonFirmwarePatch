@@ -98,11 +98,11 @@
   "source_sha256": {
     "LICENSE": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
     "NOTICE.md": "1f2defd8713ef17d8c6b91781eaa9dd9dce663760cea98d48624f395fec3f440",
-    "README.md": "29337e1e651fd512f9027b3f2199089c0595754dd367e9751834e326cf230405",
+    "README.md": "a95f8c701c648fadee245ff8390626648f239952cb686c56f24499274236eac2",
     "configure.py": "f45bfac908c1730ad40b435b857ff402ef0e91df5f046679ea83ced32cdd0ff4",
-    "docs/raw-precapture.md": "51d76d68a7524203bac5a3968bca990952c09a6a8dbb46ff8984be1062278262",
-    "docs/releases.md": "9270de6342685bf1994031f5623706541c6bbeba12626fd28653754642068f5c",
-    "docs/validation.md": "34afebff5f1c033eea64dbe2d9b9c4d19c6b74c61b9a990bf23e4e0cd7e9b1c6",
+    "docs/raw-precapture.md": "f75b495bb2d38d198d5fbe19a4cf584286077327654db66e0a08506378d041ae",
+    "docs/releases.md": "3ac350c9f90f79a7fd89b663ab15af06f7c4cd6dc2a7f169970390274f27f1c6",
+    "docs/validation.md": "8156afe22aaae9f3fc6e3c37e02611210408ba3fae7c50c7ffae4b706cf98401",
     "features.py": "196c2caadcafce5d25e9d5d773fedd05a69014086cbac704116b038a09560cba",
     "patch.py": "f85e95092ce140ff0119ecc98d13179abe68e7b6d481fc5b91a070b9fdcd218e",
     "requirements.txt": "6b8a703c0a562d2b528575457d1b76ae5decc8d4d53093ba6515a32137098d1b",
@@ -263,9 +263,9 @@
     "card_write": false
   },
   "incident_notice": {
-    "date": "2026-10-19",
+    "date": "2026-10-20",
     "issue": "https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3",
-    "status": "FAILURE_REPORT_RETAINED_WITH_SEPARATE_MAINTAINER_NON_REPRODUCTION",
+    "status": "CLOSED_BY_REPORTER_AFTER_FOLLOW_UP_TESTS",
     "reported_version": "04.03",
     "reported_features": [
       "prores",
@@ -277,7 +277,7 @@
     ],
     "affected_file_sha256": null,
     "additional_failure_evidence_available": false,
-    "recommendation": "Pause physical-camera installation pending investigation",
+    "recommendation": "Incident-specific installation pause lifted after reporter follow-up; general experimental-firmware risk statement retained",
     "existing_tests_do_not_rule_out_report": true,
     "firmware_implementation_changed": false,
     "received_reporter_package_sha256": "7047c831e0517e5e5352ae3721e21a0b1ad1f9aa12ddca52eb81cf927e81af9c",
@@ -286,8 +286,13 @@
     "affected_camera_flash_readback_verified": false,
     "failure_process_logs_available": false,
     "issue_retained": true,
-    "issue_state_at_update": "open",
-    "latest_observation": "In my Z8 test, I observed normal boot and no abnormality during card changes, including powered-on insertion/removal; I could enable pre-capture with a CFG-equipped card"
+    "issue_state_at_update": "closed",
+    "latest_observation": "Reporter reports 10 Z8 cameras tested without black screens, freezes or failure to boot; earlier black screen not reproduced; RAW pre-capture issue attributed to an operating mistake",
+    "follow_up_comment": "https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3#issuecomment-6288128394",
+    "closed_at": "2026-10-20T09:44:38Z",
+    "pinned_incident_notice_active": false,
+    "physical_camera_installation_paused": false,
+    "general_experimental_risk_statement_retained": true
   },
   "boot_investigation_20261019": {
     "status": "FOUR_MAIN_IMAGES_REACH_NATIVE_MENU_WITH_FIXED_MODEL",
@@ -392,7 +397,8 @@
     "public_toolkit_sha256": "4f2dde963e888987c1ad6f03f151de6b335780d378206f4320d9ecc864cf4a53",
     "visual_menu_response_confirmed": true,
     "physical_camera_installation_paused": true,
-    "physical_failure_cause": "unconfirmed; user report only"
+    "physical_failure_cause": "unconfirmed; user report only",
+    "notice_status_as_of": "2026-10-19; superseded by incident_notice on 2026-10-20"
   },
   "reporter_artifact_comparison_20261019": {
     "status": "BYTE_IDENTICAL_TO_REFERENCE_AND_PRETEST_CARD_READBACK",
@@ -427,6 +433,27 @@
     "original_issue_retained": true,
     "root_cause_confirmed": false,
     "general_hardware_safety_established": false,
-    "installation_warning_retained": true
+    "installation_warning_retained": true,
+    "notice_status_as_of": "2026-10-19; superseded by incident_notice on 2026-10-20"
+  },
+  "reporter_follow_up_20261020": {
+    "evidence_type": "reporter_issue_comment",
+    "source": "https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3#issuecomment-6288128394",
+    "reported_at": "2026-10-20T09:44:36Z",
+    "reported_camera_model": "Nikon Z8",
+    "reported_firmware_version": "C 4.03",
+    "reported_camera_count": 10,
+    "overlap_with_original_reported_cameras": "not specified",
+    "no_black_screen_freeze_or_boot_failure_reported_in_follow_up_tests": true,
+    "earlier_black_screen_reproduced": false,
+    "raw_precapture_failure_attributed_by_reporter_to": "operating mistake",
+    "reproducible_firmware_defect_established_by_reporter": false,
+    "per_camera_package_hashes_or_test_logs_in_comment": false,
+    "earlier_black_screen_root_cause_established": false,
+    "general_hardware_safety_established": false,
+    "issue_closed_by_reporter": true,
+    "original_report_retained": true,
+    "incident_specific_notice_removed": true,
+    "firmware_implementation_changed": false
   }
 }

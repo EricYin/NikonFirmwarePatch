@@ -1,10 +1,16 @@
 # Validation scope / 验证范围
 
-> **Unresolved serious incident report — installation warning retained (2026-10-19).** [Issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) reports failure to boot after flashing and persistent loss of RAW pre-capture after card changes. The subsequently supplied firmware and configuration are byte-identical to the project reference. In my test on a Z8, the camera booted normally and I observed no abnormality during card changes, including insertion/removal while powered on. I could enable pre-capture with a CFG-equipped card. **The original failure report remains unresolved, and the recommendation to pause physical-camera installation is retained.** This limited observation does not establish general safety or a recovery procedure.
-
-> **故障报告仍待查：保留暂停刷写提示（2026-10-19）。** [Issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) 中的刷写后不开机和换卡后 RAW 预拍摄持续失效报告继续保留。随后收到的固件与配置已确认和项目参考逐字节相同。我在自己的 Z8 上测试时，相机正常开机；换卡以及开机状态下插拔卡均未见异常，插有 CFG 的卡时可以启用预拍摄。**原故障原因仍未确认，暂停实体机刷写的建议继续保留。** 本次有限观察不等于普遍安全结论，也不构成已确认的恢复方法。
-
 2026-10-18. Public input support remains **official Nikon Z8 C 3.11**. Recorded implementation tests, public-source regression and installation of a newly generated package are distinct evidence.
+
+## Issue #3 follow-up 2026-10-20
+
+The original [issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) reported failure to boot on one Z8 and loss of RAW pre-capture after card changes on another. On 2026-10-20, the reporter [updated and closed the issue](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3#issuecomment-6288128394): they reported testing C 4.03 modified firmware on 10 Z8 cameras without black screens, freezes or failure to boot. They said the earlier black-screen incident had not been reproduced, and attributed the RAW pre-capture problem to an operating mistake rather than a confirmed firmware defect.
+
+Based on that follow-up, I have removed the incident-specific pause-installation notice. The original report, file comparison and investigation below remain available. This is the reporter’s hardware feedback; the comment does not provide per-camera package hashes or test logs. It does not establish the cause of the earlier black screen or general hardware safety. The usual experimental-firmware risk statement remains applicable; no firmware change was made for this update.
+
+原 [issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) 报告一台 Z8 刷写后无法开机，另一台换卡后 RAW 预拍摄无法恢复。测试者于 2026-10-20 [补充反馈并关闭 issue](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3#issuecomment-6288128394)：10 台 Z8 使用 C 4.03 修改固件测试，均未出现黑屏、死机或无法开机；此前黑屏个例未能复现，RAW 预拍摄失效则被测试者确认为操作不当，并非已确认的固件缺陷。
+
+我已据此撤下专项暂停刷写提示，原故障报告、文件比对及下文的调查记录继续保留。这是测试者提供的实机反馈，评论未附逐台固件哈希或测试日志；不能据此确定早先黑屏的原因或保证普遍安全。常规实验固件风险说明继续适用，本次没有修改固件。
 
 ## Maintainer hardware observation 2026-10-19
 
@@ -23,11 +29,11 @@ The reporter-supplied firmware/configuration, the locally rebuilt reference, and
 
 The supplied manifest records source compilation; the reference used the default precompiled path. Their final files match exactly, and independent verification of the supplied firmware passed. This comparison identifies the received files; it is not a readback of the affected camera's flashed memory.
 
-**Test scope:** these observations cover this test on my camera, using the firmware and configuration identified by the pre-test comparison and card readback. This update includes no new capture-file checks, RAW decoding, device logs, repeat count, or record of write activity at removal. The test does not establish safety for removal during active writes, every card/slot/dual-card arrangement, or long-term reliability. Existing image-decoding counts below are unchanged. I am keeping the original issue open and retaining the failure report: I have not established its cause, and this successful test does not invalidate the reporter's experience. The installation warning remains in place.
+**Test scope:** these observations cover this test on my camera, using the firmware and configuration identified by the pre-test comparison and card readback. This update includes no new capture-file checks, RAW decoding, device logs, repeat count, or record of write activity at removal. The test does not establish safety for removal during active writes, every card/slot/dual-card arrangement, or long-term reliability. Existing image-decoding counts below are unchanged. I have retained the original failure report. This test alone did not establish its cause; the reporter’s later follow-up and issue closure are recorded above.
 
 在先前故障报告与 QEMU 对照之后，我用已写卡核对的公开 **04.03.p0 ProRes＋预拍摄组合包**在自己的 Z8 上进行了测试，相机正常开机；换卡以及开机状态下插拔卡均未见异常，插着有 CFG 的卡时可以启用预拍摄。收到的反馈者固件／配置、本地参考及测试前卡上读回文件逐字节一致，具体身份见上表；对方采用源码编译，本地采用预编译路径，最终字节相同。
 
-以上是我这次在自己相机上的观察。本次更新没有新增照片检查、RAW 解码、设备日志、重复次数或拔卡时写入状态记录，因此不能外推到写入中拔卡、全部卡型／卡槽／双卡组合或长期可靠性；下文旧实拍的文件检查数量保持不变。我也没有对故障相机的已刷内容做读回。**我会保留原 issue 和故障报告：这次测试没有遇到异常，但原故障的原因仍未确认，不能据此认定已排除或修复；暂停刷写建议及风险声明继续保留。**
+以上是我这次在自己相机上的观察。本次更新没有新增照片检查、RAW 解码、设备日志、重复次数或拔卡时写入状态记录，因此不能外推到写入中拔卡、全部卡型／卡槽／双卡组合或长期可靠性；下文旧实拍的文件检查数量保持不变。我也没有对故障相机的已刷内容做读回。我保留了原故障报告；仅凭这次测试未遇到异常，不能确定原故障的原因。测试者后续反馈及 issue 关闭经过见上节。
 
 ## Boot investigation 2026-10-19
 
@@ -42,9 +48,9 @@ The exact public `v0.1.0` toolkit was downloaded again and verified against SHA-
 
 The four runs used the same pinned board, tools, synthetic ROM/sensor/MCU inputs and fresh file-backed virtual NVMe card. Down selected **Extended menu banks** and up selected **Shooting menu bank**; corresponding screenshots were byte-identical across all four runs and visually checked. No unmodeled-MMIO abort occurred. Each owned emulator process was stopped. Full package and MAIN hashes, model identities and screen hashes are recorded under `boot_investigation_20261019` in the [validation summary](validation-summary.json).
 
-**This does not resolve or exclude issue #3.** The emulator loads the decrypted MAIN at `0x40160000`; it does not test flashing, the boot ROM, real persistent settings/calibration, power behavior or the full camera startup chain. The virtual card was initially blank, with no `Z8PRE.CFG`; C15/C30 capture and live card removal/reinsertion were not tested. At the time of these QEMU runs, the reporter's files had not yet been received. The later file comparison and physical observation are recorded above; the affected camera's update/boot logs and flashed-memory readback remain unavailable. The warning to pause physical-camera installation remains in force, and no recovery procedure is established.
+**These QEMU runs alone did not resolve or exclude the reported hardware failures.** The emulator loads the decrypted MAIN at `0x40160000`; it does not test flashing, the boot ROM, real persistent settings/calibration, power behavior or the full camera startup chain. The virtual card was initially blank, with no `Z8PRE.CFG`; C15/C30 capture and live card removal/reinsertion were not tested. At the time of these QEMU runs, the reporter's files had not yet been received. The later file comparison and physical observation are recorded above; the affected camera's update/boot logs and flashed-memory readback remain unavailable. These runs did not establish a recovery procedure. The subsequent reporter follow-up and removal of the incident-specific notice are recorded above.
 
-本轮重新下载实际公开的 v0.1.0 工具包，按默认预编译方式生成三个 `04.03.p0` 功能包，整包哈希均与既有发布记录一致。原厂正控和三个修改 MAIN 在同一固定 QEMU 条件下都进入原生拍摄菜单并响应上下按键，对应截图逐字节一致，目视确认选中行正确。**没有复现这一入口和模型条件下的不开机，不等于排除实机故障。** 本轮不覆盖升级／刷写、完整上电链、真实保留设置／校准或真实卡状态；空白虚拟卡无配置文件，没有测试 C15／C30 或运行中换卡。这些 QEMU 运行时尚未收到反馈者文件；后续文件比对和实机观察见上节。故障相机的刷写／启动过程和已刷内容读回仍缺失，根因尚未确认，暂停刷写提示不撤销，不能靠重复相同模拟运行宣布安全或恢复成功。
+本轮重新下载实际公开的 v0.1.0 工具包，按默认预编译方式生成三个 `04.03.p0` 功能包，整包哈希均与既有发布记录一致。原厂正控和三个修改 MAIN 在同一固定 QEMU 条件下都进入原生拍摄菜单并响应上下按键，对应截图逐字节一致，目视确认选中行正确。**没有复现这一入口和模型条件下的不开机，不等于排除实机故障。** 本轮不覆盖升级／刷写、完整上电链、真实保留设置／校准或真实卡状态；空白虚拟卡无配置文件，没有测试 C15／C30 或运行中换卡。这些 QEMU 运行时尚未收到反馈者文件；后续文件比对和实机观察见上节。故障相机的刷写／启动过程和已刷内容读回仍缺失，这些模拟运行本身没有确定根因或恢复方法。后续测试者反馈及专项提示撤下经过见上节。
 
 ## Precompiled distribution update
 

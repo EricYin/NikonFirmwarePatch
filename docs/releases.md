@@ -1,12 +1,8 @@
 # 发布包与独立验证
 
-> **Unresolved serious incident report — installation warning retained (2026-10-19).** [Issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) reports failure to boot after flashing and persistent loss of RAW pre-capture after card changes. The subsequently supplied firmware and configuration are byte-identical to the project reference. In my test on a Z8, the camera booted normally and I observed no abnormality during card changes, including insertion/removal while powered on. I could enable pre-capture with a CFG-equipped card. **The original failure report remains unresolved, and the recommendation to pause physical-camera installation is retained.** This limited observation does not establish general safety or a recovery procedure.
-
-> **故障报告仍待查：保留暂停刷写提示（2026-10-19）。** [Issue #3](https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3) 中的刷写后不开机和换卡后 RAW 预拍摄持续失效报告继续保留。随后收到的固件与配置已确认和项目参考逐字节相同。我在自己的 Z8 上测试时，相机正常开机；换卡以及开机状态下插拔卡均未见异常，插有 CFG 的卡时可以启用预拍摄。**原故障原因仍未确认，暂停实体机刷写的建议继续保留。** 本次有限观察不等于普遍安全结论，也不构成已确认的恢复方法。
-
 工具包版本 `v0.1.0` 与固件版本号相互独立。用户仍可选择 ProRes、预拍摄或两者，以及 `NN.NN` 版本号和一个小写字母加一位数字的 tag。默认功能仍为 ProRes；“默认预编译”指选择预拍摄后取得该功能代码的方式。
 
-我这次的实机测试及收到文件的身份比对见[验证范围](validation.md#maintainer-hardware-observation-2026-10-19)。这是新的观察记录，没有修改 v0.1.0 的机器码、tag 或附件；原故障报告继续保留。
+我的 2026-10-19 实机测试及收到文件的身份比对见[验证范围](validation.md#maintainer-hardware-observation-2026-10-19)。测试者于 2026-10-20 补充 10 台 Z8 的测试反馈并关闭 issue #3；我已据此撤下专项暂停刷写提示。原报告及后续说明见[调查记录](validation.md#issue-3-follow-up-2026-10-20)。v0.1.0 的机器码、tag 和附件保持不变。
 
 ## 下载和使用
 
