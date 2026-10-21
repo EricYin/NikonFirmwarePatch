@@ -81,9 +81,11 @@ The package has five modules and is 99,051,117 bytes. Both the builder and indep
 
 A fixed whole-output hash applies only to a fixed input, feature selection, version and tag. Custom outputs are checked against the published per-feature recipes and identity rules. Their locally generated hashes identify the files for later readback; a locally generated hash alone is not proof of a correct build. When running `verify.py` separately, supply `--features`, `--version` and `--tag` to check your intended options. Omitting them checks detected features and consistent identity and reports that distinction.
 
-This release is based on the hardware-tested HN8 implementation. Its latest camera session recorded **108 C15/C30 frames**, producing **158 HE★ NEF files** across two cards, plus one ordinary single-shot NEF. All **159 NEFs** passed complete Adobe decoding. The tests covered backup, RAW/JPEG split, and changes to card roles or the primary slot while earlier frames were still being written. I checked the quality display on the camera, supported by screen photos.
+**The public combined `04.04.p0` package has now completed a camera session:** 81 exposures produced 102 NEFs (62 HE★, 40 HE), 62 JPEGs and two ProRes clips. Every NEF decoded completely; all 21 dual-card NEF pairs have identical RAW strips and decoded pixels, and all NEFs end at the RAW strip with no diagnostic footer. HQ and Proxy clips passed all-frame structure/matrix checks and complete video/audio decoding. See the [public camera-file results](docs/validation.md#public-0404p0-camera-files-2026-10-21).
 
-The public build uses public identifiers and omits HN8’s diagnostic footer. The [validation record](docs/validation.md) distinguishes the tested HN8 package, the public-port equivalence checks, actual public machine-code execution, generated-file decoding and QEMU checks. It also records the timer ROI limitation and subsequent visual confirmation. The new public package has not itself been installed on a camera. Previous evidence and the [issue #3 follow-up](docs/validation.md#issue-3-follow-up-2026-10-20) remain available.
+This release is based on the previously hardware-tested HN8 implementation. Its latest camera session recorded **108 C15/C30 frames**, producing **158 HE★ NEF files** across two cards, plus one ordinary single-shot NEF. All **159 NEFs** passed complete Adobe decoding. The tests covered backup, RAW/JPEG split, and changes to card roles or the primary slot while earlier frames were still being written. I checked the quality display on the camera, supported by screen photos.
+
+The public build uses public identifiers and omits HN8’s diagnostic footer. The [validation record](docs/validation.md) distinguishes the tested HN8 package, the public-port equivalence checks, actual public machine-code execution, generated-file decoding and QEMU checks. It also records the timer ROI limitation and subsequent visual confirmation. The new public camera-file results above are separate from that HN8 session; they do not cover nearly full cards or prolonged stress. Previous evidence and the [issue #3 follow-up](docs/validation.md#issue-3-follow-up-2026-10-20) remain available.
 
 ```sh
 python tests/validate.py --stock "/path/to/Z_8_0311.bin" --report build/prores-tests.json
@@ -180,9 +182,11 @@ python patch.py "/path/to/Z_8_0311.bin" --features prores precapture --version 0
 
 固定整包哈希只适用于输入、功能组合、版本和 tag 全部固定的构建。自定义产物通过公开功能配方及版本规则核验；本地产生的哈希用于后续读回确认，不能单凭“生成了哈希”证明构建正确。单独运行 `verify.py` 时，传入 `--features`、`--version`、`--tag` 可核对预期选项；省略时检查实际检测出的功能和版本一致性，报告会区分两者。
 
-本版以已上机的 HN8 为基础。最近一次实机测试的 **108 帧 C15／C30 拍摄在两张卡上生成 158 个 HE★ NEF 文件**，另有普通单拍 1 个 NEF；**159 个 NEF 全部完整 Adobe 解码通过**。覆盖双卡备份、RAW／JPEG 分卡，以及积压写入期间改变副卡槽功能或主卡槽。我在相机上目视确认了画质显示，并有拍屏佐证。
+**公开组合包 `04.04.p0` 已完成本轮实拍文件检查：**81 个拍摄帧产生 102 个 NEF（62 个 HE★、40 个 HE）、62 个 JPEG 和两段 ProRes 录像。NEF 全部完整解码，21 对双卡 NEF 的 RAW 条带与像素一致，全部 NEF 在 RAW 条带结束处结尾，没有诊断尾标。HQ／Proxy 两段录像通过逐帧结构与量化矩阵核查，并完整解码视频及音频。详见[公开版实拍文件结果](docs/validation.md#public-0404p0-camera-files-2026-10-21)。
 
-公开版使用独立标识，默认关闭 HN8 的诊断尾标。[验证记录](docs/validation.md)分别说明 HN8 上机包、公开迁移的等价性、实际公开机器码执行、生成文件解码及 QEMU 核验，并保留计时器 ROI 的限制和后续目视确认。新公开包本身尚未安装到相机。旧验证与 [issue #3 后续记录](docs/validation.md#issue-3-follow-up-2026-10-20)继续可查。
+本版以此前已上机的 HN8 为基础。HN8 那轮实机测试的 **108 帧 C15／C30 拍摄在两张卡上生成 158 个 HE★ NEF 文件**，另有普通单拍 1 个 NEF；**159 个 NEF 全部完整 Adobe 解码通过**。覆盖双卡备份、RAW／JPEG 分卡，以及积压写入期间改变副卡槽功能或主卡槽。我在相机上目视确认了画质显示，并有拍屏佐证。
+
+公开版使用独立标识，默认关闭 HN8 的诊断尾标。[验证记录](docs/validation.md)分别说明 HN8 上机包、公开迁移的等价性、实际公开机器码执行、生成文件解码及 QEMU 核验，并保留计时器 ROI 的限制和后续目视确认。上述公开包实拍是独立的一轮结果，不覆盖近满卡或长时间压力拍摄。旧验证与 [issue #3 后续记录](docs/validation.md#issue-3-follow-up-2026-10-20)继续可查。
 
 ```sh
 python tests/validate.py --stock "/path/to/Z_8_0311.bin" --report build/prores-tests.json

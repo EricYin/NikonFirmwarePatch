@@ -2,7 +2,7 @@
   "schema": 2,
   "date": "2026-10-21",
   "toolkit_release": "v0.2.0",
-  "status": "BUILD_NATIVE_DECODE_AND_QEMU_CHECKS_PASSED",
+  "status": "BUILD_OFFLINE_AND_RECORDED_CAMERA_FILES_VALIDATED",
   "public_input": {
     "id": "nikon-z8-c311-official",
     "bytes": 99051117,
@@ -16,7 +16,7 @@
     ".gitignore": "5546d558f5501001d221bee17c381fa07f8f8d789ff7e1682aca79c733377942",
     "LICENSE": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
     "NOTICE.md": "1f2defd8713ef17d8c6b91781eaa9dd9dce663760cea98d48624f395fec3f440",
-    "README.md": "8a2653df3efb6ccf755218c96c5c85d984947f5016858030aa0a2dd42a152843",
+    "README.md": "e38bee113e97f7e4263fad9036e50f153ee8e2d802dc93029620577e23e2c59e",
     "features.py": "196c2caadcafce5d25e9d5d773fedd05a69014086cbac704116b038a09560cba",
     "patch.py": "0fa85944197325ebf59a7b191c536c024d341e75f49a011b5ac2a579eebc4dc4",
     "verify.py": "7bc59464ba4135f5d0055d97d03e9386c2f0a475c9d0bf8fee9a4eba3a8a71b2",
@@ -24,10 +24,10 @@
     "docs/images/prores-quality-options.png": "e4fdd6f975eecfde03f2730cc55f7071cb1b03a48644fc492f06edf127af8367",
     "docs/images/prores-quality-value.png": "f51d83239f3fdb4b32faf899111d54492d8307363ffcb91d8bf9134a0c12b9e6",
     "docs/raw-precapture.md": "066a5217961f4acbcef67907748d882b9d12e439c30f29b976f09b008756958f",
-    "docs/validation.md": "4e89774758078cfec2d38b389f256c0d5226688ce4908ad70bc3193d979d225d",
+    "docs/validation.md": "52cb35fabd04503979eada4e9f22f78c3085c6ff14205cc92e0e4116897a04fc",
     "docs/validation-implementation-v3.json": "3d025c61181b9ff5e36fd3f399fcb6ec4bd10a8276282d14a00d8a408abf5239",
     "docs/validation-v0.1.0.json": "600bccabfb29de962ab8c7b7c33ff495949d5c79777c12b5ed0e68a5334ba048",
-    "docs/releases.md": "9c60fdfdec5ef25d74c9e4a000e647585ad8091629e3b38d91229797feec32ef",
+    "docs/releases.md": "462d9d6b32ee5e9a5c72c47dec438b33b6886f5fd376aadd1d50b6d5116192e0",
     "resources/input.json": "d100e8f0f8d2ceddc3ea38f2298aac30143d19514a4c571b63eedbb887cb00be",
     "resources/precapture.json": "c110c43cdf76eb12449b9586e06f6ebb574bc436c289883a7648d6f594ad74e8",
     "resources/profile.json": "5c82bd900476b7b65f829a72bdf4475d690f9aba991135de423f39cab540b27a",
@@ -697,7 +697,7 @@
       ]
     },
     "remaining_R2_ambiguity": "Repeated milliseconds across adjacent seconds; corresponding other-card copy shows same ambiguity; visual seconds/milliseconds review confirms RAW/JPEG correspondence.",
-    "new_public_package_physically_tested": false
+    "new_public_package_physically_tested_at_release_preparation": false
   },
   "equivalence": {
     "public_0411_to_hn8": {
@@ -1540,5 +1540,168 @@
     "ejected": true,
     "camera_update_performed": false,
     "receipt_sha256": "fe5661afda03bb3edacc402f6009bcf62a9fda59a117a2b57615ea85177cf934"
+  },
+  "release_time_validation_summary": {
+    "source_commit": "20d0c4a59d1ec3822291c7e99ead6d983812f865",
+    "sha256": "cb84bca455b2db5d0b217283921cd21f360d5572572bfa68607e0f01c3f5a94a",
+    "url": "https://github.com/XinmiaoZhao/NikonFirmwarePatch/blob/v0.2.0/docs/validation-summary.json",
+    "preserved_in_release_tag_and_assets": true
+  },
+  "public_camera_run_20261021": {
+    "status": "PUBLIC_0404_BODY_FILE_VALIDATION_PASSED",
+    "date": "2026-10-21",
+    "firmware_identity": "04.04.p0",
+    "sd_package_sha256": "54a6876e336027acfa07c98c488b09bfe9a686dcef56158092cb32947223629d",
+    "firmware_source_commit": "20d0c4a59d1ec3822291c7e99ead6d983812f865",
+    "unique_photo_frames": 81,
+    "NEF_files": 102,
+    "HEstar_NEF_files": 62,
+    "HE_NEF_files": 40,
+    "JPEG_files": 62,
+    "MOV_files": 2,
+    "all_NEF_complete_Adobe_decode": true,
+    "adobe_version": "18.1.1 (2422)",
+    "all_decoded_mosaic_shapes": [
+      5520,
+      8280
+    ],
+    "unique_decoded_mosaics": 81,
+    "all_raw_strip_ends_equal_file_ends": true,
+    "diagnostic_footers_found": 0,
+    "NEF_full_size_previews": [
+      8256,
+      5504
+    ],
+    "split_RAW_JPEG_pairs_with_matching_metadata_and_copied_previews": 60,
+    "dual_NEF_pairs_with_equal_RAW_and_pixels": 21,
+    "single_shot_dual_JPEG_image_streams_equal": true,
+    "groups": [
+      {
+        "name": "A_C30_HEstar_split",
+        "files": [
+          "DSC_7391",
+          "DSC_7450"
+        ],
+        "unique_frames": 60,
+        "metadata_marked_precapture": 30,
+        "current_or_single": 30,
+        "layout": {
+          "A": [
+            "JPG"
+          ],
+          "B": [
+            "NEF"
+          ]
+        },
+        "compression": "HE-star",
+        "start_time": "2026:10:21 19:07:31.99+08:00",
+        "end_time": "2026:10:21 19:07:33.96+08:00"
+      },
+      {
+        "name": "B_C15_HE_backup",
+        "files": [
+          "DSC_7451",
+          "DSC_7470"
+        ],
+        "unique_frames": 20,
+        "metadata_marked_precapture": 5,
+        "current_or_single": 15,
+        "layout": {
+          "A": [
+            "NEF"
+          ],
+          "B": [
+            "NEF"
+          ]
+        },
+        "compression": "HE",
+        "start_time": "2026:10:21 19:10:06.73+08:00",
+        "end_time": "2026:10:21 19:10:08.00+08:00"
+      },
+      {
+        "name": "S_single_backup",
+        "files": [
+          "DSC_7471",
+          "DSC_7471"
+        ],
+        "unique_frames": 1,
+        "metadata_marked_precapture": 0,
+        "current_or_single": 1,
+        "layout": {
+          "A": [
+            "JPG",
+            "NEF"
+          ],
+          "B": [
+            "JPG",
+            "NEF"
+          ]
+        },
+        "compression": "HE-star",
+        "start_time": "2026:10:21 19:10:42.61+08:00",
+        "end_time": "2026:10:21 19:10:42.61+08:00"
+      }
+    ],
+    "videos": [
+      {
+        "file": "DSC_7472.MOV",
+        "grade": "HQ",
+        "fourcc": "apch",
+        "frames": 171,
+        "duration": "5.705700",
+        "mode": "3840x2160 30000/1001 fps yuv422p10le",
+        "video_mbps": 910.893,
+        "all_frame_matrices_match_grade": true,
+        "video_audio_complete_decode": true,
+        "frame_timestamps_contiguous": true,
+        "audio": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "bits_per_sample": 24,
+            "duration": "5.705667",
+            "nb_frames": "273872"
+          }
+        ],
+        "sha256": "4925fc8151f3f05786b3485f1a03123e3050f98dca049142bf9781507e7f4768"
+      },
+      {
+        "file": "DSC_7473.MOV",
+        "grade": "PROXY",
+        "fourcc": "apco",
+        "frames": 174,
+        "duration": "5.805800",
+        "mode": "3840x2160 30000/1001 fps yuv422p10le",
+        "video_mbps": 187.971,
+        "all_frame_matrices_match_grade": true,
+        "video_audio_complete_decode": true,
+        "frame_timestamps_contiguous": true,
+        "audio": [
+          {
+            "codec_name": "pcm_s24le",
+            "sample_rate": "48000",
+            "channels": 2,
+            "bits_per_sample": 24,
+            "duration": "5.805667",
+            "nb_frames": "278672"
+          }
+        ],
+        "sha256": "81177287fae1cd249d1016f2da60aef71288a90dab0ce8c6e92500d960d3f967"
+      }
+    ],
+    "stop_or_temporary_files_found": false,
+    "all_166_source_hashes_unchanged_after_analysis": true,
+    "limits": [
+      "File evidence does not independently prove full flashed-memory identity or all UI/startup observations.",
+      "No near-full-card, sustained stress, all-card compatibility or long-term safety conclusion.",
+      "Actual full-press time was not independently recorded; pre-capture counts above use camera metadata.",
+      "Source files were read in place on read-only mounts; full DNG intermediates were temporary local outputs."
+    ],
+    "new_public_package_physically_tested": true,
+    "local_result_summary_sha256": "386f6a708ebdc6917cefa29ee37ab2df04e8f401af03a4d17da493c64a43f44d",
+    "original_files_copied_to_computer": false,
+    "temporary_DNG_files_remaining": 0,
+    "published_original_media": false
   }
 }

@@ -15,6 +15,33 @@ The RAW feature is ported from the hardware-tested **HN8, 03.50.n8** implementat
 
 The public output is **not byte-identical to HN8**. Public file/protocol identifiers, an auxiliary marker, diagnostic identity/label, default-off diagnostic footer and firmware identity differ. An offline comparison restores those choices, accounts for compiler-layout relocation at 24 branch sites and nine GUI callback pointers, then checks the code, MAIN payload and complete package byte-for-byte against HN8. All three match after that explicit normalization. This establishes the port's defined relationship to the reference; it does not turn the public package into a physically tested HN8 file.
 
+## Public 04.04.p0 camera files 2026-10-21
+
+**The public combined package identified above passed this limited camera-file validation.** The maintainer followed the reduced test plan, then returned both cards. All new images record `Ver.04.04`; both MOVs record `NIKON Z 8 Ver.04.04`. The SD update file still matches the package SHA-256 above. This identifies the supplied package and resulting files together with the maintainer's report; it is not a readback of flashed camera memory.
+
+| Group | Unique exposures | CFexpress | SD | Metadata-marked history / current |
+|---|---:|---|---|---:|
+| C30, HE★, RAW+JPEG fine, split cards | 60 | 60 JPEG | 60 NEF | 30 / 30 |
+| C15, HE, RAW-only, backup | 20 | 20 NEF | 20 NEF | 5 / 15 |
+| Ordinary single, HE★, RAW+JPEG, backup retained | 1 | 1 NEF + 1 JPEG | 1 NEF + 1 JPEG | Single shot |
+
+All **102 NEFs** (62 HE★ and 40 HE, including card copies) completed Adobe DNG Converter 18.1.1 conversion and full 5520×8280 mosaic reading with LibRaw. There are 81 distinct mosaics, matching the 81 exposures. All **21 dual-card NEF pairs** have identical RAW strips, decoded mosaics and previews; header differences are confined to documented card fields. The 60 split RAW/JPEG pairs agree on file number, shutter count and subsecond timestamp, and the independent checker verifies their shared metadata and copied thumbnail/VGA/FHD streams. Both JPEG copies of the ordinary single have identical image streams. All 62 JPEG main images decoded completely.
+
+All NEFs carry an 8256×5504 main embedded preview. **Every RAW-strip end equals the file end: zero trailing bytes and no diagnostic footer**, including all 100 NEFs from the patched burst path and the two ordinary-shot copies. The checker also detects the known 512-byte footer in an earlier HN8 file as a positive control. Group file numbers and shutter counts are consecutive; no expected counterpart is missing, and no temporary `.NE_` or stop file was found. All 166 new source files, including videos, retained their initial SHA-256 after analysis.
+
+| ProRes clip | Encoding | Frames | Duration | Video bitrate |
+|---|---|---:|---:|---:|
+| `DSC_7472.MOV` | HQ, `apch` | 171 | 5.7057 s | 910.893 Mb/s |
+| `DSC_7473.MOV` | Proxy, `apco` | 174 | 5.8058 s | 187.971 Mb/s |
+
+Both are **3840×2160, 30000/1001 fps, 10-bit 4:2:2**. Every frame's length, slice structure and luma/chroma quantization matrices match its declared grade; MOV labels and FFprobe agree. FFmpeg 8.1.2 decoded all video and audio without errors; decoded frame counts match the sample tables and timestamps are contiguous. Both audio tracks are 48 kHz stereo 24-bit PCM. First/middle/last video frames and selected RAW/preview pairs were visually reviewed without visible truncation or scene mismatch.
+
+**Scope and storage:** cards were identified and mounted read-only. Original NEF/JPEG/MOV files stayed on the cards and were not copied to the computer or published. Temporary DNGs were removed after full-pixel checks; per-file derived images were also removed, retaining hashes, text records and two small review contact sheets locally. History counts use camera metadata, not an independent full-press recording. This round did not repeat exhaustive timer-ROI matching, prolonged stress, every UI operation or nearly-full-card tests. RawPy review images use independent rendering and are not an equal-brightness/color comparison with camera JPEGs. Earlier HN8 evidence remains distinct below.
+
+**本轮公开 `04.04.p0` 实拍文件验证通过。** 81 个独立拍摄帧产生 102 个 NEF（62 个 HE★、40 个 HE）和 62 个 JPEG；NEF 全部完整解码，21 对双卡 NEF 的 RAW 条带与像素一致，60 对分卡 RAW／JPEG 的元数据和共享预览对应。所有 NEF 的 RAW 条带结束处就是文件末尾，确认没有诊断尾标。HQ／Proxy 两段 4K 29.97p、10-bit 4:2:2 录像分别 171／174 帧，逐帧矩阵、结构及视频／音频完整解码均通过。没有停止文件或临时 NEF 残留，检查前后全部新文件哈希一致。
+
+原始文件只在卡上读取，没有复制到电脑或发布；临时 DNG 和逐文件解码缩略图已清理，仅保留小型报告、哈希及两张复核拼图。预拍计数依据机内元数据，本轮不追加完整逐帧计时器匹配结论，不覆盖近满卡或长期压力测试；既有限制仍适用。
+
 ## HN8 camera evidence
 
 The latest HN8 session used HE★ and recorded 108 unique C15/C30 frames:
@@ -60,7 +87,7 @@ QEMU loads decrypted MAIN at `0x40160000`. It does not cover firmware installati
 
 The r/buffer estimate remains the stock HSFC estimate. Immediate playback can omit the RAW **L** label until restart although the files record Large. Unlimited sustained bursts, all cards and dual-card transitions, special secondary-size JPEG combinations, card removal during writes, deletion/protection/transfer, AF tracking and auto capture remain outside complete validation. C60/C120 RAW, DX and HLG/HEIF are not added.
 
-The earlier public combined `04.11.p0` candidate was copied to the maintainer's SD card and read back. The maintainer confirmed it had not been installed before changing the public example to `04.04.p0`. After the final-version checks completed, the `04.04.p0` combined package was written to the SD card, read back against the package hash above, and safely ejected. **Copying to a card is not camera installation or a camera test.** At this record's preparation, the new public package has no reported physical test result; the HN8 session above remains the hardware reference. These checks do not establish freedom from freezes, dropped frames, data loss or camera damage.
+The earlier public combined `04.11.p0` candidate was copied to the maintainer's SD card and read back. The maintainer confirmed it had not been installed before changing the public example to `04.04.p0`. After the final-version checks completed, the `04.04.p0` combined package was written to the SD card, read back against the package hash above, and safely ejected. **Copying to a card is not camera installation or a camera test.** The subsequent public-package camera-file results are recorded above, separately from the earlier HN8 session. These checks do not establish freedom from freezes, dropped frames, data loss or camera damage.
 
 ## 中文说明
 
@@ -72,7 +99,7 @@ HN8 最近一轮实拍的 108 个 C15／C30 独立帧，在两张卡上产生 15
 
 实际公开机器码另完成 110 项限定原指令用例（83 功能、26 缺陷负控、1 强制失败恢复）、12 项原厂写入用例及 3 个写入负控。20 个生成 NEF 通过结构检查，其中 19 个有效 HE 码流完整解码且像素等于存档输入；另 1 个是填充 HE 数据的 HE★ 布局夹具，不算 HE★ 解码成功。四个文件／元数据负控被拒。公开构建的 ProRes／功能／分发检查分别 16／68／49 项，三种功能、两组版本的预编译／源码输出一致。
 
-QEMU、合成内存执行、已有实拍及新公开固件必须分别理解。QEMU 从解密 MAIN 入口运行，不能证明刷写流程、完整上电链或所有实机状态。三种功能包及官方正控均进入原生菜单并响应上下按键，对应截图逐字节一致且已目视检查。组合包双卡普通 RAW 单拍也通过，两卡 NEF 除可变 ShotInfo 和版本字段外与 HN8 参照一致。首次双卡 QEMU 在模型已知访问处中断，失败保留；相同固件和模型输入的重试成功。先前 `04.11.p0` 候选包已写卡读回，但用户确认尚未安装；最终公开示例改为 `04.04.p0`，另重跑三种功能启动与组合包原指令用例。独立字节审计确认两个版本只差版本标识、对应立即数与封装校验，功能代码不变。`04.04.p0` 的所需检查全部完成后才重新写卡，读回哈希与上表一致并安全弹出。**写卡不等于已上机测试**。
+QEMU、合成内存执行、已有实拍及新公开固件必须分别理解。QEMU 从解密 MAIN 入口运行，不能证明刷写流程、完整上电链或所有实机状态。三种功能包及官方正控均进入原生菜单并响应上下按键，对应截图逐字节一致且已目视检查。组合包双卡普通 RAW 单拍也通过，两卡 NEF 除可变 ShotInfo 和版本字段外与 HN8 参照一致。首次双卡 QEMU 在模型已知访问处中断，失败保留；相同固件和模型输入的重试成功。先前 `04.11.p0` 候选包已写卡读回，但用户确认尚未安装；最终公开示例改为 `04.04.p0`，另重跑三种功能启动与组合包原指令用例。独立字节审计确认两个版本只差版本标识、对应立即数与封装校验，功能代码不变。`04.04.p0` 的所需检查全部完成后才重新写卡，读回哈希与上表一致并安全弹出。**写卡本身不等于已上机测试**；写卡后另完成的公开版实拍文件检查见本页前节。
 
 **近满卡风险尚未修复或验证。** 原厂 HSFC 的剩余张数、DCF 估计与空间预留仍按 JPEG 计划计算，没有覆盖新增 NEF；可能 JPEG 放得下而 NEF 放不下，造成写入失败、漏文件或不完整文件。参与写入的每张卡都要保留充足空闲，不把剩余张数当成 RAW 容量保证；目前没有测得安全余量阈值。r／缓冲估计、即时 RAW 的 L 标签及其他限制见上文与[使用指南](raw-precapture.md)。
 

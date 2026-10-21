@@ -6,6 +6,9 @@ v0.2.0 以已上机的 HN8 为基础，更新 HE／HE★、免 CFG、双卡提�
 
 **已知风险：近满卡时的 NEF 空间保护尚未验证或修复。** 剩余张数及空间预留仍按 HSFC JPEG 计划估算，可能有空间写 JPEG，却不足以写完 NEF。使用空闲空间充足的卡，双卡分别确认余量；不要把剩余张数当作 RAW 容量保证。完整说明见[使用限制](raw-precapture.md#已知风险存储卡接近写满)。
 
+
+2026-10-21 实拍状态更新：公开组合包 `04.04.p0` 的 102 个 NEF、双卡对应、无诊断尾标及两段 HQ／Proxy 视频和音频检查通过，见[实拍文件验证](validation.md#public-0404p0-camera-files-2026-10-21)。本次只更新验证文档；已发布 v0.2.0 的 tag、ZIP、预编译代码和校验清单保持原样。ZIP 内文档是发布时快照，最新实拍状态以仓库文档为准。
+
 ## 下载和使用
 
 普通用户下载 [Release 的完整 toolkit ZIP](https://github.com/XinmiaoZhao/NikonFirmwarePatch/releases/tag/v0.2.0)，在独立目录解压，按 [README](../README.md)安装 Python 依赖。工具包包含全部工具源码、许可证、验证配方和 `resources/precapture.bin`；不包含编译器、Python 运行库、官方完整固件或修改后的完整固件。
