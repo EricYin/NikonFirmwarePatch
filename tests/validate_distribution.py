@@ -61,7 +61,7 @@ def main():
             need(compiler, 'Compiler unavailable for source equivalence test')
             # An empty PATH makes an accidental compiler subprocess fail in default mode.
             no_compiler = dict(os.environ, PATH='')
-            variants = [('04.03', 'p0'), ('17.42', 'x7')]
+            variants = [('04.04', 'p0'), ('17.42', 'x7')]
             for version, tag in variants:
                 for features in (['prores'], ['precapture'], ['prores', 'precapture']):
                     outputs = []
@@ -108,6 +108,16 @@ def main():
 
             reject('changed hook with repaired checksums', lambda: verify_pair(original, changed(0xe0fe90, b'\0' * 4), features), 'reviewed feature patch bytes')
             reject('changed code with repaired checksums', lambda: verify_pair(original, changed(0x800010, b'\xff' * 4), features), 'reviewed feature patch bytes')
+            capture_profile = json.loads((ROOT/'resources/precapture.json').read_text())
+            old_sites = {0xe0fe90,0xd4915c,0xd43638,0xd4eb60,0xe0ff38,0xee8e1c,0xd49fac,0xd4eeec,0xd4ef10,0x4d2ffc0,0x4d2ffcc,0x800000,0x1024d8c}
+            for edit in capture_profile['patches']:
+                at = int(edit['offset'], 16)
+                if at in old_sites:
+                    continue
+                damaged = bytes([patched_eg[at] ^ 1])
+                reject('changed HE-star / UI / callback patch '+edit['offset']+' with repaired checksums',
+                       lambda at=at, damaged=damaged: verify_pair(original, changed(at, damaged), features),
+                       'reviewed feature patch bytes')
             reject('wrong shared loader with repaired checksums', lambda: verify_pair(original, changed(0x1024d8c, b'\0' * 8), features), 'reviewed feature patch bytes')
             reject('unlisted byte with repaired checksums', lambda: verify_pair(original, changed(0x2400000, b'\x13\x27\x42\x91'), features), 'outside declared')
             reject('version instruction opcode changed', lambda: verify_pair(original, changed(0xeb29fc, b'\0' * 4), features), 'Version instruction shape')
@@ -122,7 +132,7 @@ def main():
             wrong_input.write_bytes(modified_input)
             rejected_dir = temp / 'rejected'
             run = subprocess.run([sys.executable, '-O', str(ROOT/'patch.py'), str(wrong_input), '--features', *features,
-                                  '--version', '04.03', '--output', str(rejected_dir)], capture_output=True, text=True)
+                                  '--version', '04.04', '--output', str(rejected_dir)], capture_output=True, text=True)
             need(run.returncode != 0 and 'official Nikon Z8 C 3.11 SHA-256' in run.stderr and not rejected_dir.exists(),
                  'Modified input passed the public CLI or left output')
             rows.append(dict(test='public CLI enforces exact original under python -O before output creation', result='PASS'))
@@ -142,14 +152,14 @@ def main():
             isolated = temp / 'missing-asset-toolkit'
             shutil.copytree(ROOT, isolated, ignore=shutil.ignore_patterns('.git', 'build', '*.bin', '__pycache__'))
             run = subprocess.run([sys.executable, '-B', str(isolated/'patch.py'), str(args.stock.resolve()),
-                                  '--features', 'precapture', '--version', '04.03', '--output', str(rejected_dir)],
+                                  '--features', 'precapture', '--version', '04.04', '--output', str(rejected_dir)],
                                  capture_output=True, text=True)
             need(run.returncode != 0 and 'Prebuilt pre-capture code is missing' in run.stderr and not rejected_dir.exists(),
                  'Missing prebuilt did not stop the CLI before output')
             rows.append(dict(test='missing Release asset aborts CLI without output or fallback', result='PASS'))
             # A source checkout remains usable with an explicit source request.
             run = subprocess.run([sys.executable, '-B', str(isolated/'patch.py'), str(args.stock.resolve()),
-                                  '--features', 'precapture', '--version', '04.03', '--code-source', 'source',
+                                  '--features', 'precapture', '--version', '04.04', '--code-source', 'source',
                                   '--compiler', compiler, '--output', str(temp/'source-checkout')], capture_output=True, text=True)
             need(run.returncode == 0, 'Source checkout requires a prebuilt asset: ' + run.stderr)
             rows.append(dict(test='explicit source mode works without prebuilt asset', result='PASS'))

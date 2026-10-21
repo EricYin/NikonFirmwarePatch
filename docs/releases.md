@@ -1,16 +1,18 @@
 # 发布包与独立验证
 
-工具包版本 `v0.1.0` 与固件版本号相互独立。用户仍可选择 ProRes、预拍摄或两者，以及 `NN.NN` 版本号和一个小写字母加一位数字的 tag。默认功能仍为 ProRes；“默认预编译”指选择预拍摄后取得该功能代码的方式。
+工具包版本 `v0.2.0` 与固件版本号相互独立。用户仍可选择 ProRes、预拍摄或两者，以及 `NN.NN` 版本号和一个小写字母加一位数字的 tag。默认功能仍为 ProRes；“默认预编译”指选择预拍摄后取得该功能代码的方式。
 
-我的 2026-10-19 实机测试及收到文件的身份比对见[验证范围](validation.md#maintainer-hardware-observation-2026-10-19)。测试者于 2026-10-20 补充 10 台 Z8 的测试反馈并关闭 issue #3；我已据此撤下专项暂停刷写提示。原报告及后续说明见[调查记录](validation.md#issue-3-follow-up-2026-10-20)。v0.1.0 的机器码、tag 和附件保持不变。
+v0.2.0 以已上机的 HN8 为基础，更新 HE／HE★、免 CFG、双卡提交设置及 C15／C30 画质界面；ProRes 配方保持不变。公开版仍使用独立标识并默认关闭诊断尾标。旧 v0.1.0 的 tag、附件和历史验证保留，issue #3 的后续说明见[调查记录](validation.md#issue-3-follow-up-2026-10-20)。
+
+**已知风险：近满卡时的 NEF 空间保护尚未验证或修复。** 剩余张数及空间预留仍按 HSFC JPEG 计划估算，可能有空间写 JPEG，却不足以写完 NEF。使用空闲空间充足的卡，双卡分别确认余量；不要把剩余张数当作 RAW 容量保证。完整说明见[使用限制](raw-precapture.md#已知风险存储卡接近写满)。
 
 ## 下载和使用
 
-普通用户下载 [Release 的完整 toolkit ZIP](https://github.com/XinmiaoZhao/NikonFirmwarePatch/releases/tag/v0.1.0)，在独立目录解压，按 [README](../README.md)安装 Python 依赖。工具包包含全部工具源码、许可证、验证配方和 `resources/precapture.bin`；不包含编译器、Python 运行库、官方完整固件或修改后的完整固件。
+普通用户下载 [Release 的完整 toolkit ZIP](https://github.com/XinmiaoZhao/NikonFirmwarePatch/releases/tag/v0.2.0)，在独立目录解压，按 [README](../README.md)安装 Python 依赖。工具包包含全部工具源码、许可证、验证配方和 `resources/precapture.bin`；不包含编译器、Python 运行库、官方完整固件或修改后的完整固件。
 
 GitHub 自动生成的 Source code 归档和 Git 克隆不包含机器码。源码用户可显式使用 `--code-source source --compiler clang`，或者从**同一版本**完整工具包取得机器码，放在对应源码的 `resources/precapture.bin`。不要混用不同版本的代码和配方；加载时始终检查固定长度及哈希。
 
-Release 的 `SHA256SUMS.txt` 提供 ZIP 的校验值。macOS 可运行 `shasum -a 256 -c SHA256SUMS.txt`，Linux 可运行 `sha256sum -c SHA256SUMS.txt`；Windows PowerShell 可用 `Get-FileHash .\NikonFirmwarePatch-v0.1.0-toolkit.zip -Algorithm SHA256` 与清单比较。校验信息应从可信的项目发布页面取得；同一不可信来源提供的文件和哈希不能证明来源真实。
+Release 的 `SHA256SUMS.txt` 提供 ZIP 的校验值。macOS 可运行 `shasum -a 256 -c SHA256SUMS.txt`，Linux 可运行 `sha256sum -c SHA256SUMS.txt`；Windows PowerShell 可用 `Get-FileHash .\NikonFirmwarePatch-v0.2.0-toolkit.zip -Algorithm SHA256` 与清单比较。校验信息应从可信的项目发布页面取得；同一不可信来源提供的文件和哈希不能证明来源真实。
 
 默认预编译构建不运行 Clang，也不联网下载补丁。缺失或损坏的机器码会报错，并在写输出前停止；不会自动改为源码编译。源码方式仍要求生成已审阅的机器码及入口地址，不提供放宽检查的选项。ProRes 修改继续由 Python 生成并逐块匹配固定配方。
 
@@ -35,14 +37,14 @@ python verify.py "/path/to/Z_8_0311.bin" "build/custom/Z_8_1742.bin" --features 
 
 ## 发布者与开发者复现
 
-源码编译使用 `resources/precapture.json` 记录的编译参数及入口地址。当前机器码为 30,301 字节，SHA-256 为 `479f4e37db3968a9e796fc97d865246793ebbac83b28f10a95711535c45cb715`，与前一版已审阅实现相同；改变的是分发、构建和验证方式。
+源码编译使用 `resources/precapture.json` 记录的编译参数及入口地址。当前机器码为 33,117 字节，SHA-256 为 `d71bffd5f64105eeda35d627c5f628dd4c9da6a976c3ba2de09667ea5e49e224`。公开配方为 `z8-c311-precapture-v4`，包含 37 个修改窗口；新钩子和界面依赖回调也受独立验证器检查。
 
 完成并提交源码后，在干净的对应提交上生成工具包：
 
 ```sh
-python tools/build_release.py --tag v0.1.0 --compiler clang --output /path/to/new-release-assets
-python tools/check_release.py /path/to/new-release-assets/NikonFirmwarePatch-v0.1.0-toolkit.zip --commit COMMIT_SHA
-python tests/validate_distribution.py --archive /path/to/new-release-assets/NikonFirmwarePatch-v0.1.0-toolkit.zip --archive-only --report /path/to/new-archive-report.json
+python tools/build_release.py --tag v0.2.0 --compiler clang --output /path/to/new-release-assets
+python tools/check_release.py /path/to/new-release-assets/NikonFirmwarePatch-v0.2.0-toolkit.zip --commit COMMIT_SHA
+python tests/validate_distribution.py --archive /path/to/new-release-assets/NikonFirmwarePatch-v0.2.0-toolkit.zip --archive-only --report /path/to/new-archive-report.json
 ```
 
 发布构建器要求记录中的编译器版本，并再次核对机器码哈希。它只读取明确允许的、已提交源码及自编译代码，不读取任何完整固件。ZIP 包含对应提交的完整源码、构建和验证脚本、许可证，以及带文件哈希与源码提交的 `release-manifest.json`。生成时使用固定时间和文件模式。
@@ -50,3 +52,7 @@ python tests/validate_distribution.py --archive /path/to/new-release-assets/Niko
 独立包检查器检查精确成员清单、文件类型、大小、源码字节、机器码哈希和 manifest。多出完整固件路径、缺文件、重复成员、损坏内容或不匹配的来源提交都会被拒绝。检查 Git 内容仍使用原有 `tools/check_repository.py`；机器码和 ZIP 保持 Git 忽略，只作为 Release 附件发布，不能用强制纳入绕过仓库规则。
 
 发布前运行功能回归和源码／预编译等价性测试，检查 Release 归档；上传后下载附件再核对。正式发布的资产与源码 tag 一同保留，有修正时创建新版本。源码、编译材料和许可证随同补丁提供；Nikon 固件的许可不因此改变。
+
+## 致谢
+
+感谢 [@aoyukkk（傲宇）](https://github.com/aoyukkk)和“琴岛唯一指定哥布林”协助开发、开展实机测试并反馈问题。

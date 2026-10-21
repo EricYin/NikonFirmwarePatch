@@ -9,14 +9,13 @@ import sys
 sys.dont_write_bytecode = True
 from z8prores.package import Package, PACKAGE_BYTES, RESOURCES, require, require_official_input, sha
 from features import build, compatibility
-from z8precapture.config import CONFIG_NAME, build_config
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('firmware', type=Path, help='User-supplied complete Z8 firmware .bin')
     ap.add_argument('--check', action='store_true', help='Read-only input compatibility and integrity check')
-    ap.add_argument('--version', help='Output version NN.NN, e.g. 04.03 (choose higher than the installed camera)')
+    ap.add_argument('--version', help='Output version NN.NN, e.g. 04.04 (choose higher than the installed camera)')
     ap.add_argument('--tag', default='p0', help='Internal revision suffix: lowercase letter plus digit; default p0')
     group = ap.add_mutually_exclusive_group()
     group.add_argument('--features', nargs='+', choices=['prores', 'precapture'], help='One or both features; default prores')
@@ -33,7 +32,7 @@ def main():
     if a.check and (a.output or a.version or a.tag != 'p0' or a.interactive or a.compiler or a.code_source != 'prebuilt'):
         ap.error('--check cannot be combined with output options')
     if a.interactive:
-        print('1: ProRes quality / ProRes 画质\n2: HE RAW capture / HE RAW 连拍与预拍\n3: Both / 两项同时启用')
+        print('1: ProRes quality / ProRes 画质\n2: HE / HE-star RAW capture / HE／HE★ RAW 连拍与预拍\n3: Both / 两项同时启用')
         choice = input('Select / 选择 [1/2/3]: ').strip()
         require(choice in ('1', '2', '3'), 'Select 1, 2 or 3')
         a.features = {'1': ['prores'], '2': ['precapture'], '3': ['prores', 'precapture']}[choice]
@@ -68,10 +67,11 @@ def main():
                                                   *RESOURCES.glob('*.json')]) if p.is_file() and p.suffix in ('.py','.c','.inc','.json')},
                   independent_verification=independent,
                   scope='Only selected patch windows, version fields and checksums changed; no camera test of this new output')
-    config = build_config() if 'precapture' in selected else None
-    if config is not None:
-        report['configuration'] = dict(filename=CONFIG_NAME, sha256=sha(config), history_ceiling=30,
-                                       control='camera-menu', format=3, c15=True, c30=True, diagnostic_footer=False, budget_us=1500000)
+    if 'precapture' in selected:
+        report['capture_control'] = dict(control='camera-menu', configuration_required=False,
+                                        history_ceiling=30, c15=True, c30=True,
+                                        raw_compression=['HE', 'HE-star'],
+                                        diagnostic_footer=False, budget_us=1500000)
     # Create only after validation. Exclusive creation never replaces input or an earlier build.
     # On I/O failure the directory is kept, without a successful manifest, for inspection.
     a.output.mkdir(parents=True, exist_ok=False)
@@ -81,14 +81,8 @@ def main():
         os.fsync(f.fileno())
     require(sha((a.output / name).read_bytes()) == report['output_sha256'], 'Output readback mismatch')
     require(sha(a.firmware.read_bytes()) == package.sha256, 'Input changed during build')
-    if config is not None:
-        with (a.output / CONFIG_NAME).open('xb') as f:
-            f.write(config)
-        require((a.output / CONFIG_NAME).read_bytes() == config, 'Configuration readback mismatch')
     with (a.output / 'SHA256SUMS.txt').open('x') as f:
         f.write(report['output_sha256'] + '  ' + name + '\n')
-        if config is not None:
-            f.write(sha(config) + '  ' + CONFIG_NAME + '\n')
     with (a.output / 'manifest.json').open('x') as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
         f.write('\n')

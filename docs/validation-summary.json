@@ -1,127 +1,47 @@
 {
-  "date": "2026-10-18",
-  "status": "DISTRIBUTION_REGRESSION_PASSED_WITH_RETAINED_IMPLEMENTATION_EVIDENCE",
-  "supported_input": "Official Nikon Z8 C 3.11",
-  "features": [
-    "prores",
-    "precapture"
-  ],
-  "capture_control": "ordinary Image quality menu",
-  "capture_modes": [
-    "RAW",
-    "RAW+JPEG",
-    "JPEG"
-  ],
-  "capture_phases": [
-    "pre-release history",
-    "full press",
-    "post-release"
-  ],
-  "capture_with_pre_release_off": true,
-  "nef_full_size_embedded_preview": [
-    8256,
-    5504
-  ],
-  "jpeg_quality_choices": [
-    "fine star",
-    "fine",
-    "normal star",
-    "normal",
-    "basic star",
-    "basic"
-  ],
-  "configuration_format": 3,
-  "previous_configurations_rejected": [
-    1,
-    2
-  ],
-  "diagnostic_footer_default": false,
-  "prores_regression_checks": 16,
-  "feature_regression_checks": 42,
-  "interactive_selection_verified": true,
-  "bounded_native_cases": 119,
-  "menu_composition_combinations": 75,
-  "valid_menu_choices": 13,
-  "control_builds": 17,
-  "defective_native_builds_rejected": 16,
-  "forced_failure_recovery_builds": 1,
-  "original_writer_cases": 13,
-  "defective_writer_builds_rejected": 3,
-  "nef_structure_checks": 15,
-  "complete_nef_decodes": 15,
-  "damaged_file_controls_rejected": 4,
-  "archived_input_mosaics_equal": true,
-  "default_nefs_match_verified_diagnostic_prefix": true,
-  "diagnostic_filename_padding_zero": true,
-  "compatible_input": {
-    "bounded_cases": 102,
-    "nef_files_byte_identical": 15,
-    "normalized_code_payload_package_match_hardware_reference": true,
-    "actual_package_byte_identical_to_hardware_reference": false
+  "schema": 2,
+  "date": "2026-10-21",
+  "toolkit_release": "v0.2.0",
+  "status": "BUILD_NATIVE_DECODE_AND_QEMU_CHECKS_PASSED",
+  "public_input": {
+    "id": "nikon-z8-c311-official",
+    "bytes": 99051117,
+    "sha256": "d67413c2ede6b9ce8887175f20700bd9fbad2a973a4820968c45503d15d80d96"
   },
-  "qemu": {
-    "official_combined_build": true,
-    "ordinary_raw_still_saved": true,
-    "embedded_jpegs_and_raw_equal_stock_control": true,
-    "only_version_text_differs_outside_variable_shotinfo": true,
-    "explicit_model_inputs": true,
-    "cpu_register_redirection": false,
-    "debugger_ram_patches": false,
-    "end_to_end_c15_c30_tested": false
-  },
-  "hardware_observations": {
-    "c15_c30_nefs": 328,
-    "historical_nefs": 256,
-    "current_nefs": 72,
-    "ordinary_single_nefs": 1,
-    "total_nefs": 329,
-    "total_jpegs": 324,
-    "stress_sequence_triggers": 14,
-    "stress_sequence_nef_jpeg_pairs": 308,
-    "all_328_nef_file_checks_and_decodes_passed": true,
-    "all_328_nefs_full_size_embedded_preview": true,
-    "frame_correspondence": "confirmed by automated comparison and visual review",
-    "visual_review_confirmed": true,
-    "frame_mismatch_identified": false,
-    "new_public_builds_hardware_certified": false
-  },
-  "reviewed_precapture_code_sha256": "479f4e37db3968a9e796fc97d865246793ebbac83b28f10a95711535c45cb715",
-  "limitations": [
-    "HE RAW, FX L, C15/C30 only",
-    "Shortcuts and shooting display still refer to HSFC quality",
-    "Immediate RAW playback label may omit L although files record Large",
-    "Buffer and write throughput limit sustained capture",
-    "Bounded execution uses modeled services and supplied JPEG streams",
-    "Input photos and emulator runtime are not distributed",
-    "Only official C 3.11 is publicly supported"
-  ],
+  "example_firmware_identity": "04.04.p0",
+  "version_selection": "Required explicit --version; 04.04 is an example after prior public 04.03, not a fixed default. Tool does not inspect installed camera version.",
   "source_sha256": {
+    ".gitattributes": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+    ".githooks/pre-commit": "a8c7702b9e824358f0923a6842fcec7d02da7422d4ea43cc82cc251f7970e767",
+    ".gitignore": "5546d558f5501001d221bee17c381fa07f8f8d789ff7e1682aca79c733377942",
     "LICENSE": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
     "NOTICE.md": "1f2defd8713ef17d8c6b91781eaa9dd9dce663760cea98d48624f395fec3f440",
-    "README.md": "a95f8c701c648fadee245ff8390626648f239952cb686c56f24499274236eac2",
-    "configure.py": "f45bfac908c1730ad40b435b857ff402ef0e91df5f046679ea83ced32cdd0ff4",
-    "docs/raw-precapture.md": "f75b495bb2d38d198d5fbe19a4cf584286077327654db66e0a08506378d041ae",
-    "docs/releases.md": "3ac350c9f90f79a7fd89b663ab15af06f7c4cd6dc2a7f169970390274f27f1c6",
-    "docs/validation.md": "8156afe22aaae9f3fc6e3c37e02611210408ba3fae7c50c7ffae4b706cf98401",
+    "README.md": "8a2653df3efb6ccf755218c96c5c85d984947f5016858030aa0a2dd42a152843",
     "features.py": "196c2caadcafce5d25e9d5d773fedd05a69014086cbac704116b038a09560cba",
-    "patch.py": "f85e95092ce140ff0119ecc98d13179abe68e7b6d481fc5b91a070b9fdcd218e",
+    "patch.py": "0fa85944197325ebf59a7b191c536c024d341e75f49a011b5ac2a579eebc4dc4",
+    "verify.py": "7bc59464ba4135f5d0055d97d03e9386c2f0a475c9d0bf8fee9a4eba3a8a71b2",
     "requirements.txt": "6b8a703c0a562d2b528575457d1b76ae5decc8d4d53093ba6515a32137098d1b",
+    "docs/images/prores-quality-options.png": "e4fdd6f975eecfde03f2730cc55f7071cb1b03a48644fc492f06edf127af8367",
+    "docs/images/prores-quality-value.png": "f51d83239f3fdb4b32faf899111d54492d8307363ffcb91d8bf9134a0c12b9e6",
+    "docs/raw-precapture.md": "066a5217961f4acbcef67907748d882b9d12e439c30f29b976f09b008756958f",
+    "docs/validation.md": "4e89774758078cfec2d38b389f256c0d5226688ce4908ad70bc3193d979d225d",
+    "docs/validation-implementation-v3.json": "3d025c61181b9ff5e36fd3f399fcb6ec4bd10a8276282d14a00d8a408abf5239",
+    "docs/validation-v0.1.0.json": "600bccabfb29de962ab8c7b7c33ff495949d5c79777c12b5ed0e68a5334ba048",
+    "docs/releases.md": "9c60fdfdec5ef25d74c9e4a000e647585ad8091629e3b38d91229797feec32ef",
     "resources/input.json": "d100e8f0f8d2ceddc3ea38f2298aac30143d19514a4c571b63eedbb887cb00be",
-    "resources/precapture.json": "be5aaa1c6bac8a4cc4f5c2ae6b1d9d3e9c401fe03382ba6549cc8bdfc6312fa2",
+    "resources/precapture.json": "c110c43cdf76eb12449b9586e06f6ebb574bc436c289883a7648d6f594ad74e8",
     "resources/profile.json": "5c82bd900476b7b65f829a72bdf4475d690f9aba991135de423f39cab540b27a",
     "tests/validate.py": "32c4632b3e32838e748fd4399575a30d2660598f949e17716da549e07362a505",
-    "tests/validate_distribution.py": "d6e63b0301a0f2a73e5380937bc4c2c02039673dff97f58259bf343ba5e3dc7b",
-    "tests/validate_features.py": "83b9289f448cd2f16042162fa2cb1eec9da6deba49df842099bcb3c161839b4e",
-    "tools/build_release.py": "6721faffb2bbe86ef3856ace71a866f4e31981f8b8df1268726232796d86358c",
-    "tools/check_release.py": "306764d16c135e62a4c2b92dbcb5ff782a28721e59e2a14d4df4da6774df2eed",
+    "tests/validate_features.py": "2072ba473a60669ed38cfd669ffe1da5a83c3df02314feb691392b0c449c4980",
+    "tests/validate_distribution.py": "87561231e86e0ef10f02db7d96698f459519051aba3db89a1738af9348512bfd",
     "tools/check_repository.py": "8b120cfecf113aca271c8aac47b96f859a642408d81b6ae48c26bf940fa4e2c7",
-    "verify.py": "7bc59464ba4135f5d0055d97d03e9386c2f0a475c9d0bf8fee9a4eba3a8a71b2",
+    "tools/build_release.py": "6721faffb2bbe86ef3856ace71a866f4e31981f8b8df1268726232796d86358c",
+    "tools/check_release.py": "f66fbfd511a3d4f610b33a48f9520efdaaf1152e94837ed6af5dbd270336bffb",
     "z8precapture/__init__.py": "2553af81f7abaa8443643c2a451a47d1547fa650b75b50d29bd215ea2c20bed6",
-    "z8precapture/config.py": "9210666adb21999b590b8e39b3eddbaf6afff92a21fd53805822f5c4394b8076",
     "z8precapture/crc32_table.inc": "fe021e684d78717732adddb6c9dde91f6fc6918f18cb0aeccfb349db5511a515",
-    "z8precapture/firmware.c": "236087f6a331c7dc1949e78b5e9444b2a682b78881cdb4834fbf29777ef99422",
+    "z8precapture/firmware.c": "1aa9b9ac08f92448cf79d8bd09a3f4d0d31c54a3aa94d4845b63423f3db10b5f",
     "z8precapture/linker.py": "a65a9ec04410fbc39c3c81b0b2ae7e6199901af387a74e8eefce0d15d4a1fa2b",
-    "z8precapture/patcher.py": "f514b636214d79320947d6f970a062323c5c16cda30f950820916f329259807c",
+    "z8precapture/patcher.py": "386da0f1629043e3e619a4dcfc6b3eda150479994f825bdd7440b9c3945092b4",
     "z8prores/__init__.py": "c4962da695a83c541133ad1a6565bb8d60601992b2e2514f8dfb361fba99dbe5",
     "z8prores/a64.py": "64879c989f85c88bc550b5ac57270c881737c4f53bb246450d8d8c3ba61ba6ae",
     "z8prores/back_half.py": "5ebece2e98464d0bb50c9c82453b264b8889f1ff526d2e408165180877c39e7d",
@@ -130,330 +50,1495 @@
     "z8prores/package.py": "2534fa3c6e40fda3e2e7b6198e75f81c5582757133c3b5a8d7241af695d931e7",
     "z8prores/patcher.py": "2968e7b382463fda3ef79c7b93c2dbab4315717cf2c76172ef483a60c387b85c"
   },
-  "implementation_evidence": {
-    "source_commit": "d155b8b183e359140ac36147297f33707b9374e5",
-    "summary": "docs/validation-implementation-v3.json",
-    "sha256": "3d025c61181b9ff5e36fd3f399fcb6ec4bd10a8276282d14a00d8a408abf5239",
-    "native_decode_and_hardware_tests_rerun": false,
-    "basis": "Unchanged code bytes and feature recipes; historical implementation evidence retained"
+  "precompiled_patch": {
+    "profile": "z8-c311-precapture-v4",
+    "bytes": 33117,
+    "sha256": "d71bffd5f64105eeda35d627c5f628dd4c9da6a976c3ba2de09667ea5e49e224",
+    "diagnostic_footer": false,
+    "card_configuration_required": false
   },
-  "distribution": {
-    "toolkit_version": "v0.1.0",
-    "default_code_source": "prebuilt",
-    "source_build_option": "--code-source source",
-    "host": "macOS arm64",
-    "python": "3.14.6",
-    "capstone": "5.0.7",
-    "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)",
-    "windows_linux_full_builds_tested": false,
-    "official_input_sha256_enforced": true,
-    "expected_features_version_tag_verified": true,
-    "prebuilt_tests_with_empty_PATH": true,
-    "checks": [
+  "public_regressions": {
+    "prores": {
+      "status": "PASS",
+      "count": 16,
+      "report_sha256": "ef7a5a336b8be892724ee08965a4fe63db0e9afaca2c80f90c873dd84068f6b6",
+      "tests": [
+        {
+          "test": "truncated input",
+          "result": "REJECTED",
+          "reason": "Unsupported package length; expected Z8 3.11 layout"
+        },
+        {
+          "test": "damaged package",
+          "result": "REJECTED",
+          "reason": "Package body CRC mismatch"
+        },
+        {
+          "test": "wrong package context",
+          "result": "REJECTED",
+          "reason": "Unsupported outer package context"
+        },
+        {
+          "test": "occupied code gap",
+          "result": "REJECTED",
+          "reason": "Incompatible region: ARM64 code before version (0x0..0xeb29fc); already patched images are not supported"
+        },
+        {
+          "test": "changed bank hook",
+          "result": "REJECTED",
+          "reason": "Incompatible region: ARM64 code after version (0xeb2a08..0x14e4000); already patched images are not supported"
+        },
+        {
+          "test": "changed UI state",
+          "result": "REJECTED",
+          "reason": "Incompatible region: initialized data image (0x4b13000..0x4dc0000); already patched images are not supported"
+        },
+        {
+          "test": "inconsistent identity",
+          "result": "REJECTED",
+          "reason": "Runtime and trailer versions disagree"
+        },
+        {
+          "test": "bad display version syntax",
+          "result": "REJECTED",
+          "reason": "Version must be two digits, a dot and two digits, e.g. 04.01"
+        },
+        {
+          "test": "non-increasing version",
+          "result": "REJECTED",
+          "reason": "Output version must be higher than the input version"
+        },
+        {
+          "test": "bad tag",
+          "result": "REJECTED",
+          "reason": "Tag must be a lowercase letter and digit, e.g. p0"
+        },
+        {
+          "test": "stock firmware via CLI",
+          "status": "PASS",
+          "input_sha256": "d67413c2ede6b9ce8887175f20700bd9fbad2a973a4820968c45503d15d80d96",
+          "output_sha256": "780d2a3a6f724743a4619ca646b22c29d2ca43ce17cf7d4c1ad2d0b7ae8df922",
+          "output_identity": "03.23.p0",
+          "features": [
+            "prores"
+          ],
+          "patch_matches_reviewed_profile": true,
+          "official_input_verified": true,
+          "requested_identity_checked": false,
+          "requested_features_checked": false,
+          "all_non_patch_EG_bytes_preserved": true,
+          "other_modules_preserved": true,
+          "scope": "Offline byte equivalence and integrity; not a camera test"
+        },
+        {
+          "test": "existing output preserved",
+          "result": "PASS"
+        },
+        {
+          "test": "guards active under python -O; no output on rejection",
+          "result": "PASS"
+        },
+        {
+          "test": "already patched image",
+          "result": "REJECTED",
+          "reason": "Incompatible region: ARM64 code before version (0x0..0xeb29fc); already patched images are not supported"
+        },
+        {
+          "test": "modified input is outside public support even when locally preserved",
+          "result": "REJECTED",
+          "reason": "Original must match the official Nikon Z8 C 3.11 SHA-256"
+        },
+        {
+          "test": "repaired CRC/SHA1 with unrelated changed byte",
+          "result": "REJECTED",
+          "reason": "Overlapping edits or change outside declared windows"
+        }
+      ]
+    },
+    "features": {
+      "status": "PASS",
+      "count": 68,
+      "report_sha256": "8628cb4238266fe522b5a404d74881ea52ef981dedaad63a44b645783839b517",
+      "tests": [
+        {
+          "test": "prores",
+          "result": "PASS",
+          "output_sha256": "3523420980c6c8ac6612405e64a6796520a4c6e78fe9aff30c973dfba0fa08c8",
+          "independently_verified": "PASS"
+        },
+        {
+          "test": "prores repeated patch",
+          "result": "REJECTED"
+        },
+        {
+          "test": "prores wrong feature claim",
+          "result": "REJECTED"
+        },
+        {
+          "test": "precapture",
+          "result": "PASS",
+          "output_sha256": "628f19b6c5dd6db98574c01e37fa0f5a2c939cb6168458f06f0d9ceb1ac986a2",
+          "independently_verified": "PASS"
+        },
+        {
+          "test": "precapture repeated patch",
+          "result": "REJECTED"
+        },
+        {
+          "test": "precapture wrong feature claim",
+          "result": "REJECTED"
+        },
+        {
+          "test": "prores+precapture",
+          "result": "PASS",
+          "output_sha256": "54a6876e336027acfa07c98c488b09bfe9a686dcef56158092cb32947223629d",
+          "independently_verified": "PASS"
+        },
+        {
+          "test": "prores+precapture repeated patch",
+          "result": "REJECTED"
+        },
+        {
+          "test": "prores+precapture wrong feature claim",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x17aa4c",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x24cce8",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x47add4",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x55a3e0",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x56c134",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x7002cc",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x710284",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x7148a8",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x715834",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x800000",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xbe24f0",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xbe9044",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xd39798",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xd397c8",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xd43638",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xd4367c",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xd49048",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xd4915c",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xd49fac",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xd4eb60",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xd4eeec",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xd4ef10",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xd64640",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xd66a8c",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xdc4e08",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xe0fe90",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xe0ff38",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xe36c90",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xe38c4c",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xe3a0b4",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xeb4b1c",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xee8e1c",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xeedf14",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0xf871f8",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x1024d8c",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x3ec44c8",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x4c69b50",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x4c6a308",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x4c6a370",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x4c6a3d8",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x4c6a440",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x4c6a4a8",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x4c6a510",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x4c6a9f0",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x4c6aa58",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x4cf4fd0",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x4d2ffc0",
+          "result": "REJECTED"
+        },
+        {
+          "test": "conflicting input 0x4d2ffcc",
+          "result": "REJECTED"
+        },
+        {
+          "test": "repaired checksums do not hide unrelated edits",
+          "result": "REJECTED"
+        },
+        {
+          "test": "unselected input bytes preserved",
+          "result": "PASS"
+        },
+        {
+          "test": "optimized Python rejects incompatible input without output",
+          "result": "PASS"
+        },
+        {
+          "test": "obsolete configuration option rejected: --capture-mode raw-jpeg",
+          "result": "PASS"
+        },
+        {
+          "test": "obsolete configuration option rejected: --capture-mode raw-only",
+          "result": "PASS"
+        },
+        {
+          "test": "obsolete configuration option rejected: --frames 5",
+          "result": "PASS"
+        },
+        {
+          "test": "obsolete configuration option rejected: --c15-only",
+          "result": "PASS"
+        },
+        {
+          "test": "obsolete configuration option rejected: --diagnostic-footer",
+          "result": "PASS"
+        },
+        {
+          "test": "invalid feature selection []",
+          "result": "REJECTED"
+        },
+        {
+          "test": "invalid feature selection ['unknown']",
+          "result": "REJECTED"
+        },
+        {
+          "test": "invalid feature selection ['prores', 'prores']",
+          "result": "REJECTED"
+        }
+      ]
+    },
+    "distribution": {
+      "status": "PASS",
+      "count": 49,
+      "report_sha256": "abe1873b0ae35c3cba1623a2fa05f1c20281b64cfbde155c3c5fdffd4185176c",
+      "tests": [
+        {
+          "test": "prebuilt/source: prores 04.04.p0",
+          "result": "PASS",
+          "output_sha256": "3523420980c6c8ac6612405e64a6796520a4c6e78fe9aff30c973dfba0fa08c8"
+        },
+        {
+          "test": "prebuilt/source: precapture 04.04.p0",
+          "result": "PASS",
+          "output_sha256": "628f19b6c5dd6db98574c01e37fa0f5a2c939cb6168458f06f0d9ceb1ac986a2"
+        },
+        {
+          "test": "prebuilt/source: prores+precapture 04.04.p0",
+          "result": "PASS",
+          "output_sha256": "54a6876e336027acfa07c98c488b09bfe9a686dcef56158092cb32947223629d"
+        },
+        {
+          "test": "prebuilt/source: prores 17.42.x7",
+          "result": "PASS",
+          "output_sha256": "b0783a1faee393504f7c05b025d663f0598e503eec852693cd06944bd3c4fc1f"
+        },
+        {
+          "test": "prebuilt/source: precapture 17.42.x7",
+          "result": "PASS",
+          "output_sha256": "9380b18bbf9c4ef8b565a99ba8419baaaf1d08a5ff6cd36d0718fb9710d0b7be"
+        },
+        {
+          "test": "prebuilt/source: prores+precapture 17.42.x7",
+          "result": "PASS",
+          "output_sha256": "ca2c4f1078e46b4b3840e92819f05e5436b808368997ca6926ddcbb6e28796ab"
+        },
+        {
+          "test": "wrong requested version",
+          "result": "REJECTED"
+        },
+        {
+          "test": "wrong requested tag",
+          "result": "REJECTED"
+        },
+        {
+          "test": "tag without version",
+          "result": "REJECTED"
+        },
+        {
+          "test": "wrong selected feature",
+          "result": "REJECTED"
+        },
+        {
+          "test": "inferred options reported separately from explicitly checked options",
+          "result": "PASS"
+        },
+        {
+          "test": "changed hook with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed code with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0x24cce8 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0xbe24f0 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0xbe9044 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0xd39798 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0xd397c8 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0xd49048 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0xd64640 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0xd66a8c with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0xdc4e08 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0xe36c90 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0xe38c4c with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0xe3a0b4 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0xeb4b1c with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0xeedf14 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0xf871f8 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0x4c69b50 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0x4c6a308 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0x4c6a370 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0x4c6a3d8 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0x4c6a440 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0x4c6a4a8 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0x4c6a510 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0x4c6a9f0 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "changed HE-star / UI / callback patch 0x4c6aa58 with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "wrong shared loader with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "unlisted byte with repaired checksums",
+          "result": "REJECTED"
+        },
+        {
+          "test": "version instruction opcode changed",
+          "result": "REJECTED"
+        },
+        {
+          "test": "trailer identity changed",
+          "result": "REJECTED"
+        },
+        {
+          "test": "module identity changed",
+          "result": "REJECTED"
+        },
+        {
+          "test": "modified input with valid envelope",
+          "result": "REJECTED"
+        },
+        {
+          "test": "public CLI enforces exact original under python -O before output creation",
+          "result": "PASS"
+        },
+        {
+          "test": "missing prebuilt has no fallback",
+          "result": "REJECTED"
+        },
+        {
+          "test": "truncated prebuilt",
+          "result": "REJECTED"
+        },
+        {
+          "test": "corrupt prebuilt",
+          "result": "REJECTED"
+        },
+        {
+          "test": "missing Release asset aborts CLI without output or fallback",
+          "result": "PASS"
+        },
+        {
+          "test": "explicit source mode works without prebuilt asset",
+          "result": "PASS"
+        }
+      ]
+    }
+  },
+  "output_identities": [
+    {
+      "name": "combined",
+      "package_sha256": "54a6876e336027acfa07c98c488b09bfe9a686dcef56158092cb32947223629d",
+      "main_sha256": "7a4eb30b587bd0c4b71ae60267e2836db1a6d8281ceaa035e28c10528ec08236"
+    },
+    {
+      "name": "prores",
+      "package_sha256": "3523420980c6c8ac6612405e64a6796520a4c6e78fe9aff30c973dfba0fa08c8",
+      "main_sha256": "3b755cd414c2b6a132729f912dc9db1052870e41d3a03002e3476caacb24f638"
+    },
+    {
+      "name": "precapture",
+      "package_sha256": "628f19b6c5dd6db98574c01e37fa0f5a2c939cb6168458f06f0d9ceb1ac986a2",
+      "main_sha256": "6bee68d6cd40ee897ac96c3f41bdeb5854c9a1340793662725984836c3103cb3"
+    }
+  ],
+  "hn8_reference": {
+    "identity": "03.50.n8",
+    "package_sha256": "c387206c102d611e46e0634aaac9527105ea534cc78a8dc1c6b93542eb8edeb3",
+    "hardware_status": "HN8_DELIVERY_VERIFIED_BODY_RUN_1_CHECKED",
+    "verification_sha256": "7ff74a90c2566c3d15f5a0fcda150c84234c6f9ea0c0ac451103865792630b2e",
+    "body_summary_sha256": "965b85610683ba17842dfce96f8d23eb3d08b93ef49817c6eb0382c65c26a8be",
+    "verification_bindings_checked": 79,
+    "body_bindings_checked": 24,
+    "unique_C15_C30_frames": 108,
+    "C15_C30_NEf_files_including_card_copies": 158,
+    "ordinary_single_NEF_files": 1,
+    "all_159_HEstar_NEFS_Adobe_complete_decode": true,
+    "jpeg_files": 99,
+    "duplicate_NEF_pairs_with_identical_RAW_strips_and_mosaics": 50,
+    "original_fixed_ROI_criterion_failed_comparisons": 49,
+    "corrected_exploratory_ROI_matches": {
+      "R1": [
+        58,
+        58
+      ],
+      "R2": [
+        19,
+        20
+      ],
+      "R3": [
+        30,
+        30
+      ]
+    },
+    "remaining_R2_ambiguity": "Repeated milliseconds across adjacent seconds; corresponding other-card copy shows same ambiguity; visual seconds/milliseconds review confirms RAW/JPEG correspondence.",
+    "new_public_package_physically_tested": false
+  },
+  "equivalence": {
+    "public_0411_to_hn8": {
+      "status": "PASS",
+      "actual_public_package_sha256": "9995b9aa4b90beca15c0156f555360e7ca0fc0073223beee37a255fa6a735490",
+      "tested_hn8_package_sha256": "c387206c102d611e46e0634aaac9527105ea534cc78a8dc1c6b93542eb8edeb3",
+      "public_code_sha256": "d71bffd5f64105eeda35d627c5f628dd4c9da6a976c3ba2de09667ea5e49e224",
+      "tested_code_sha256": "e22a9cc7e0e8131fa46541b84974d97935847ed3f04b245d8c96b897a1700658",
+      "normalizations": [
+        "public file/protocol identifiers and auxiliary marker",
+        "diagnostic identity and record label",
+        "diagnostic footer enabled as in the tested HN8 package",
+        "branch/callback relocations for the resulting compiler layout",
+        "firmware version/module identity and integrity"
+      ],
+      "normalized_code_exact": true,
+      "checked_branch_sites": 24,
+      "checked_callback_sites": 9,
+      "normalized_payload_exact": true,
+      "normalized_complete_package_exact": true,
+      "actual_public_package_identical": false,
+      "body_test_is_hn8_reference_not_new_public_package": true
+    },
+    "final_0404_to_public_0411": {
+      "status": "PASS",
+      "checker_sha256": "0edc2cb4f4c2bb7d628041772b2a41d038424be1ab99b0a61cbbd539ebcb79a6",
+      "cases": [
+        {
+          "features": "combined",
+          "old_sha256": "9995b9aa4b90beca15c0156f555360e7ca0fc0073223beee37a255fa6a735490",
+          "new_sha256": "54a6876e336027acfa07c98c488b09bfe9a686dcef56158092cb32947223629d",
+          "changes_only": "version-immediate instructions, version strings, EG name and required integrity fields",
+          "patch_and_other_bytes_identical": true
+        },
+        {
+          "features": "prores",
+          "old_sha256": "f9a05b8a33546534c754d8ba417e625f8670ecb2b82fe48fe5c52ca37d1f5e7f",
+          "new_sha256": "3523420980c6c8ac6612405e64a6796520a4c6e78fe9aff30c973dfba0fa08c8",
+          "changes_only": "version-immediate instructions, version strings, EG name and required integrity fields",
+          "patch_and_other_bytes_identical": true
+        },
+        {
+          "features": "precapture",
+          "old_sha256": "351bfa652b0e6ad6612ad557a1f056e743c91b7e14bd6d9a63d93b8c44aa09ba",
+          "new_sha256": "628f19b6c5dd6db98574c01e37fa0f5a2c939cb6168458f06f0d9ceb1ac986a2",
+          "changes_only": "version-immediate instructions, version strings, EG name and required integrity fields",
+          "patch_and_other_bytes_identical": true
+        }
+      ]
+    }
+  },
+  "native": {
+    "identity": "04.04.p0",
+    "total_cases": 110,
+    "functional_cases": 83,
+    "defective_builds_rejected": 26,
+    "forced_failure_fallbacks": 1,
+    "case_results": [
       {
-        "test": "prebuilt/source: prores 04.03.p0",
-        "result": "PASS",
-        "output_sha256": "b56881c1ee28fec44ad93b7583e8684e43a9638c10cac8f36659531d61769f5e"
+        "name": "history_raw_only_pvq",
+        "status": "PASS"
       },
       {
-        "test": "prebuilt/source: precapture 04.03.p0",
-        "result": "PASS",
-        "output_sha256": "5051d873730e0b9f4f3ce8a7c59433c934a1757b56fcba649edb9865d819c127"
+        "name": "history_raw_jpeg_basic_main_embedded",
+        "status": "PASS"
       },
       {
-        "test": "prebuilt/source: prores+precapture 04.03.p0",
-        "result": "PASS",
-        "output_sha256": "7047c831e0517e5e5352ae3721e21a0b1ad1f9aa12ddca52eb81cf927e81af9c"
+        "name": "history_raw_jpeg_fine_without_preview_fhd_only",
+        "status": "PASS"
       },
       {
-        "test": "prebuilt/source: prores 17.42.x7",
-        "result": "PASS",
-        "output_sha256": "b0783a1faee393504f7c05b025d663f0598e503eec852693cd06944bd3c4fc1f"
+        "name": "history_jpeg_only_stock_jpeg_with_menu_grade",
+        "status": "PASS"
       },
       {
-        "test": "prebuilt/source: precapture 17.42.x7",
-        "result": "PASS",
-        "output_sha256": "3963ea46eb2d295efad792d5d3beb4a71554b2ac44227ae905c40d20eff8365b"
+        "name": "history_mode4_untouched",
+        "status": "PASS"
       },
       {
-        "test": "prebuilt/source: prores+precapture 17.42.x7",
-        "result": "PASS",
-        "output_sha256": "13baa9ee393097f7b3ba8b2c33a68818720cb7e32100c9fd64887a122b120c79"
+        "name": "history_mode5_untouched",
+        "status": "PASS"
       },
       {
-        "test": "wrong requested version",
-        "result": "REJECTED"
+        "name": "card_files_ignored",
+        "status": "PASS"
       },
       {
-        "test": "wrong requested tag",
-        "result": "REJECTED"
+        "name": "nef_card_from_file_id",
+        "status": "PASS"
       },
       {
-        "test": "tag without version",
-        "result": "REJECTED"
+        "name": "p8_record_contents",
+        "status": "PASS"
       },
       {
-        "test": "wrong selected feature",
-        "result": "REJECTED"
+        "name": "p8_marks_only_C15_C30_frames",
+        "status": "PASS"
       },
       {
-        "test": "inferred options reported separately from explicitly checked options",
-        "result": "PASS"
+        "name": "menu_items_composed_like_stock",
+        "status": "PASS"
       },
       {
-        "test": "changed hook with repaired checksums",
-        "result": "REJECTED"
+        "name": "menu_value_0_rawjpeg_fine_star",
+        "status": "PASS"
       },
       {
-        "test": "changed code with repaired checksums",
-        "result": "REJECTED"
+        "name": "menu_value_1_rawjpeg_fine",
+        "status": "PASS"
       },
       {
-        "test": "wrong shared loader with repaired checksums",
-        "result": "REJECTED"
+        "name": "menu_value_2_rawjpeg_normal_star",
+        "status": "PASS"
       },
       {
-        "test": "unlisted byte with repaired checksums",
-        "result": "REJECTED"
+        "name": "menu_value_3_rawjpeg_normal",
+        "status": "PASS"
       },
       {
-        "test": "version instruction opcode changed",
-        "result": "REJECTED"
+        "name": "menu_value_4_rawjpeg_basic_star",
+        "status": "PASS"
       },
       {
-        "test": "trailer identity changed",
-        "result": "REJECTED"
+        "name": "menu_value_5_rawjpeg_basic",
+        "status": "PASS"
       },
       {
-        "test": "module identity changed",
-        "result": "REJECTED"
+        "name": "menu_value_6_jpeg_fine_star",
+        "status": "PASS"
       },
       {
-        "test": "modified input with valid envelope",
-        "result": "REJECTED"
+        "name": "menu_value_7_jpeg_fine",
+        "status": "PASS"
       },
       {
-        "test": "public CLI enforces exact original under python -O before output creation",
-        "result": "PASS"
+        "name": "menu_value_8_jpeg_normal_star",
+        "status": "PASS"
       },
       {
-        "test": "missing prebuilt has no fallback",
-        "result": "REJECTED"
+        "name": "menu_value_9_jpeg_normal",
+        "status": "PASS"
       },
       {
-        "test": "truncated prebuilt",
-        "result": "REJECTED"
+        "name": "menu_value_10_jpeg_basic_star",
+        "status": "PASS"
       },
       {
-        "test": "corrupt prebuilt",
-        "result": "REJECTED"
+        "name": "menu_value_11_jpeg_basic",
+        "status": "PASS"
       },
       {
-        "test": "missing Release asset aborts CLI without output or fallback",
-        "result": "PASS"
+        "name": "menu_value_13_raw_fine",
+        "status": "PASS"
       },
       {
-        "test": "explicit source mode works without prebuilt asset",
-        "result": "PASS"
+        "name": "card_config_M4_present_ignored",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_all_current_frames_mode3",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_all_current_frames_mode6",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_C60_untouched",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_items_2_0_0_not_taken_over",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_items_4_0_0_not_taken_over",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_items_0_3_0_not_taken_over",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_items_3_1_2_not_taken_over",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_items_5_1_1_not_taken_over",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_items_ffffffff_0_0_not_taken_over",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_items_0_0_ffffffff_not_taken_over",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_value_read_at_submit",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_not_taken_over_heif",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_not_taken_over_raw_format",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_not_taken_over_dx_size",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_not_taken_over_second_jpeg",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_not_taken_over_special_mode",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_not_taken_over_quality_basic_at_submit",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_not_taken_over_half_at_submit",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_stop_file_jpeg_only_writer_side",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_stop_file_quality_still_applied",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_stop_file_on_the_other_card_ignored",
+        "status": "PASS"
+      },
+      {
+        "name": "y_layout_vs_stock_jpeg_and_raw_jpeg",
+        "status": "PASS"
+      },
+      {
+        "name": "preview_job_equals_stock_preview_job",
+        "status": "PASS"
+      },
+      {
+        "name": "preview_job_writes_no_statistics",
+        "status": "PASS"
+      },
+      {
+        "name": "preview_fallback_special_mode_path",
+        "status": "PASS"
+      },
+      {
+        "name": "preview_fallback_block_too_small",
+        "status": "PASS"
+      },
+      {
+        "name": "preview_source_r690_like_the_stock_step",
+        "status": "PASS"
+      },
+      {
+        "name": "preview_region_with_unaligned_block_base",
+        "status": "PASS"
+      },
+      {
+        "name": "preview_larger_than_capacity_fhd_only",
+        "status": "PASS"
+      },
+      {
+        "name": "fallback_lock_timeout",
+        "status": "PASS"
+      },
+      {
+        "name": "fallback_add_refused",
+        "status": "PASS"
+      },
+      {
+        "name": "fallback_lock_timeout_raw_only",
+        "status": "PASS"
+      },
+      {
+        "name": "nef_write_failed_stops_further_frames",
+        "status": "PASS"
+      },
+      {
+        "name": "nef_write_failed_raw_only_writes_jpeg",
+        "status": "PASS"
+      },
+      {
+        "name": "raw_only_cancel_ineffective_writes_jpeg",
+        "status": "PASS"
+      },
+      {
+        "name": "menu_preview_nef_write_failed_stops",
+        "status": "PASS"
+      },
+      {
+        "name": "unmarked_frame_freed_at_tdec",
+        "status": "PASS"
+      },
+      {
+        "name": "record_crc_corrupt",
+        "status": "PASS"
+      },
+      {
+        "name": "record_aux_crc_corrupt",
+        "status": "PASS"
+      },
+      {
+        "name": "record_stale_120s",
+        "status": "PASS"
+      },
+      {
+        "name": "allocation_not_extended",
+        "status": "PASS"
+      },
+      {
+        "name": "DX_descriptor_not_marked",
+        "status": "PASS"
+      },
+      {
+        "name": "writer_job_other_M",
+        "status": "PASS"
+      },
+      {
+        "name": "mpf_size_mismatch",
+        "status": "PASS"
+      },
+      {
+        "name": "list_two_files_passes_through",
+        "status": "PASS"
+      },
+      {
+        "name": "secondary_list_passes_through",
+        "status": "PASS"
+      },
+      {
+        "name": "hn5_he_star_frame_nef_fields",
+        "status": "PASS"
+      },
+      {
+        "name": "hn6_T_tenc_budget_by_settings_only",
+        "status": "PASS"
+      },
+      {
+        "name": "hn6_capture_path_no_file_calls",
+        "status": "PASS"
+      },
+      {
+        "name": "hn5_stock_encode_budget_matches_payload_constants",
+        "status": "PASS"
+      },
+      {
+        "name": "hn5_E_allocation_size",
+        "status": "PASS"
+      },
+      {
+        "name": "hn5_S_size_queries",
+        "status": "PASS"
+      },
+      {
+        "name": "hn5_D_tdec_selector_and_stock_decode_budget",
+        "status": "PASS"
+      },
+      {
+        "name": "hn6_G_gui_predicate_and_V_role",
+        "status": "PASS"
+      },
+      {
+        "name": "hn6_C_capability_status_all_five_stores",
+        "status": "PASS"
+      },
+      {
+        "name": "hn6_R_ready_gate",
+        "status": "PASS"
+      },
+      {
+        "name": "hn7_split",
+        "status": "PASS"
+      },
+      {
+        "name": "hn8_display",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_BAD_TOTAL",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_DIMS_ZERO",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_DISPLAY_STOCK",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_GRADE_ONLY",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_HN7_SECOND",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_HS_SMALL_E",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_LEAK_E",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_MENU_IGNORED",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_NO_CLEAN",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_NO_REMAIN",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_NO_REQUEUE",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_NO_SPLIT",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_NO_UNLOCK",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_ORDER",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_P2_FILE_IO",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_PREVIEW_KIND0",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_PVQ_ANY_FRAME",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_PVQ_NO_MARK",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_READY_STOCK",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_READ_PAYLOAD",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_ROLE_AT_WRITE",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_TDEC_FIXED",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_T_FILE_IO",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_UI_STOCK",
+        "status": "PASS"
+      },
+      {
+        "name": "control_NEG_Y_OVERLAP",
+        "status": "PASS"
+      },
+      {
+        "name": "control_TEST_FORCE_BAD",
+        "status": "PASS"
+      },
+      {
+        "name": "control_TEST_FORCE_BAD_NEG_NO_CANCEL",
+        "status": "PASS"
       }
     ],
-    "prores_checks": 16,
-    "feature_checks": 42,
-    "camera_installation": false,
-    "card_write": false
+    "scope": "Original ARM64 routines under explicit synthetic heap/filesystem/database/clock/DMA/JPEG boundaries; not device-register readback or hardware timing"
   },
-  "incident_notice": {
-    "date": "2026-10-20",
-    "issue": "https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3",
-    "status": "CLOSED_BY_REPORTER_AFTER_FOLLOW_UP_TESTS",
-    "reported_version": "04.03",
-    "reported_features": [
-      "prores",
-      "precapture"
+  "stock_writer": {
+    "identity": "04.04.p0",
+    "cases": 12,
+    "earlier_0411_defective_controls_rejected": [
+      "NEG_DIMS_ZERO",
+      "NEG_BAD_TOTAL",
+      "NEG_NO_CLEAN"
     ],
-    "reported_symptoms": [
-      "one camera fails to boot after flashing",
-      "another loses RAW pre-capture after card changes"
+    "controls_cover_identical_patch_code_confirmed_by_version_audit": true
+  },
+  "generated_nefs": {
+    "final_identity": "04.04.p0",
+    "files": 20,
+    "all_equal_to_previous_checked_files": true,
+    "valid_HE_complete_decodes": 19,
+    "synthetic_HEstar_layout_fixture_not_decodable": 1,
+    "adobe_version": "18.1.1 (2422)",
+    "corrupt_file_or_metadata_controls_rejected": 4,
+    "mosaics_equal_archived_input": true,
+    "decoding_identical_bytes_repeated": false
+  },
+  "qemu": {
+    "boot": {
+      "status": "ALL_FOUR_BOOT_MENU_CHECKS_PASSED",
+      "checker_sha256": "04ba33d6d39e4cd32055ee3477f4c39ed2f515c2c651f6084106c6dbe96e34fe",
+      "board_commit": "5a9b9a63adcfc158870b611b4be39818fff468c0",
+      "board_binary_sha256": "a6f683a52c5d61901930a452fa7d6b5325358cb1c31c75d6a9915447664a0d4c",
+      "tools_commit": "c24e33460ab311b8b120b19ba25f532ccef1b391",
+      "entry": "0x40160000; decrypted MAIN",
+      "corresponding_screens_identical": true,
+      "screen_visual_review": "down highlights Extended menu banks; up highlights Shooting menu bank",
+      "cases": [
+        {
+          "case": "stock",
+          "package_sha256": "d67413c2ede6b9ce8887175f20700bd9fbad2a973a4820968c45503d15d80d96",
+          "main_sha256": "2b43a31c9de838f84b12416de4348a7004e65be07f853ec56ec2b10f3a8e3853",
+          "status": "PASS",
+          "screens": {
+            "menu-ready": "5f4b8f96aad941f030c99a757f0fa3a06af5d325a7f0ccff31ad01ca6f6d47fb",
+            "menu-down": "d7253abc311533751863e6f2f5df2122f6d62a2bb38f9e1f49cf44f9579d5700",
+            "menu-up": "50a90bbf42b8a8e76fdd9524f4e57c093fbf8be5ce83cc5e95afd85356d59ab4"
+          },
+          "result_sha256": "77eb7cdd00d388432d62342ed4012c236fbb98773bebdd602f457d9b4e625a48",
+          "owned_qemu_stopped": true
+        },
+        {
+          "case": "combined",
+          "package_sha256": "54a6876e336027acfa07c98c488b09bfe9a686dcef56158092cb32947223629d",
+          "main_sha256": "7a4eb30b587bd0c4b71ae60267e2836db1a6d8281ceaa035e28c10528ec08236",
+          "status": "PASS",
+          "screens": {
+            "menu-ready": "5f4b8f96aad941f030c99a757f0fa3a06af5d325a7f0ccff31ad01ca6f6d47fb",
+            "menu-down": "d7253abc311533751863e6f2f5df2122f6d62a2bb38f9e1f49cf44f9579d5700",
+            "menu-up": "50a90bbf42b8a8e76fdd9524f4e57c093fbf8be5ce83cc5e95afd85356d59ab4"
+          },
+          "result_sha256": "5b0afebef7ff48e20b3cbd84ebc6d30086a8b314d6671610396c761d975d3fdc",
+          "owned_qemu_stopped": true
+        },
+        {
+          "case": "prores",
+          "package_sha256": "3523420980c6c8ac6612405e64a6796520a4c6e78fe9aff30c973dfba0fa08c8",
+          "main_sha256": "3b755cd414c2b6a132729f912dc9db1052870e41d3a03002e3476caacb24f638",
+          "status": "PASS",
+          "screens": {
+            "menu-ready": "5f4b8f96aad941f030c99a757f0fa3a06af5d325a7f0ccff31ad01ca6f6d47fb",
+            "menu-down": "d7253abc311533751863e6f2f5df2122f6d62a2bb38f9e1f49cf44f9579d5700",
+            "menu-up": "50a90bbf42b8a8e76fdd9524f4e57c093fbf8be5ce83cc5e95afd85356d59ab4"
+          },
+          "result_sha256": "7355fa2a858e30dbce8a5a1320dfe91b15c1a648aa3cedcf23db9a3a3f68dfcb",
+          "owned_qemu_stopped": true
+        },
+        {
+          "case": "precapture",
+          "package_sha256": "628f19b6c5dd6db98574c01e37fa0f5a2c939cb6168458f06f0d9ceb1ac986a2",
+          "main_sha256": "6bee68d6cd40ee897ac96c3f41bdeb5854c9a1340793662725984836c3103cb3",
+          "status": "PASS",
+          "screens": {
+            "menu-ready": "5f4b8f96aad941f030c99a757f0fa3a06af5d325a7f0ccff31ad01ca6f6d47fb",
+            "menu-down": "d7253abc311533751863e6f2f5df2122f6d62a2bb38f9e1f49cf44f9579d5700",
+            "menu-up": "50a90bbf42b8a8e76fdd9524f4e57c093fbf8be5ce83cc5e95afd85356d59ab4"
+          },
+          "result_sha256": "80660fcc5b940cf79ef027f4259130f2d0962e3e9b68c0d59768a0649d132d3f",
+          "owned_qemu_stopped": true
+        }
+      ],
+      "scope": "Bounded synthetic QEMU boot/menu observation; no physical update, boot ROM/full power chain or camera safety proof"
+    },
+    "display_0411": {
+      "status": "HN8_QEMU_DISPLAY_AS_EXPECTED",
+      "checker_sha256": "fd6a5d9c268827a1dab9f9e6f21f7a75be32c227c57f5a6adb3180c4dbb8258a",
+      "runs": [
+        {
+          "run": "qemu-ui-01",
+          "problems": [],
+          "hits": {
+            "hn8set": 4,
+            "stockset": 9,
+            "starset": 16
+          },
+          "hn8set_codes": [
+            [
+              6,
+              3,
+              0,
+              5
+            ],
+            [
+              6,
+              1,
+              0,
+              3
+            ],
+            [
+              6,
+              0,
+              2,
+              2
+            ],
+            [
+              3,
+              0,
+              2,
+              2
+            ]
+          ],
+          "type_only": true,
+          "c60_stock": [
+            6
+          ],
+          "final": {
+            "release_2126": 6,
+            "q_type_0604": 0,
+            "q_grade_0605": 2,
+            "q_star_0606": 0,
+            "gui_code_2503": 2,
+            "gui_star_2504": 0
+          },
+          "status": "PASS"
+        }
+      ]
+    },
+    "two_card_capture_0411": {
+      "status": "HN8_QEMU_TWO_CARD_REGRESSION_AS_EXPECTED",
+      "checker_sha256": "8e503f4e0ce6e05e05dccde0602dde0ca7b19584b86e0564295637770ee9a36c",
+      "runs": [
+        {
+          "run": "qemu-capture-02",
+          "problems": [],
+          "acmd22_corrections": 8,
+          "role": 2,
+          "primary": 0,
+          "nefs": {
+            "A": {
+              "size_equal": true,
+              "by_tag": {
+                "ifd0:0131": 3,
+                "ifd0:02bc": 3,
+                "mn:0040": 3,
+                "mn:004d": 3,
+                "mn:0091": 116
+              },
+              "version_bytes": [
+                [
+                  "0x14d",
+                  "ifd0:0131"
+                ],
+                [
+                  "0x14f",
+                  "ifd0:0131"
+                ],
+                [
+                  "0x150",
+                  "ifd0:0131"
+                ],
+                [
+                  "0x2dd",
+                  "ifd0:02bc"
+                ],
+                [
+                  "0x2df",
+                  "ifd0:02bc"
+                ],
+                [
+                  "0x2e0",
+                  "ifd0:02bc"
+                ],
+                [
+                  "0x8a7d",
+                  "mn:0040"
+                ],
+                [
+                  "0x8a7e",
+                  "mn:0040"
+                ],
+                [
+                  "0x8a7f",
+                  "mn:0040"
+                ],
+                [
+                  "0x8ab9",
+                  "mn:004d"
+                ],
+                [
+                  "0x8aba",
+                  "mn:004d"
+                ],
+                [
+                  "0x8abb",
+                  "mn:004d"
+                ]
+              ],
+              "unexplained": [],
+              "sha256": "d4fd4f55d73127cb1440ad6ddb4eec4ff749fdec781b8d3693f1c6acd5c8f980",
+              "bytes": 35110512,
+              "reference_sha256": "8513af82aaffff97f14c7b1d2fbc4846f6509c5693a0d401cd2152b34f039338"
+            },
+            "B": {
+              "size_equal": true,
+              "by_tag": {
+                "ifd0:0131": 3,
+                "ifd0:02bc": 3,
+                "mn:0040": 3,
+                "mn:004d": 3,
+                "mn:0091": 116
+              },
+              "version_bytes": [
+                [
+                  "0x14d",
+                  "ifd0:0131"
+                ],
+                [
+                  "0x14f",
+                  "ifd0:0131"
+                ],
+                [
+                  "0x150",
+                  "ifd0:0131"
+                ],
+                [
+                  "0x2dd",
+                  "ifd0:02bc"
+                ],
+                [
+                  "0x2df",
+                  "ifd0:02bc"
+                ],
+                [
+                  "0x2e0",
+                  "ifd0:02bc"
+                ],
+                [
+                  "0x8a7d",
+                  "mn:0040"
+                ],
+                [
+                  "0x8a7e",
+                  "mn:0040"
+                ],
+                [
+                  "0x8a7f",
+                  "mn:0040"
+                ],
+                [
+                  "0x8ab9",
+                  "mn:004d"
+                ],
+                [
+                  "0x8aba",
+                  "mn:004d"
+                ],
+                [
+                  "0x8abb",
+                  "mn:004d"
+                ]
+              ],
+              "unexplained": [],
+              "sha256": "9c58292f5581be6095bcace9746fcf1d4d1cec22198cbcfbc04c4ee78f0ca054",
+              "bytes": 35110512,
+              "reference_sha256": "87413b8ae6a9ea9ccf1b6809b367e5ae35cfca69a16b2d05650bda2b38fc09e2"
+            }
+          },
+          "files_A": [
+            "DCIM/100NCZ_8/DSC_0001.NEF",
+            "DCIM/100NCZ_8/NC_FLLST.DAT",
+            "NIKON001.DSC"
+          ],
+          "files_B": [
+            "DCIM/100NCZ_8/DSC_0001.NEF",
+            "DCIM/100NCZ_8/NC_FLLST.DAT",
+            "NIKON001.DSC"
+          ],
+          "status": "PASS"
+        }
+      ]
+    },
+    "first_capture_attempt": {
+      "status": "FAILED_RETAINED",
+      "run": "qemu-capture-01",
+      "reason": "Known timing-dependent model stop: pc=0x40c1fce4 write addr=0x150c000c size=4 value=0x6",
+      "result_sha256": "aa31916dfbc7fc756acf24e9cfb6757cc6d8e9e4eb5c98289386bba0f7bbb36c",
+      "not_counted_as_pass": true
+    },
+    "boundary": "Decrypted MAIN loaded at 0x40160000, synthetic external ROM/sensor/MCU inputs, regular-file virtual cards; no CPU-register redirection/debugger RAM patches; not full power-chain/update, end-to-end C15/C30 or physical-card proof"
+  },
+  "known_near_full_card_risk": {
+    "validated": false,
+    "fixed": false,
+    "cause": "Remaining-shot/DCF estimates and space reservation retain stock HSFC JPEG file plan; extra NEF bytes not reserved",
+    "possible_outcome": [
+      "failed write",
+      "missing file",
+      "incomplete file"
     ],
-    "affected_file_sha256": null,
-    "additional_failure_evidence_available": false,
-    "recommendation": "Incident-specific installation pause lifted after reporter follow-up; general experimental-firmware risk statement retained",
-    "existing_tests_do_not_rule_out_report": true,
-    "firmware_implementation_changed": false,
-    "received_reporter_package_sha256": "7047c831e0517e5e5352ae3721e21a0b1ad1f9aa12ddca52eb81cf927e81af9c",
-    "received_reporter_config_sha256": "a8067db1a7e8350c07e1e76bda32aaeb3dde22fb327e829fddc1c9f262704f1f",
-    "received_files_match_reference": true,
-    "affected_camera_flash_readback_verified": false,
-    "failure_process_logs_available": false,
-    "issue_retained": true,
-    "issue_state_at_update": "closed",
-    "latest_observation": "Reporter reports 10 Z8 cameras tested without black screens, freezes or failure to boot; earlier black screen not reproduced; RAW pre-capture issue attributed to an operating mistake",
-    "follow_up_comment": "https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3#issuecomment-6288128394",
-    "closed_at": "2026-10-20T09:44:38Z",
-    "pinned_incident_notice_active": false,
-    "physical_camera_installation_paused": false,
-    "general_experimental_risk_statement_retained": true
+    "measured_minimum_free_space_threshold": null,
+    "guidance": "Keep ample free space on each destination card; remaining-shot display is not RAW capacity guarantee"
   },
-  "boot_investigation_20261019": {
-    "status": "FOUR_MAIN_IMAGES_REACH_NATIVE_MENU_WITH_FIXED_MODEL",
-    "date": "2026-10-19",
-    "cases": [
-      {
-        "case": "stock",
-        "status": "NATIVE_MENU_REACHED_AND_RESPONSIVE",
-        "package_sha256": "d67413c2ede6b9ce8887175f20700bd9fbad2a973a4820968c45503d15d80d96",
-        "main_sha256": "2b43a31c9de838f84b12416de4348a7004e65be07f853ec56ec2b10f3a8e3853",
-        "wall_seconds": 46.26173691707663,
-        "first_ready_virtual_seconds": 20.404270655,
-        "final_virtual_seconds": 26.089126011,
-        "menu_screens": {
-          "menu-ready.png": "5f4b8f96aad941f030c99a757f0fa3a06af5d325a7f0ccff31ad01ca6f6d47fb",
-          "menu-down.png": "d7253abc311533751863e6f2f5df2122f6d62a2bb38f9e1f49cf44f9579d5700",
-          "menu-up.png": "50a90bbf42b8a8e76fdd9524f4e57c093fbf8be5ce83cc5e95afd85356d59ab4"
-        },
-        "evidence": {
-          "result.json": "1eaf9ae1c706c1ea766b13910403e392f8684fb7be962215166a92498e9f7188",
-          "stderr.log": "3d477df8e8a8b93027a4e68b51fb28e8a90bcfde652555f4b82ff5b65be0e398",
-          "runner.py": "8804386218cb9e9cd8607c487569f7b7d82c222c84ecf492be785cec2f4fe0f3",
-          "final.png": "50a90bbf42b8a8e76fdd9524f4e57c093fbf8be5ce83cc5e95afd85356d59ab4"
-        },
-        "owned_qemu_stopped": true
-      },
-      {
-        "case": "prores",
-        "status": "NATIVE_MENU_REACHED_AND_RESPONSIVE",
-        "package_sha256": "b56881c1ee28fec44ad93b7583e8684e43a9638c10cac8f36659531d61769f5e",
-        "main_sha256": "af4412feccf5de25a112e0e327ca6d2a8e10655b89f4a29dbd821d4a589bffd3",
-        "wall_seconds": 45.750558166066185,
-        "first_ready_virtual_seconds": 20.450089666,
-        "final_virtual_seconds": 26.143778006,
-        "menu_screens": {
-          "menu-ready.png": "5f4b8f96aad941f030c99a757f0fa3a06af5d325a7f0ccff31ad01ca6f6d47fb",
-          "menu-down.png": "d7253abc311533751863e6f2f5df2122f6d62a2bb38f9e1f49cf44f9579d5700",
-          "menu-up.png": "50a90bbf42b8a8e76fdd9524f4e57c093fbf8be5ce83cc5e95afd85356d59ab4"
-        },
-        "evidence": {
-          "result.json": "93a76ed100a4a693750c7a5db9af9d3a7223272b8cbfe2fea034ef5faf1297fd",
-          "stderr.log": "bdfa9c54acb6ec4219c43b512e1894d6a3d646ba557ccdb9143835ff7d860763",
-          "runner.py": "8804386218cb9e9cd8607c487569f7b7d82c222c84ecf492be785cec2f4fe0f3",
-          "final.png": "50a90bbf42b8a8e76fdd9524f4e57c093fbf8be5ce83cc5e95afd85356d59ab4"
-        },
-        "owned_qemu_stopped": true
-      },
-      {
-        "case": "precapture",
-        "status": "NATIVE_MENU_REACHED_AND_RESPONSIVE",
-        "package_sha256": "5051d873730e0b9f4f3ce8a7c59433c934a1757b56fcba649edb9865d819c127",
-        "main_sha256": "bf303d3be250a8a195f0c7f94c544b31976ee00388df27324fe173a18da389f1",
-        "wall_seconds": 45.29674845817499,
-        "first_ready_virtual_seconds": 20.500559162,
-        "final_virtual_seconds": 26.085334439,
-        "menu_screens": {
-          "menu-ready.png": "5f4b8f96aad941f030c99a757f0fa3a06af5d325a7f0ccff31ad01ca6f6d47fb",
-          "menu-down.png": "d7253abc311533751863e6f2f5df2122f6d62a2bb38f9e1f49cf44f9579d5700",
-          "menu-up.png": "50a90bbf42b8a8e76fdd9524f4e57c093fbf8be5ce83cc5e95afd85356d59ab4"
-        },
-        "evidence": {
-          "result.json": "81906a25e1fb63da915543364c2725a9bf5ec7e0028fd5df6fe3681a9397bfbf",
-          "stderr.log": "0819b151d2782b0fdc0e5e0776f4060828be1f5b2d1b50bb66240a8904212dec",
-          "runner.py": "8804386218cb9e9cd8607c487569f7b7d82c222c84ecf492be785cec2f4fe0f3",
-          "final.png": "50a90bbf42b8a8e76fdd9524f4e57c093fbf8be5ce83cc5e95afd85356d59ab4"
-        },
-        "owned_qemu_stopped": true
-      },
-      {
-        "case": "combined",
-        "status": "NATIVE_MENU_REACHED_AND_RESPONSIVE",
-        "package_sha256": "7047c831e0517e5e5352ae3721e21a0b1ad1f9aa12ddca52eb81cf927e81af9c",
-        "main_sha256": "6519aa9bee02d067042cb352b2b46cdd58e176aaf51fc7ee34fc6d00ec3ab27a",
-        "wall_seconds": 45.90057979198173,
-        "first_ready_virtual_seconds": 20.482062065,
-        "final_virtual_seconds": 26.212047545,
-        "menu_screens": {
-          "menu-ready.png": "5f4b8f96aad941f030c99a757f0fa3a06af5d325a7f0ccff31ad01ca6f6d47fb",
-          "menu-down.png": "d7253abc311533751863e6f2f5df2122f6d62a2bb38f9e1f49cf44f9579d5700",
-          "menu-up.png": "50a90bbf42b8a8e76fdd9524f4e57c093fbf8be5ce83cc5e95afd85356d59ab4"
-        },
-        "evidence": {
-          "result.json": "c0036d551c4964db8e00a797abceff5d78d863c27d3b30d26de485cc6cb20f31",
-          "stderr.log": "f72debdfc1029d834937c7a22d6ff7450e70e39831a1712baa23ada266d479bf",
-          "runner.py": "8804386218cb9e9cd8607c487569f7b7d82c222c84ecf492be785cec2f4fe0f3",
-          "final.png": "50a90bbf42b8a8e76fdd9524f4e57c093fbf8be5ce83cc5e95afd85356d59ab4"
-        },
-        "owned_qemu_stopped": true
-      }
-    ],
-    "model_inputs_identical": true,
-    "reported_no_boot_reproduced": false,
-    "issue3_excluded": false,
-    "hardware_safety_established": false,
-    "firmware_installation_tested": false,
-    "active_card_reinsertion_tested": false,
-    "card_configuration_present": false,
-    "scope": "Decrypted MAIN boot and menu response with synthetic inputs and fresh virtual card only",
-    "board_commit": "0b48ea878b74e3dc12d23e11ef9b9832850e0bb7",
-    "board_binary_sha256": "092dfa1fe3ba6bc3f0ddde3a3896c0e1ebf0bab9b31e0040155a9d98d11bb011",
-    "tools_commit": "c24e33460ab311b8b120b19ba25f532ccef1b391",
-    "public_toolkit_sha256": "4f2dde963e888987c1ad6f03f151de6b335780d378206f4320d9ecc864cf4a53",
-    "visual_menu_response_confirmed": true,
-    "physical_camera_installation_paused": true,
-    "physical_failure_cause": "unconfirmed; user report only",
-    "notice_status_as_of": "2026-10-19; superseded by incident_notice on 2026-10-20"
+  "evidence_report_sha256": {
+    "baseline_audit": "524b827f43994296a4d9096b3ae8b7c69ad40246404c1a56f7f3363ea99246e3",
+    "hn8_normalization_on_0411": "15ceb55eb9b22943dc86473ff419586fd942b5ed433cabaeec55674f598f0e5d",
+    "version_only_change_to_0404": "ef515e05cda65d893c9e835ec5a92b04d3cec30a2f30e535a50ae5bc8b9020a9",
+    "native_0404": "b00a1b54121e9813877d5be307afa20a2485af6ce4dae42e49ce95adfd8c3dd2",
+    "stock_writer_0404": "414cce82d627c02b17a74b8fa2188930c71fd1cc456efa7ca8cac69571ad4b04",
+    "nef_byte_equality_0404": "f7e66c0d2c5aed860a67be0e8dc2689a41b27d56777f9648df002d49f12d44d5",
+    "decode_0411": "df934894e2789113ec8709d5d1145d4da1d6ca7f2ce893c8453fd62b9c9237ef",
+    "qemu_display_0411": "a9fd7fd9109329ed5c6b2bb4239a30ace732fa97714a6fe2a3e57956c84ee0c5",
+    "qemu_two_card_0411": "c67624df50cc895b33b4503e6139032f563bc830b277f7719cc13aa8d3c5218f",
+    "boot_0404": "75321e12f82547dfafad7f571b63d827e1632d35ffbd7e3c0d066a12d4a3e9ba",
+    "binding_audit": "b09189f0ec58094ed1308a6da99333ec31c90e9f9297bd5f14a9198a29c0967e"
   },
-  "reporter_artifact_comparison_20261019": {
-    "status": "BYTE_IDENTICAL_TO_REFERENCE_AND_PRETEST_CARD_READBACK",
-    "package_sha256": "7047c831e0517e5e5352ae3721e21a0b1ad1f9aa12ddca52eb81cf927e81af9c",
-    "configuration_sha256": "a8067db1a7e8350c07e1e76bda32aaeb3dde22fb327e829fddc1c9f262704f1f",
-    "independent_package_verification": "PASS",
-    "reported_code_source": "source",
-    "reference_code_source": "prebuilt",
-    "affected_camera_flash_readback_verified": false
-  },
-  "maintainer_hardware_observation_20261019": {
-    "evidence_type": "maintainer_report",
-    "date": "2026-10-19",
-    "firmware_identity": "04.03.p0",
-    "features": [
-      "prores",
-      "precapture"
-    ],
-    "package_sha256": "7047c831e0517e5e5352ae3721e21a0b1ad1f9aa12ddca52eb81cf927e81af9c",
-    "configuration_sha256": "a8067db1a7e8350c07e1e76bda32aaeb3dde22fb327e829fddc1c9f262704f1f",
-    "package_identity_basis": "Pre-test received-file comparison and staged-card readback; subsequent first-person physical-camera observation",
-    "normal_boot_reported": true,
-    "failure_to_boot_observed_in_this_test": false,
-    "card_changes_without_abnormality_reported": true,
-    "powered_on_card_insertion_removal_without_abnormality_reported": true,
-    "pre_capture_enabled_with_cfg_card_reported": true,
-    "repetition_count": null,
-    "active_write_during_removal_documented": false,
-    "new_capture_files_or_device_logs_provided": false,
-    "new_raw_decode_validation_performed": false,
-    "affected_camera_flash_readback_verified": false,
-    "original_issue_retained": true,
-    "root_cause_confirmed": false,
-    "general_hardware_safety_established": false,
-    "installation_warning_retained": true,
-    "notice_status_as_of": "2026-10-19; superseded by incident_notice on 2026-10-20"
-  },
-  "reporter_follow_up_20261020": {
-    "evidence_type": "reporter_issue_comment",
-    "source": "https://github.com/XinmiaoZhao/NikonFirmwarePatch/issues/3#issuecomment-6288128394",
-    "reported_at": "2026-10-20T09:44:36Z",
-    "reported_camera_model": "Nikon Z8",
-    "reported_firmware_version": "C 4.03",
-    "reported_camera_count": 10,
-    "overlap_with_original_reported_cameras": "not specified",
-    "no_black_screen_freeze_or_boot_failure_reported_in_follow_up_tests": true,
-    "earlier_black_screen_reproduced": false,
-    "raw_precapture_failure_attributed_by_reporter_to": "operating mistake",
-    "reproducible_firmware_defect_established_by_reporter": false,
-    "per_camera_package_hashes_or_test_logs_in_comment": false,
-    "earlier_black_screen_root_cause_established": false,
-    "general_hardware_safety_established": false,
-    "issue_closed_by_reporter": true,
-    "original_report_retained": true,
-    "incident_specific_notice_removed": true,
-    "firmware_implementation_changed": false
+  "historical_summary": "validation-v0.1.0.json",
+  "artifact_scope": "Source and self-compiled patch only; complete firmware, images, device data and runtimes excluded. Release ZIP checks run after source commit and are retained in the publication receipt.",
+  "host_scope": "macOS full integration; Windows/Linux complete firmware builds not independently run",
+  "final_sd_readback": {
+    "identity": "04.04.p0",
+    "sha256": "54a6876e336027acfa07c98c488b09bfe9a686dcef56158092cb32947223629d",
+    "bytes": 99051117,
+    "checks_completed_before_write": true,
+    "readback_verified": true,
+    "ejected": true,
+    "camera_update_performed": false,
+    "receipt_sha256": "fe5661afda03bb3edacc402f6009bcf62a9fda59a117a2b57615ea85177cf934"
   }
 }

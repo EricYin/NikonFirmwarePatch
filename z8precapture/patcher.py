@@ -62,10 +62,13 @@ def edits(code):
     profile = json.loads((RESOURCES / 'precapture.json').read_text())
     entries = {k: int(v, 16) for k, v in profile['entries'].items()}
 
-    def bl(at, to):
+    def branch(at, to, tail=False):
         d = to-at
         require(d % 4 == 0 and -(1 << 27) <= d < (1 << 27), 'Branch target out of range')
-        return struct.pack('<I', 0x94000000 | ((d // 4) & 0x3ffffff))
+        return struct.pack('<I', (0x14000000 if tail else 0x94000000) | ((d // 4) & 0x3ffffff))
+
+    def bl(at, to):
+        return branch(at, to)
 
     values = {
         0xe0fe90: bl(0x40f6fe90, entries['precapture_history_entry']),
@@ -82,6 +85,32 @@ def edits(code):
         0x800000: code,
         LOADER: bytes.fromhex('080080d2e812a8f2'),
     }
+    for at, entry in (
+        (0x40e99798, 'precapture_tenc_config'),
+        (0x4104df14, 'precapture_e_alloc'),
+        (0x40e997c8, 'precapture_e_size'),
+        (0x40f98c4c, 'precapture_e_size'),
+        (0x40f9a0b4, 'precapture_e_size'),
+        (0x40ea9048, 'precapture_tdec_sel_entry'),
+        (0x403acce8, 'precapture_gui_mode'),
+        (0x40f96c90, 'precapture_ready_margin'),
+        (0x40d49044, 'precapture_ui_mode'),
+        (0x40d424f0, 'precapture_ui_mode'),
+    ):
+        values[at - 0x40160000] = bl(at, entries[entry])
+    for at in (0x40ec4640, 0x40ec6a8c, 0x40f24e08, 0x41014b1c, 0x410e71f8):
+        values[at - 0x40160000] = branch(at, entries['precapture_cap_update'], tail=at == 0x40ec4640)
+    # These are callback pointers in the initialized-data image, not AArch64 branches.
+    callbacks = {93: 'precapture_display_mode', 112: 'precapture_quality_code',
+                 113: 'precapture_quality_code', 114: 'precapture_ordinary_code',
+                 115: 'precapture_ordinary_code', 116: 'precapture_quality_star',
+                 117: 'precapture_ordinary_star', 129: 'precapture_display_mode',
+                 130: 'precapture_display_mode'}
+    for index, entry in callbacks.items():
+        at = 0x4b13000 + 0xa0295c558 + 0x68 * index + 0x30 - 0xa02808000
+        values[at] = struct.pack('<Q', entries[entry])
+    require(set(values) == {int(row['offset'], 16) for row in profile['patches']},
+            'Generated pre-capture windows differ from the reviewed recipe')
     result = []
     for row in profile['patches']:
         at = int(row['offset'], 16)

@@ -11,13 +11,14 @@ ROOT = Path(__file__).resolve().parents[1]
 # Deliberate distribution allowlist. Full firmware, photos and runtimes have no entry.
 SOURCE_FILES = (
     '.gitattributes', '.githooks/pre-commit', '.gitignore', 'LICENSE', 'NOTICE.md', 'README.md',
-    'configure.py', 'features.py', 'patch.py', 'verify.py', 'requirements.txt',
+    'features.py', 'patch.py', 'verify.py', 'requirements.txt',
     'docs/images/prores-quality-options.png', 'docs/images/prores-quality-value.png',
     'docs/raw-precapture.md', 'docs/validation.md', 'docs/validation-summary.json', 'docs/validation-implementation-v3.json',
+    'docs/validation-v0.1.0.json',
     'docs/releases.md', 'resources/input.json', 'resources/precapture.json', 'resources/profile.json',
     'tests/validate.py', 'tests/validate_features.py', 'tests/validate_distribution.py',
     'tools/check_repository.py', 'tools/build_release.py', 'tools/check_release.py',
-    'z8precapture/__init__.py', 'z8precapture/config.py', 'z8precapture/crc32_table.inc',
+    'z8precapture/__init__.py', 'z8precapture/crc32_table.inc',
     'z8precapture/firmware.c', 'z8precapture/linker.py', 'z8precapture/patcher.py',
     'z8prores/__init__.py', 'z8prores/a64.py', 'z8prores/back_half.py', 'z8prores/layout.py',
     'z8prores/menu.py', 'z8prores/package.py', 'z8prores/patcher.py',

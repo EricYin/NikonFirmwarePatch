@@ -1,6 +1,84 @@
 # Validation scope / 验证范围
 
-2026-10-18. Public input support remains **official Nikon Z8 C 3.11**. Recorded implementation tests, public-source regression and installation of a newly generated package are distinct evidence.
+2026-10-21 · toolkit **v0.2.0** · public input: **official Nikon Z8 C 3.11**. The [machine-readable summary](validation-summary.json) binds the current source and recorded checks. Complete firmware, photographs, private device records and emulator/runtime inputs are not distributed.
+
+## Current implementation and identity
+
+The RAW feature is ported from the hardware-tested **HN8, 03.50.n8** implementation. It adds HE★, removes the card CFG dependency, follows ordinary Image quality through QUAL/f2 and the i menu, and uses the dual-card role and primary slot captured when each frame is submitted. ProRes patch bytes and their recipe are unchanged.
+
+| Artifact | SHA-256 |
+|---|---|
+| Official C 3.11 input | `d67413c2ede6b9ce8887175f20700bd9fbad2a973a4820968c45503d15d80d96` |
+| Tested HN8 complete package, 03.50.n8 | `c387206c102d611e46e0634aaac9527105ea534cc78a8dc1c6b93542eb8edeb3` |
+| Public combined output, 04.04.p0 | `54a6876e336027acfa07c98c488b09bfe9a686dcef56158092cb32947223629d` |
+| Public pre-capture code, 33,117 bytes | `d71bffd5f64105eeda35d627c5f628dd4c9da6a976c3ba2de09667ea5e49e224` |
+
+The public output is **not byte-identical to HN8**. Public file/protocol identifiers, an auxiliary marker, diagnostic identity/label, default-off diagnostic footer and firmware identity differ. An offline comparison restores those choices, accounts for compiler-layout relocation at 24 branch sites and nine GUI callback pointers, then checks the code, MAIN payload and complete package byte-for-byte against HN8. All three match after that explicit normalization. This establishes the port's defined relationship to the reference; it does not turn the public package into a physically tested HN8 file.
+
+## HN8 camera evidence
+
+The latest HN8 session used HE★ and recorded 108 unique C15/C30 frames:
+
+| Run | Camera settings and output | Historical / current frames |
+|---|---|---:|
+| R1 | SD primary, RAW+JPEG fine, RAW-primary/JPEG-secondary: NEF on SD, JPEG on CFexpress | 30 / 28 |
+| R2 | Backup, RAW+JPEG: both file types on both cards | 5 / 15 |
+| R3 | CFexpress primary, RAW, RAW-primary/JPEG-secondary: NEF on both cards | 15 / 15 |
+
+These produced **158 C15/C30 NEF files including dual-card copies**, plus one ordinary single-shot NEF, and 99 JPEG files. All **159 HE★ NEFs** completed Adobe DNG Converter 18.1.1 decoding. Fifty duplicate NEF pairs have identical RAW strips and decoded mosaics; card-specific header fields differ as expected. The files contain full-size 8256×5504 previews.
+
+The card role changed during R1's queued writing (about 21.2 seconds), and the primary slot changed during R3's queued writing (about 14.2 seconds). Submitted frames retained the settings at submission. Camera quality-display checks U1–U9 were reported as normal, with four screen photographs supporting the observations.
+
+**Frame-comparison limitation:** the original fixed timer ROI criterion failed on 49 comparisons because the RAW and JPEG timer positions differed by about 54 pixels. It remains a failed original criterion. A corrected exploratory ROI matched 58/58 R1, 19/20 R2 and 30/30 R3 frames. The remaining R2 ambiguity also appeared in the corresponding copy on the other card: adjacent readings shared milliseconds but differed by one second. Visual review of the actual seconds and milliseconds confirmed the RAW/JPEG correspondence. This repair is documented as exploratory/visual review, not a retroactive pass of the original criterion.
+
+## Actual public code and files
+
+The actual default public bytes, with diagnostic footers disabled, were tested independently of the HN8 normalization. The final `04.04.p0` combined MAIN repeated the native functional/control and stock-writer suites. Its generated NEFs were compared byte-for-byte with the earlier decoded files:
+
+- **16 ProRes, 68 feature and 49 distribution checks passed.** Prebuilt and explicit-source complete firmware agree for all three feature selections at both `04.04.p0` and `17.42.x7`. Default builds run with an empty executable search path. Checks reject unsupported inputs, invalid identities, altered hooks/callbacks/code/loaders, unrelated edits and missing/corrupted prebuilt assets. No CFG is generated; retired configuration options are rejected.
+- **110 bounded native cases passed:** 83 functional cases and 27 controls, including 26 deliberately defective builds rejected and one forced-failure fallback. Coverage includes the 13 Image quality selections, HE★ resource/layout choices, frame ordering, previews, dual-card routing and submission-time settings, GUI quality callbacks, and absence of CFG/filesystem reads in the capture path.
+- **12 stock-writer cases passed**, with three additional defective width/height, total-length and cache-cleaning builds rejected. Original ARM64 routines execute within recorded boundaries; heap, filesystem/database, clock/DMA and JPEG-engine interfaces have explicit models. Supplied JPEG/HE streams do not prove real encoder timing or sustained throughput.
+- **20 generated NEFs passed structural checks. Nineteen contain valid HE streams** and completed Adobe decoding; their mosaics equal the archived input mosaics. The twentieth is a deliberately synthetic HE★ layout fixture made with padded HE data: it tests fields and allocation, and is not counted as a decodable HE★ stream. Four corrupt file/metadata controls were rejected. Public files contain no diagnostic footer.
+
+A source-only checkout can reproduce public build/verification tests with a user-supplied official package, but cannot reproduce private archived-frame or camera tests. Full firmware integration ran on macOS; complete Windows/Linux builds have not been independently tested.
+
+## QEMU observations
+
+Current QEMU startup, display and two-card file checks are recorded separately in the [validation summary](validation-summary.json). They use pinned Z8QemuBoard `main-u5` (`5a9b9a63adcfc158870b611b4be39818fff468c0`) and launcher tools `c24e33460ab311b8b120b19ba25f532ccef1b391`, with explicit synthetic ROM, sensor and MCU inputs and regular-file virtual cards.
+
+All three public feature selections at `04.04.p0`, compared with the official C 3.11 positive control, reached the native photo menu and responded to down/up MCU inputs. Corresponding menu images were byte-identical across all four runs; visual review confirmed the selected rows. Each run completed without an unmodeled-MMIO abort and stopped its owned emulator process. This is a MAIN-entry boot/menu check, not a hardware boot guarantee.
+
+The combined package also completed an ordinary single RAW shot with both virtual cards present, role 2 and CFexpress primary. Each card held exactly the expected NEF, database and camera-identification files. Both 35,110,512-byte NEFs matched the corresponding HN8 reference except variable ShotInfo and the declared version strings; all other bytes, including preview and RAW strips, matched. The successful retry used the same firmware, board and input settings as the retained first failed attempt.
+
+The display and two-card capture runs used the earlier public `04.11.p0` identity. An independent comparison verifies that the final `04.04.p0` outputs differ only in version-immediate instructions, version strings, module identity and required integrity fields; all patch code and other bytes are identical. Startup/menu checks were repeated on all three actual `04.04.p0` outputs. The display run checks C15/C30 ordinary quality, a type-only QUAL change, C60's stock fallback, and the final i-menu quality/star values. It had no unmodeled access, CPU-register redirection or debugger RAM patches. The final i-menu image was visually checked.
+
+QEMU loads decrypted MAIN at `0x40160000`. It does not cover firmware installation, the boot ROM/full power-on chain, real persistent settings/calibration, physical card timing, or end-to-end C15/C30 capture. Bounded native tests, ordinary QEMU single shots and hardware bursts are different evidence. The first two-card attempt stopped at the model's previously recorded timing-dependent write to `0x150c000c` from `0x40c1fce4`; that failed run is retained and is not called a pass.
+
+## Known risks and limits
+
+**Avoid nearly full cards.** Remaining-shot count, DCF estimate and free-space reservation still use the stock HSFC JPEG file plan. They do not reserve the added NEF space. A JPEG may fit when its NEF does not, risking write failure, missing or incomplete files. This situation has not been validated or fixed; there is no measured minimum-free-space threshold. Keep ample space on every destination card. The displayed remaining count is not a RAW-capacity guarantee.
+
+The r/buffer estimate remains the stock HSFC estimate. Immediate playback can omit the RAW **L** label until restart although the files record Large. Unlimited sustained bursts, all cards and dual-card transitions, special secondary-size JPEG combinations, card removal during writes, deletion/protection/transfer, AF tracking and auto capture remain outside complete validation. C60/C120 RAW, DX and HLG/HEIF are not added.
+
+The earlier public combined `04.11.p0` candidate was copied to the maintainer's SD card and read back. The maintainer confirmed it had not been installed before changing the public example to `04.04.p0`. After the final-version checks completed, the `04.04.p0` combined package was written to the SD card, read back against the package hash above, and safely ejected. **Copying to a card is not camera installation or a camera test.** At this record's preparation, the new public package has no reported physical test result; the HN8 session above remains the hardware reference. These checks do not establish freedom from freezes, dropped frames, data loss or camera damage.
+
+## 中文说明
+
+本版以已上机的 HN8（`03.50.n8`）迁移而来，公开版使用独立标识、默认关闭诊断尾标，示例组合包为 `04.04.p0`。恢复所列标识、尾标和版本选择，并核对布局变化对应的 24 处跳转与 9 处回调指针后，代码、MAIN 和整包都能逐字节还原 HN8；**实际公开包本身与 HN8 并不相同**。ProRes 原有修改字节保持不变。
+
+HN8 最近一轮实拍的 108 个 C15／C30 独立帧，在两张卡上产生 158 个 NEF 文件，另有普通单拍 1 个 NEF；159 个 HE★ NEF 全部完整 Adobe 解码通过。50 对双卡副本的 RAW 条带与解码像素相同。备份、RAW／JPEG 分卡，以及积压写入时修改副卡槽功能或主卡槽的测试，均保留了每帧提交时的设置。显示 U1–U9 的机身观察正常，附有四张拍屏。
+
+原定计时器 ROI 因 RAW／JPEG 位置约偏移 54 像素而有 49 项失败，原失败仍保留；修正 ROI 的探索性比对分别为 58/58、19/20、30/30。R2 剩余歧义在另一张卡的副本也存在，原因是相邻秒的毫秒相同；随后逐秒和毫秒目视确认帧内对应。不能把后来的修正记成原判据通过。
+
+实际公开机器码另完成 110 项限定原指令用例（83 功能、26 缺陷负控、1 强制失败恢复）、12 项原厂写入用例及 3 个写入负控。20 个生成 NEF 通过结构检查，其中 19 个有效 HE 码流完整解码且像素等于存档输入；另 1 个是填充 HE 数据的 HE★ 布局夹具，不算 HE★ 解码成功。四个文件／元数据负控被拒。公开构建的 ProRes／功能／分发检查分别 16／68／49 项，三种功能、两组版本的预编译／源码输出一致。
+
+QEMU、合成内存执行、已有实拍及新公开固件必须分别理解。QEMU 从解密 MAIN 入口运行，不能证明刷写流程、完整上电链或所有实机状态。三种功能包及官方正控均进入原生菜单并响应上下按键，对应截图逐字节一致且已目视检查。组合包双卡普通 RAW 单拍也通过，两卡 NEF 除可变 ShotInfo 和版本字段外与 HN8 参照一致。首次双卡 QEMU 在模型已知访问处中断，失败保留；相同固件和模型输入的重试成功。先前 `04.11.p0` 候选包已写卡读回，但用户确认尚未安装；最终公开示例改为 `04.04.p0`，另重跑三种功能启动与组合包原指令用例。独立字节审计确认两个版本只差版本标识、对应立即数与封装校验，功能代码不变。`04.04.p0` 的所需检查全部完成后才重新写卡，读回哈希与上表一致并安全弹出。**写卡不等于已上机测试**。
+
+**近满卡风险尚未修复或验证。** 原厂 HSFC 的剩余张数、DCF 估计与空间预留仍按 JPEG 计划计算，没有覆盖新增 NEF；可能 JPEG 放得下而 NEF 放不下，造成写入失败、漏文件或不完整文件。参与写入的每张卡都要保留充足空闲，不把剩余张数当成 RAW 容量保证；目前没有测得安全余量阈值。r／缓冲估计、即时 RAW 的 L 标签及其他限制见上文与[使用指南](raw-precapture.md)。
+
+## Historical evidence
+
+The prior v0.1.0 summary is preserved verbatim in [validation-v0.1.0.json](validation-v0.1.0.json); its earlier implementation snapshot remains in [validation-implementation-v3.json](validation-implementation-v3.json). The [previous full report](https://github.com/XinmiaoZhao/NikonFirmwarePatch/blob/8995eac3e734b506fef0807f11475795c46b4ae1/docs/validation.md) preserves the older 329-NEF hardware session and v3 configuration behavior. Those are historical results, not current CFG instructions. The following incident history concerns v0.1.0 / 04.03.p0.
 
 ## Issue #3 follow-up 2026-10-20
 
@@ -46,91 +124,8 @@ The exact public `v0.1.0` toolkit was downloaded again and verified against SHA-
 | RAW pre-capture only, 04.03.p0 | Reached the native photo menu; down/up inputs responded |
 | Combined, 04.03.p0 | Reached the native photo menu; down/up inputs responded |
 
-The four runs used the same pinned board, tools, synthetic ROM/sensor/MCU inputs and fresh file-backed virtual NVMe card. Down selected **Extended menu banks** and up selected **Shooting menu bank**; corresponding screenshots were byte-identical across all four runs and visually checked. No unmodeled-MMIO abort occurred. Each owned emulator process was stopped. Full package and MAIN hashes, model identities and screen hashes are recorded under `boot_investigation_20261019` in the [validation summary](validation-summary.json).
+The four runs used the same pinned board, tools, synthetic ROM/sensor/MCU inputs and fresh file-backed virtual NVMe card. Down selected **Extended menu banks** and up selected **Shooting menu bank**; corresponding screenshots were byte-identical across all four runs and visually checked. No unmodeled-MMIO abort occurred. Each owned emulator process was stopped. Full package and MAIN hashes, model identities and screen hashes are recorded under `boot_investigation_20261019` in the [validation summary](validation-v0.1.0.json).
 
 **These QEMU runs alone did not resolve or exclude the reported hardware failures.** The emulator loads the decrypted MAIN at `0x40160000`; it does not test flashing, the boot ROM, real persistent settings/calibration, power behavior or the full camera startup chain. The virtual card was initially blank, with no `Z8PRE.CFG`; C15/C30 capture and live card removal/reinsertion were not tested. At the time of these QEMU runs, the reporter's files had not yet been received. The later file comparison and physical observation are recorded above; the affected camera's update/boot logs and flashed-memory readback remain unavailable. These runs did not establish a recovery procedure. The subsequent reporter follow-up and removal of the incident-specific notice are recorded above.
 
 本轮重新下载实际公开的 v0.1.0 工具包，按默认预编译方式生成三个 `04.03.p0` 功能包，整包哈希均与既有发布记录一致。原厂正控和三个修改 MAIN 在同一固定 QEMU 条件下都进入原生拍摄菜单并响应上下按键，对应截图逐字节一致，目视确认选中行正确。**没有复现这一入口和模型条件下的不开机，不等于排除实机故障。** 本轮不覆盖升级／刷写、完整上电链、真实保留设置／校准或真实卡状态；空白虚拟卡无配置文件，没有测试 C15／C30 或运行中换卡。这些 QEMU 运行时尚未收到反馈者文件；后续文件比对和实机观察见上节。故障相机的刷写／启动过程和已刷内容读回仍缺失，这些模拟运行本身没有确定根因或恢复方法。后续测试者反馈及专项提示撤下经过见上节。
-
-## Precompiled distribution update
-
-The release changes code delivery and offline validation, without changing the reviewed ARM64 patch or its feature recipes. The 30,301-byte pre-capture module retains SHA-256 `479f4e37db3968a9e796fc97d865246793ebbac83b28f10a95711535c45cb715`. The original implementation evidence below is retained from source commit `d155b8b183e359140ac36147297f33707b9374e5`; its hash-bound summary is preserved in [implementation validation](validation-implementation-v3.json). Native execution, image decoding and camera tests were not repeated for this packaging change.
-
-Current distribution regression compares prebuilt and explicit-source full outputs for all three feature selections, at both `04.03.p0` and custom `17.42.x7`. Default builds run with an empty executable search path to catch accidental compiler use. The official `04.03.p0` combined output remains identical to the preceding public build. Separate checks cover wrong requested version/tag/features, modified input with a repaired envelope, changed hooks/code/shared loader, unrelated edits, version opcodes, trailer/module names, missing/truncated/corrupted prebuilt code, and an explicit source build without any prebuilt asset. The ProRes and feature/configuration regression suites are also rerun.
-
-The public builder and independent verifier now require the exact official input hash. Prior compatible-input model work below remains historical implementation evidence; it is not a supported way to use the current public CLI. Both delivery modes verify the requested options and every allowed edit, not a candidate's own self-reported digest. Release packaging has a fixed member allowlist and an independent source/archive checker; it excludes complete firmware and original photos. Detailed results and host scope are in the [current validation summary](validation-summary.json). Full integration was tested on macOS; Windows/Linux full firmware builds have not been independently run.
-
-本次更新只改变分发、构建和离线验证，预拍摄机器码及功能配方保持相同。此前 `d155b8b` 的原指令执行、像素／文件检查和相机观察作为既有实现证据保留，原始摘要单独存档；没有为了打包变化重复全部仿真和图像解码。当前回归比较三种功能组合、两组版本／tag 的源码与预编译完整输出，并覆盖错误声明、合法封装下的非法修改、缺失或损坏机器码、源码独立构建及既有功能检查。默认构建测试清空 PATH，确保未暗中调用编译器。当前公开 CLI 严格拒绝非官方输入；下文的兼容修改输入试验只属于历史实现证据。此次发布没有安装相机或写卡，也没有新增上机认证。
-
-## Hardware observations
-
-The current implementation was tested on a camera with the ordinary Image quality menu controlling C15/C30. File type, JPEG grade and ★ selection matched the menu in these groups:
-
-| Setting | Recorded output | Historical / current NEF frames |
-|---|---|---:|
-| C15, 0.3 s history, RAW + JPEG fine | 7 NEF/JPEG pairs | 5 / 2 |
-| C30, 0.3 s history, RAW | 12 NEFs, no matching JPEGs | 9 / 3 |
-| C15, 0.3 s history, JPEG normal★ | 7 JPEGs, no NEFs | — |
-| C15, history off, RAW + JPEG basic | 1 NEF/JPEG pair | 0 / 1 |
-| C30, 1 s history, RAW + JPEG fine★, 14-trigger stress sequence | 308 NEF/JPEG pairs | 242 / 66 |
-
-There are **328 C15/C30 NEFs: 256 historical and 72 full-press/post-release frames**. Together with one ordinary single-shot NEF/JPEG pair, the acquisition contains **329 NEFs and 324 JPEGs**. These totals come from the per-file records.
-
-All 328 C15/C30 NEFs passed structure, metadata, recorded-format and complete Adobe DNG Converter 18.1.1 decoding checks. Every file carried an **8256×5504 full-size preview**, with JPEG marker structure, quantization, Huffman tables and sampling matching the camera-made reference. The files were about 20.6–21.4 MB; embedded full-size previews were about 3.17–3.23 MB. RAW+JPEG basic reused the main JPEG stream as expected; the other tested paired grades had separately encoded NEF previews. The ordinary single-shot regression also decoded normally.
-
-**Frame correspondence was confirmed using automated image comparison and visual review.** Repeated timer readings created scoring ambiguity in a small subset of stress frames; the visual review compared the actual seconds and milliseconds and confirmed matching readings in each frame's RAW/JPEG pair. No frame mismatch was identified. The original measurements and review images are retained with the local evidence.
-
-The file sets were continuous within the recorded bursts, with no stop file or temporary NEF residue. The user reported normal playback. The immediate RAW label can omit **L**, although every checked NEF records Large; a subsequent restart restores the label. This display issue is not yet fixed. The full menu controls output; i-menu/dial shortcuts and the shooting display still refer to HSFC quality.
-
-The stress sequence demonstrates limited busy-card use, not unlimited sustained capture. One trigger had zero history frames and three current frames. The “!” indicator coincided with pending writes and later cleared; an exact code-level threshold or original-firmware comparison has not been established. The 308 pairs took about 155 s to write in that trial. Near-full cards, all card types, dual-card modes, deletion/protection/transfer, AF tracking and automatic capture have not been fully validated.
-
-Existing ProRes hardware observations covered its four quality choices, clip identifiers, complete decoding and menu-bank persistence. They do not certify every newly generated combination.
-
-## Public-source regression
-
-- All three feature selections—ProRes only, capture only and both—build from official 3.11 and pass independent container/module and byte-range verification. The shared loader edit is composed once; other input bytes and modules are preserved. The original ProRes recipe and its **16-check regression** remain unchanged.
-- **42 feature/configuration checks** cover conflicting or occupied patch windows, the new current-frame/menu/preview dependencies, repeat application, incorrect feature claims, repaired checksums hiding unrelated edits, optimized Python, configuration generation and overwrite protection. Obsolete fixed-output CLI options are rejected. The interactive combined build matches the explicit build and configuration exactly.
-- **119 bounded machine-code cases** execute the actual public build's patched call sites. They cover historical/current frames, all 13 valid menu choices, six JPEG grades, preview allocation/layout and encoding parameters, original statistics, failure fallbacks, both C15/C30 default configurations and rejection of old public configurations. The menu-composition case compares **75 combinations** against the original menu composer: 20 supported combinations agree; 55 unsupported combinations are declined.
-- **17 control builds** were exercised: 16 deliberately faulty builds were rejected for the intended reason, and one forced-failure build verified recovery. Controls include reading only JPEG grade instead of composing all three settings, preview overlap, wrong preview kind, incorrect retention, missing cache cleaning and leaked resources.
-- **13 original-writer cases** execute the original still-image writer on the generated segment/attribute blocks. Three defective builds are rejected at this layer for width, length and cache-cleaning violations.
-- **15 generated NEFs passed independent structure/source checks and complete Adobe decoding**, covering RAW+JPEG fine/basic and RAW, with three historical and two current frames in each set. Every RAW sample matches the existing decode of its archived real-frame input. Four damaged-file/metadata controls were rejected. Default non-diagnostic output matches the verified diagnostic file before its footer; diagnostic filename padding is zero.
-- A compatible-input run passes the same functional cases and produces byte-identical NEFs for the same archived inputs. Normalizing only public file/protocol identifiers, record magic and diagnostic identity reconstructs the exact machine code, payload and complete package of the hardware-tested reference. **The actual public package differs from that reference**, and this regression does not extend public support beyond official C 3.11.
-- The official-input combined build booted and saved an ordinary RAW still in the established QEMU camera model. Embedded JPEGs and RAW strips matched the original-firmware control; outside the model's variable ShotInfo block, differences were confined to version text. The run used explicit model inputs, no CPU register redirection and no debugger RAM patches. **This is not end-to-end C15/C30 emulation or a physical-camera test.**
-
-The CPU tests execute original menu, allocation, layout, JPEG parameter/rate-control and writer routines. Filesystem/database/heap/clock/DMA and JPEG-engine boundaries have explicit models; JPEG streams are supplied test inputs. These tests verify code behavior and arguments, not hardware JPEG timing or unlimited throughput.
-
-The [source-bound summary](validation-summary.json) records the completed release checks. Public identifiers and v3 card configuration differ from the recorded camera implementation. Old public v1/v2 configurations must be regenerated; diagnostic footers are off by default. Original development and model-warning records remain local; a successful current run is not a reliability guarantee.
-
-No new public package was installed on a physical camera during this release preparation. Firmware, photos, complete device metadata, emulator images and native-test inputs are not distributed. Repository tests require a user-supplied official package; a source-only checkout cannot reproduce the archived-frame or hardware checks. Tests do not establish freedom from freezes, dropped frames, data loss or camera damage.
-
-## 中文
-
-本次公开支持的构建输入仍仅限**官方 Z8 C 3.11**。当前实现的上机记录确认：C15／C30 按普通“画质”菜单选择文件类型、JPEG 档位和 ★，预拍及全按后正式帧都生效。
-
-| 设置 | 结果 | 历史／正式 NEF 帧 |
-|---|---|---:|
-| C15，预拍 0.3 秒，RAW＋JPEG fine | 7 对 NEF／JPEG | 5／2 |
-| C30，预拍 0.3 秒，RAW | 12 张 NEF，没有同号 JPEG | 9／3 |
-| C15，预拍 0.3 秒，JPEG normal★ | 7 张 JPEG，没有 NEF | — |
-| C15，预拍关，RAW＋JPEG basic | 1 对 NEF／JPEG | 0／1 |
-| C30，预拍 1 秒，RAW＋JPEG fine★，连续触发 14 次 | 308 对 NEF／JPEG | 242／66 |
-
-C15／C30 合计 **328 张 NEF：256 张历史帧、72 张全按当帧及后拍帧**。另有一对普通单拍回归，因此整次新增 **329 张 NEF 和 324 张 JPEG**，数字按逐文件记录汇总。
-
-328 张 C15／C30 NEF 的结构、元数据、记录格式及 Adobe DNG Converter 18.1.1 完整解码都正常。全部内嵌 **8256×5504**，JPEG 标记结构、量化表、哈夫曼表和采样与相机自产参照一致。NEF 约 20.6–21.4 MB，整幅内嵌预览约 3.17–3.23 MB。RAW+JPEG basic 如预期复用主图；其余已测配对档另编 NEF 预览。普通单拍回归也完整解码正常。
-
-**画面对应经自动图像比对和目视复核确认。** 压力序列少数帧因计时器重复读数产生评分歧义，复核直接核对秒位和毫秒位，本帧 RAW／JPEG 读数一致，未发现帧错配。原始测量与复核图保留在本地证据中。
-
-已记录的各次连拍文件号连续，没有停止文件或临时 NEF 残留；用户报告回放正常。刚拍完 RAW 标签可能不显示 **L**，但所有文件已记录 Large，之后关开机显示恢复。这个显示问题尚未修复；i 菜单／拨盘快捷方式及取景显示也仍指向 HSFC 画质，实际输出应以完整普通菜单为准。
-
-压力试验是有限的边写卡边拍覆盖，不代表无限持续连拍。有一次触发没有历史帧，只有三张正式帧；“!”与写入积压同时出现，随后消失，但精确代码阈值及原厂对照尚未建立。308 对文件在本次约 155 秒写完。近满卡、全部卡型／双卡模式、删除／保护／传输、自动对焦跟踪与自动捕获尚未充分验证。原有 ProRes 四档、编码标识、完整解码和菜单库保存实测结论保留，也不等于每个新组合都已上机。
-
-公开源码本轮完成三种功能选择的构建、独立整包／改动范围核验和原有 **16 项 ProRes 回归**；**42 项功能／配置检查**覆盖冲突、重复应用、模式声明、优化运行、旧参数拒绝和覆盖保护，交互组合构建与显式构建完全一致。
-
-实际公开机器码 **119 项限定执行通过**，包括预拍／正式帧、13 个有效菜单选项、六档 JPEG、预览空间／参数、原有统计和异常回退。菜单组合用例对照原厂组合函数检查 75 种组合，20 种受支持组合一致，55 种不受支持组合不接管。共运行 17 个控制构建，其中 16 个缺陷构建按预期被拒，一个强制失败构建验证恢复路径。原厂写入函数 **13 项通过**，另有三个宽高／总长／缓存清理负控按预期被拒。
-
-**15 张生成 NEF 全部独立检查和完整解码通过**，覆盖 RAW+JPEG fine／basic 与 RAW，每种包含三张历史帧和两张正式帧；全部 RAW 样本与存档输入既有解码相同。四个损坏文件／元数据负控被拒；默认无尾标文件与已验证诊断文件的尾标前内容完全一致，诊断文件名填充清零。兼容修改输入的功能回归及同输入 NEF 字节一致性也通过；仅还原公开文件／协议标识、记录魔数和诊断身份，即可逐字节重建上机参照整包。**实际公开包与参照并不逐字节相同**，支持范围仍仅官方 3.11。
-
-官方输入组合包在既有 QEMU 模型完成普通 RAW 单拍，内嵌 JPEG 和 RAW 条带与原厂对照相同；模型中会变化的 ShotInfo 之外只差版本文字。使用明确的模型输入，没有 CPU 寄存器重定向或调试器 RAM 补丁；**不是 C15／C30 端到端仿真或实体相机测试**。CPU 测试的 JPEG 引擎及若干服务是边界模型，码流由测试提供，不证明真实硬件的编码耗时或持续吞吐。
-
-[验证摘要](validation-summary.json)绑定源码和本轮结果。公开版使用独立标识及 v3 配置，旧 v1／v2 配置必须重新生成，默认不加诊断尾标。原始开发与模型告警记录保留在本地，成功运行不等于长期可靠。此前 v0.1.0 发布准备阶段没有给实体相机安装新公开包；我的后续实机测试见本页上节。仓库不分发固件、照片、完整设备元数据、模拟器映像或存档输入；只克隆源码无法重现全部帧与硬件核查，也不保证不会冻结、丢帧、损坏数据或相机。
