@@ -47,7 +47,9 @@ JPEG-only output remains on the stock file path with the selected ordinary JPEG 
 
 Registration or write failures can leave JPEG-only output, missing/incomplete files, a temporary `.NE_`, a reduced 1620×1080 NEF preview, or **`Z8PRESTP.BIN`**. RAW-only fallback JPEGs can use NEF-preview quality. Check the complete file set and decoding; lack of an on-screen error is not sufficient.
 
-The stop file is checked in the writer on the affected card and is not cleared by restarting. It blocks additional NEFs there; JPEG quality and other menu/UI changes can remain active. If a secondary NEF fails, the primary copy may already have been written. Stop shooting, let pending writes finish, back up what is readable, and investigate before removing a stop file or retrying. The time budget is cooperative: it cannot interrupt an already blocked stock I/O call or guarantee freedom from freezes.
+**Read the [stop-file decoding and recovery guide](stop-file.md#english-summary) before deleting `Z8PRESTP.BIN`.** The patched writer checks its existence, not its contents: an empty or malformed file can also stop additional NEFs, and restarting does not remove it. Existing markers are not overwritten. On a supported two-card frame, a marker on the primary card releases the shared RAW buffer, so the secondary can also fall back to JPEG without its own marker. If only the secondary is stopped or fails, the primary NEF may already have been written. JPEG fallback is attempted but is not guaranteed to succeed; the marker does not globally disable ordinary RAW shooting or menu/UI changes.
+
+Stop shooting, let pending writes finish, preserve both cards' files, and back up readable data to a separate device with sufficient space. Investigate before removing a marker and testing a short burst. Deletion allows new NEF attempts; it does not guarantee the next write or recover earlier RAWs. The time budget is cooperative: it cannot interrupt an already blocked stock I/O call or guarantee freedom from freezes. Reason codes alone do not establish card speed, free-space or hardware causes.
 
 To avoid additional RAW capture, select **JPEG-only** in the ordinary Image quality menu, or leave C15/C30. Removing a CFG file has no effect in v0.2.0. This does not uninstall the patch or remove ProRes, and a firmware downgrade/recovery route is not guaranteed. Public builds do not append diagnostic footers; deleting a CFG file cannot toggle them.
 
@@ -98,7 +100,9 @@ JPEG-only 沿用原厂文件路径，但采用普通菜单的 JPEG 档位。副�
 
 登记或写入失败可能留下 JPEG-only、缺失／不完整文件、临时 `.NE_`、缩小的 1620×1080 NEF 预览或 **`Z8PRESTP.BIN`**。RAW-only 回退 JPEG 可能使用 NEF 预览画质。要核对完整文件集合与解码结果，不能只看是否有报错。
 
-停止文件由写入任务在对应卡上检查，重启不清除。它会阻止该卡后续 NEF，JPEG 画质及其他菜单／显示改动仍可能生效；副卡 NEF 失败时，主卡可能已经写完。出现异常后停止拍摄，等写入结束，备份可读文件，排查后再考虑删除停止文件或重试。时间预算只能在原厂 I/O 返回后检查，不能中断已阻塞的调用，也不保证不会冻结。
+**删除 `Z8PRESTP.BIN` 前，请先看[读取、原因码与恢复说明](stop-file.md)。** 补丁写入任务只检查同名文件存在，不读取内容：空文件、短文件也可能阻止后续 NEF，重启不清除，已有文件不会被覆盖。受支持的双卡帧上，主卡已有停止文件会释放共享 RAW 缓冲，副卡即使没有停止文件也可能退成 JPEG；仅副卡停止或失败时，主卡 NEF 可能已写好。JPEG 回退不保证成功；它也不是关闭普通单拍 RAW 或菜单／显示改动的总开关。
+
+出现异常后停止拍摄，等写入结束，保留两卡相关文件，将可读素材备份到有足够空间的另一存储介质。排查后再删除已备份的停止文件，做短组重试；删除只允许后续重新尝试 NEF，不保证下一帧写入成功，也不补回此前的 RAW。时间预算不能中断已阻塞的原厂 I/O，也不保证不会冻结。原因码不能单独证明卡速不足、卡满或硬件故障。
 
 若要停止额外 RAW 拍摄，在普通“画质”中选择 **JPEG-only**，或退出 C15／C30。v0.2.0 删除 CFG 没有效果；这也不卸载补丁、不移除 ProRes，不保证可以降级或恢复。公开构建默认不附加诊断尾标，删除 CFG 不能切换尾标开关。
 

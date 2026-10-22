@@ -9,6 +9,8 @@ v0.2.0 以已上机的 HN8 为基础，更新 HE／HE★、免 CFG、双卡提�
 
 2026-10-21 实拍状态更新：公开组合包 `04.04.p0` 的 102 个 NEF、双卡对应、无诊断尾标及两段 HQ／Proxy 视频和音频检查通过，见[实拍文件验证](validation.md#public-0404p0-camera-files-2026-10-21)。本次只更新验证文档；已发布 v0.2.0 的 tag、ZIP、预编译代码和校验清单保持原样。ZIP 内文档是发布时快照，最新实拍状态以仓库文档为准。
 
+**2026-10-23 停止文件说明：** 发现 `Z8PRESTP.BIN` 或 RAW 意外退成 JPEG 时，先停止拍摄并保留两卡文件。主卡停止可能影响副卡 NEF；空文件也可能生效。读取方法、原因码边界及恢复步骤见[停止文件指南](stop-file.md)。这是文档澄清，不是故障修复；既有 v0.2.0 tag、ZIP、机器码和校验清单不变，新增指南以仓库最新版为准。
+
 ## 下载和使用
 
 普通用户下载 [Release 的完整 toolkit ZIP](https://github.com/XinmiaoZhao/NikonFirmwarePatch/releases/tag/v0.2.0)，在独立目录解压，按 [README](../README.md)安装 Python 依赖。工具包包含全部工具源码、许可证、验证配方和 `resources/precapture.bin`；不包含编译器、Python 运行库、官方完整固件或修改后的完整固件。
@@ -58,4 +60,4 @@ python tests/validate_distribution.py --archive /path/to/new-release-assets/Niko
 
 ## 致谢
 
-感谢 [@aoyukkk（傲宇）](https://github.com/aoyukkk)和“琴岛唯一指定哥布林”协助开发、开展实机测试并反馈问题。
+感谢 [@aoyukkk（傲宇）](https://github.com/aoyukkk)、[@South-Bridge（琴岛唯一指定哥布林）](https://github.com/South-Bridge)和“追晚霞的流浪汉”协助开发、开展实机测试并反馈问题。

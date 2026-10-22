@@ -16,18 +16,19 @@
     ".gitignore": "5546d558f5501001d221bee17c381fa07f8f8d789ff7e1682aca79c733377942",
     "LICENSE": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
     "NOTICE.md": "1f2defd8713ef17d8c6b91781eaa9dd9dce663760cea98d48624f395fec3f440",
-    "README.md": "e38bee113e97f7e4263fad9036e50f153ee8e2d802dc93029620577e23e2c59e",
+    "README.md": "e6e5f482340c1d03409dd6b1e975659f19a0ccef4726df4509d3381d2a644df8",
     "features.py": "196c2caadcafce5d25e9d5d773fedd05a69014086cbac704116b038a09560cba",
     "patch.py": "0fa85944197325ebf59a7b191c536c024d341e75f49a011b5ac2a579eebc4dc4",
     "verify.py": "7bc59464ba4135f5d0055d97d03e9386c2f0a475c9d0bf8fee9a4eba3a8a71b2",
     "requirements.txt": "6b8a703c0a562d2b528575457d1b76ae5decc8d4d53093ba6515a32137098d1b",
     "docs/images/prores-quality-options.png": "e4fdd6f975eecfde03f2730cc55f7071cb1b03a48644fc492f06edf127af8367",
     "docs/images/prores-quality-value.png": "f51d83239f3fdb4b32faf899111d54492d8307363ffcb91d8bf9134a0c12b9e6",
-    "docs/raw-precapture.md": "066a5217961f4acbcef67907748d882b9d12e439c30f29b976f09b008756958f",
-    "docs/validation.md": "52cb35fabd04503979eada4e9f22f78c3085c6ff14205cc92e0e4116897a04fc",
+    "docs/raw-precapture.md": "248149ce8812549f34e6624d1892ce8eac4893ab68f024afa1e079f506d725a2",
+    "docs/stop-file.md": "aeef6609645462d05a045a28aa0b4f9931f7bfdbfc139a038af0b2a1ac9778d5",
+    "docs/validation.md": "2be5d10798d44947d20155f53c61e0ea36023c75c4eec8d7d151d324e7dc6656",
     "docs/validation-implementation-v3.json": "3d025c61181b9ff5e36fd3f399fcb6ec4bd10a8276282d14a00d8a408abf5239",
     "docs/validation-v0.1.0.json": "600bccabfb29de962ab8c7b7c33ff495949d5c79777c12b5ed0e68a5334ba048",
-    "docs/releases.md": "462d9d6b32ee5e9a5c72c47dec438b33b6886f5fd376aadd1d50b6d5116192e0",
+    "docs/releases.md": "b27bd7dcc94283c793e50ca758313d8d1e52d48b78cbfea0ae4e1771c54f5236",
     "resources/input.json": "d100e8f0f8d2ceddc3ea38f2298aac30143d19514a4c571b63eedbb887cb00be",
     "resources/precapture.json": "c110c43cdf76eb12449b9586e06f6ebb574bc436c289883a7648d6f594ad74e8",
     "resources/profile.json": "5c82bd900476b7b65f829a72bdf4475d690f9aba991135de423f39cab540b27a",
@@ -36,7 +37,7 @@
     "tests/validate_distribution.py": "87561231e86e0ef10f02db7d96698f459519051aba3db89a1738af9348512bfd",
     "tools/check_repository.py": "8b120cfecf113aca271c8aac47b96f859a642408d81b6ae48c26bf940fa4e2c7",
     "tools/build_release.py": "6721faffb2bbe86ef3856ace71a866f4e31981f8b8df1268726232796d86358c",
-    "tools/check_release.py": "f66fbfd511a3d4f610b33a48f9520efdaaf1152e94837ed6af5dbd270336bffb",
+    "tools/check_release.py": "59555bf63e0208563f7330059ad3fce2cf20971d3f3fa44e15f04b8f046c7e91",
     "z8precapture/__init__.py": "2553af81f7abaa8443643c2a451a47d1547fa650b75b50d29bd215ea2c20bed6",
     "z8precapture/crc32_table.inc": "fe021e684d78717732adddb6c9dde91f6fc6918f18cb0aeccfb349db5511a515",
     "z8precapture/firmware.c": "1aa9b9ac08f92448cf79d8bd09a3f4d0d31c54a3aa94d4845b63423f3db10b5f",
@@ -1703,5 +1704,136 @@
     "original_files_copied_to_computer": false,
     "temporary_DNG_files_remaining": 0,
     "published_original_media": false
+  },
+  "stop_file_documentation_review_20261023": {
+    "date": "2026-10-23",
+    "scope": "Documentation, acknowledgements and future toolkit source allowlist; no firmware changes or new camera/QEMU/native runs",
+    "source_tag": "v0.2.0",
+    "source_commit": "20d0c4a59d1ec3822291c7e99ead6d983812f865",
+    "firmware_source_sha256": "1aa9b9ac08f92448cf79d8bd09a3f4d0d31c54a3aa94d4845b63423f3db10b5f",
+    "profile_sha256": "c110c43cdf76eb12449b9586e06f6ebb574bc436c289883a7648d6f594ad74e8",
+    "code_bytes": 33117,
+    "code_sha256": "d71bffd5f64105eeda35d627c5f628dd4c9da6a976c3ba2de09667ea5e49e224",
+    "source_functions_reviewed": [
+      "stopped",
+      "stop_file",
+      "raw_route",
+      "stock_nef",
+      "flow",
+      "take",
+      "dual_second",
+      "second"
+    ],
+    "existing_native_evidence_sha256": "b00a1b54121e9813877d5be307afa20a2485af6ce4dae42e49ce95adfd8c3dd2",
+    "existing_native_cases": {
+      "role2_stop_file_on_primary": {
+        "primary": "B",
+        "output_suffixes": [
+          "A:.JPG",
+          "B:.JPG"
+        ],
+        "stop_drives": [
+          "B"
+        ]
+      },
+      "role1_raw_stop_file_on_primary": {
+        "primary": "A",
+        "output_suffixes": [
+          "A:.JPG",
+          "B:.JPG"
+        ],
+        "stop_drives": [
+          "A"
+        ]
+      },
+      "role3_raw_stop_file_on_secondary": {
+        "primary": "A",
+        "output_suffixes": [
+          "A:.NEF",
+          "B:.JPG"
+        ],
+        "stop_drives": [
+          "B"
+        ]
+      }
+    },
+    "python_command_fixture_results": [
+      {
+        "case": "example",
+        "valid_format": true,
+        "returncode": 0,
+        "source_unchanged": true
+      },
+      {
+        "case": "write_failure",
+        "valid_format": true,
+        "returncode": 0,
+        "source_unchanged": true
+      },
+      {
+        "case": "rename_failure",
+        "valid_format": true,
+        "returncode": 0,
+        "source_unchanged": true
+      },
+      {
+        "case": "missing",
+        "valid_format": true,
+        "returncode": 0,
+        "source_unchanged": true
+      },
+      {
+        "case": "zero_fields",
+        "valid_format": true,
+        "returncode": 0,
+        "source_unchanged": true
+      },
+      {
+        "case": "unknown_status",
+        "valid_format": true,
+        "returncode": 0,
+        "source_unchanged": true
+      },
+      {
+        "case": "maximum_unsigned",
+        "valid_format": true,
+        "returncode": 0,
+        "source_unchanged": true
+      },
+      {
+        "case": "empty",
+        "valid_format": false,
+        "returncode": 1,
+        "source_unchanged": true
+      },
+      {
+        "case": "short",
+        "valid_format": false,
+        "returncode": 1,
+        "source_unchanged": true
+      },
+      {
+        "case": "overlong",
+        "valid_format": false,
+        "returncode": 1,
+        "source_unchanged": true
+      },
+      {
+        "case": "bad_magic",
+        "valid_format": false,
+        "returncode": 1,
+        "source_unchanged": true
+      },
+      {
+        "case": "nonzero_reserved",
+        "valid_format": false,
+        "returncode": 1,
+        "source_unchanged": true
+      }
+    ],
+    "powershell_validation": "Static review only; no PowerShell runtime available; not executed on Windows",
+    "triggering_tester_stop_file_received": false,
+    "incident_root_cause_determined": false,
+    "release_tag_and_assets": "Preserved; latest guide is in repository documentation, not the original toolkit ZIP"
   }
 }

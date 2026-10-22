@@ -14,6 +14,8 @@ Build a local Nikon Z8 firmware update with the features you select:
 
 The publicly supported input is **official Nikon Z8 C 3.11**. Download it yourself from [Nikon](https://downloadcenter.nikonimglib.com/en/download/fw/606.html), subject to Nikon's terms. The source repository contains code, compatibility fingerprints and the existing menu screenshots. **Releases also provide the reviewed precompiled patch, with its corresponding source. No original or modified complete firmware, or RAW photos, are distributed.** Output firmware is generated locally. The tool does not copy files to a card or operate a camera.
 
+**Found `Z8PRESTP.BIN`, or RAW unexpectedly became JPEG-only?** Stop shooting, wait for writes to finish, and preserve both cards' files before removing anything. A stop on the frame's primary card can also prevent NEFs on the secondary card. Read the [stop-file decoding and recovery guide](docs/stop-file.md#english-summary); a reason code alone does not diagnose card speed or a hardware fault.
+
 ### Build
 
 Download and extract **[NikonFirmwarePatch-v0.2.0-toolkit.zip](https://github.com/XinmiaoZhao/NikonFirmwarePatch/releases/download/v0.2.0/NikonFirmwarePatch-v0.2.0-toolkit.zip)** from the [Release](https://github.com/XinmiaoZhao/NikonFirmwarePatch/releases/tag/v0.2.0). Use the toolkit asset, which includes `resources/precapture.bin`; GitHub's automatically generated source archives and a Git clone contain source only. The toolkit release number is unrelated to the output firmware version you choose.
@@ -105,7 +107,7 @@ Original tool code is [GPL-3.0-only](LICENSE); Nikon firmware is not relicensed.
 
 ### Acknowledgements
 
-Thanks to [@aoyukkk (傲宇)](https://github.com/aoyukkk) and 琴岛唯一指定哥布林 for helping with development, conducting camera tests, and reporting issues.
+Thanks to [@aoyukkk (傲宇)](https://github.com/aoyukkk), [@South-Bridge (琴岛唯一指定哥布林)](https://github.com/South-Bridge), and 追晚霞的流浪汉 for helping with development, conducting camera tests, and reporting issues.
 
 Thanks to [RdWing/z8-qemu](https://github.com/RdWing/z8-qemu) for its Z8 emulation work, [WonderLantern/z9-qemu](https://github.com/WonderLantern/z9-qemu) for the upstream camera model and tools, [WonderLantern/z7-qemu](https://github.com/WonderLantern/z7-qemu) for emulator and protocol references, and [QEMU](https://www.qemu.org/) for the emulation infrastructure. These projects helped the offline development and validation work; their code and binaries are not distributed here. See [NOTICE.md](NOTICE.md).
 
@@ -120,6 +122,8 @@ Thanks to [RdWing/z8-qemu](https://github.com/RdWing/z8-qemu) for its Z8 emulati
 **这是测试版固件，上机风险由使用者自行衡量和承担。** 构建、校验或既有测试通过不保证安全。安装或使用可能导致照片丢失、存储卡损坏、相机故障乃至永久损坏。在适用法律允许的范围内，本仓库及其作者、贡献者不作任何担保，不对构建、安装或使用本项目产物造成的数据损失、相机损失或其他损失承担责任。请勿用于不可重拍的重要工作。详见 [LICENSE](LICENSE) 和 [NOTICE.md](NOTICE.md)。
 
 公开支持范围仅为**官方 Nikon Z8 C 3.11 固件**。请自行从 [Nikon 下载中心](https://downloadcenter.nikonimglib.com/en/download/fw/606.html)获取并遵守其条款。代码库提供源码、兼容性指纹及原有菜单截图；**Release 另提供已审阅的预编译补丁及对应源码，不提供原厂或修改后的完整固件，也不提供原始照片。** 完整固件在用户本地生成；脚本不会自动写卡或操作相机。
+
+**发现 `Z8PRESTP.BIN`，或 RAW 意外变成只有 JPEG？** 先停止拍摄，等待写入结束，保留两卡相关文件，不要直接删停止文件继续连拍。主卡停止也可能使副卡无法写出 NEF。请先看[停止文件读取、原因码与恢复说明](docs/stop-file.md)；原因码不能单独诊断卡速或硬件故障。
 
 ### 构建
 
@@ -206,6 +210,6 @@ python tools/check_repository.py --staged
 
 ### 致谢
 
-感谢 [@aoyukkk（傲宇）](https://github.com/aoyukkk)和“琴岛唯一指定哥布林”协助开发、开展实机测试并反馈问题。
+感谢 [@aoyukkk（傲宇）](https://github.com/aoyukkk)、[@South-Bridge（琴岛唯一指定哥布林）](https://github.com/South-Bridge)和“追晚霞的流浪汉”协助开发、开展实机测试并反馈问题。
 
 感谢 [RdWing/z8-qemu](https://github.com/RdWing/z8-qemu) 的 Z8 仿真工作、[WonderLantern/z9-qemu](https://github.com/WonderLantern/z9-qemu) 的上游相机模型与工具、[WonderLantern/z7-qemu](https://github.com/WonderLantern/z7-qemu) 的模拟器与协议参考，以及 [QEMU](https://www.qemu.org/) 的仿真基础设施。它们为本项目的离线开发和验证提供了帮助；本仓库不分发这些项目的源码或二进制。详见 [NOTICE.md](NOTICE.md)。

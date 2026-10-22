@@ -13,7 +13,7 @@ SOURCE_FILES = (
     '.gitattributes', '.githooks/pre-commit', '.gitignore', 'LICENSE', 'NOTICE.md', 'README.md',
     'features.py', 'patch.py', 'verify.py', 'requirements.txt',
     'docs/images/prores-quality-options.png', 'docs/images/prores-quality-value.png',
-    'docs/raw-precapture.md', 'docs/validation.md', 'docs/validation-summary.json', 'docs/validation-implementation-v3.json',
+    'docs/raw-precapture.md', 'docs/stop-file.md', 'docs/validation.md', 'docs/validation-summary.json', 'docs/validation-implementation-v3.json',
     'docs/validation-v0.1.0.json',
     'docs/releases.md', 'resources/input.json', 'resources/precapture.json', 'resources/profile.json',
     'tests/validate.py', 'tests/validate_features.py', 'tests/validate_distribution.py',

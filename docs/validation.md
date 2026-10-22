@@ -2,6 +2,12 @@
 
 2026-10-21 · toolkit **v0.2.0** · public input: **official Nikon Z8 C 3.11**. The [machine-readable summary](validation-summary.json) binds the current source and recorded checks. Complete firmware, photographs, private device records and emulator/runtime inputs are not distributed.
 
+## Stop-file documentation review 2026-10-23
+
+The [stop-file guide](stop-file.md) was checked against the unchanged v0.2.0 source: record layout, writer-only existence checks, status paths, primary/secondary RAW-buffer handling and recovery limits. Existing bounded execution records confirm the primary-stop/two-JPEG and secondary-stop/primary-NEF cases; no new camera or emulator run is claimed. The exact Python command was exercised on seven valid-format fixtures (including unknown codes and maximum unsigned fields) and five malformed fixtures; decoding/rejection and unchanged input bytes were verified. PowerShell received static review only; it was not executed on Windows.
+
+本次澄清了主卡停止对副卡的影响、空／短文件仍可能生效、旧记录不被覆盖，以及原因码不能单独诊断卡速或保证 NEF／JPEG 完整等边界。尚未收到触发者的停止文件和相关素材，**没有判定这次故障的根因，也没有修复固件**。机器码、配方、v0.2.0 tag 及发布附件均不变；只更新文档、致谢和未来工具包的文档清单。
+
 ## Current implementation and identity
 
 The RAW feature is ported from the hardware-tested **HN8, 03.50.n8** implementation. It adds HE★, removes the card CFG dependency, follows ordinary Image quality through QUAL/f2 and the i menu, and uses the dual-card role and primary slot captured when each frame is submitted. ProRes patch bytes and their recipe are unchanged.
